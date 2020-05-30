@@ -4,12 +4,13 @@ import './index.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import history from "./history";
 
 ReactDOM.render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>,
+  <Router history={history}>
+    <App />
+  </Router>,
   document.getElementById("root")
 );
 

@@ -1,13 +1,14 @@
 import React from "react";
+import history from '../history'
 
 class Login extends React.Component {
 
   handleSubmit(event) {
-    this.context.history.push("/home");
+    history.push("/home");
   }
   render() {
     return (
-      <div className="container login-form">
+      <div className="container login-form ">
         <div className="row justify-content-center">
           <div className="card">
             <div className="card-header">Login</div>
@@ -15,17 +16,18 @@ class Login extends React.Component {
               <form onSubmit={this.handleSubmit}>
                 {/* Username */}
                 <div className="form-group row">
-                  <label
+                  {/* <label
                     htmlFor="username"
                     className="col-md-4 col-form-label text-md-right"
                   >
                     Username:
-                  </label>
-                  <div className="col-md-8">
+                  </label> */}
+                  <div>
                     <input
                       type="text"
                       id="username"
                       className="form-control"
+                      placeholder="Username"
                       required
                       autoFocus
                     />
@@ -33,27 +35,32 @@ class Login extends React.Component {
                 </div>
                 {/* Password */}
                 <div className="form-group row">
-                  <label
+                  {/* <label
                     htmlFor="password"
                     className="col-md-4 col-form-label text-md-right"
                   >
                     Password:
-                  </label>
-                  <div className="col-md-8">
+                  </label> */}
+                  <div>
                     <input
                       type="password"
                       id="password"
                       className="form-control"
+                      placeholder="Password"
                       required
                     />
                   </div>
                 </div>
-                <div className="col-md-8 offset-md-4">
-                  <button type="submit" className="btn btn-outline-primary">
+                <div className="d-flex flex-row-reverse">
+                  <button
+                    type="submit"
+                    className="btn btn-block btn-outline-primary"
+                  >
                     Login
                   </button>
                 </div>
-                <div className="col-md-8 offset-md-4">
+                <hr></hr>
+                <div className="d-flex flex-row-reverse">
                   <a href="/">Forgot Password?</a>
                 </div>
               </form>

@@ -1,10 +1,10 @@
 import React from 'react';
-import { slide as Menu } from "react-burger-menu";
+import Menu from "react-burger-menu/lib/menus/slide";
 
 class SidebarComp extends React.Component {
   render() {
     return (
-      <Menu noOverlay>
+      <Menu >
         <a id="user" className="menu-item" href="/home">
           Manage User
         </a>
