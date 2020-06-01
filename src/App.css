@@ -2,7 +2,7 @@
 {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
-    margin-top: 5rem;
+    margin-top: 10rem;
 }
 .login-form .row
 {
@@ -12,15 +12,15 @@
 /* Position and sizing of burger button */
 .bm-burger-button {
   position: fixed;
-  width: 36px;
-  height: 30px;
-  left: 36px;
-  top: 36px;
+  width: 24px;
+  height: 24px;
+  left: 24px;
+  top: 11px;
 }
 
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
-  background: #373a47;
+  background: #17a2b8;
 }
 
 /* Color/shape of burger icon bars on hover*/
@@ -50,7 +50,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* General sidebar styles */
 .bm-menu {
-  background: #222d32;
+  background: #343a40;
   padding: 2.5em 1.5em 0;
   font-size: 1.15em;
 }
@@ -76,4 +76,27 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* Styling of overlay */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
+}
+.navbar-search {
+  width: 100%;
+}
+.info-box{
+  width: 100%;
+  display: block;
+}
+.info-box-text {
+    display: block;
+    font-size: 14px !important;
+}
+.info-box-number {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+}
+.section-title{
+  padding: 15px;
+}
+
+.navbar-brand{
+  color: white!important;
 }
