@@ -1,13 +1,19 @@
+MuiPaper {
+  padding: 100px;
+}
 .login-form
 {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    margin-top: 10rem;
+    justify-content: center;
+    min-height: 90vh;
 }
-.login-form .row
+.button-block{
+  width: 100%;
+}
+.login-background
 {
-    margin-left: 0;
-    margin-right: 0;
+    justify-content: center;
+    min-height: 30vh;
+    padding: 50px;
 }
 /* Position and sizing of burger button */
 .bm-burger-button {
@@ -83,6 +89,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .info-box{
   width: 100%;
   display: block;
+  margin-bottom: 10px;
 }
 .info-box-text {
     display: block;
@@ -91,7 +98,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .info-box-number {
     display: block;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 24px;
 }
 .section-title{
   padding: 15px;

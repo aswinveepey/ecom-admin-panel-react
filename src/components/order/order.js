@@ -1,14 +1,12 @@
 import React from 'react'
-import SidebarComp from "../common/sidebar"
-import NavBarComponent from "../common/navbar"
+import AppBarComp from "../common/appbar";
 import OrderIndex from "./orderindex";
 
 class Order extends React.Component{
   render(){
     return (
-      <div md="12">
-        <NavBarComponent />
-        <SidebarComp />
+      <div>
+        <AppBarComp title="Orders" />
         <OrderIndex />
       </div>
     );

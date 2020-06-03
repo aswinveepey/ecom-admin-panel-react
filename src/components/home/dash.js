@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Row, Col} from 'react-bootstrap'
+import { Grid } from "@material-ui/core";
 import InfoBox from '../common/infobox'
 import DashChartComp from './dashchart'
 
@@ -11,23 +11,21 @@ class DashComp extends React.Component {
       { id: 3, title: "Quarterly GMV", value: "20 Cr" },
     ];
     const infoBoxComponent = infoBoxData.map((data) => (
-      <InfoBox title={data.title} value={data.value} key={data.id}/>
+      <Grid item xs={12} sm={12} md={4} lg={4}>
+        <InfoBox title={data.title} value={data.value} key={data.id} />
+      </Grid>
     ));
     return (
-      <div>
-        <Container className="box">
-          <Row>
-            <h3 className="section-title">Dashboard</h3>
-          </Row>
-          <Row>{infoBoxComponent}</Row>
-          <hr />
-          <Row>
-            <Col md='12'>
-              <DashChartComp />
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Grid container direction="column" justify="space-evenly">
+        <Grid item style={{ margin: "15px" }}>
+          <Grid container spacing={2}>
+            {infoBoxComponent}
+          </Grid>
+        </Grid>
+        <Grid item style={{ margin: "15px" }}>
+          <DashChartComp />
+        </Grid>
+      </Grid>
     );
   }
 }
