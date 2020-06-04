@@ -13,6 +13,14 @@ class AppBarComp extends React.Component {
   handleDrawerToggle = () => {
     this.setState({ open: !this.state.open });
   };
+  escFunction = (event)=>{
+    if (event.keyCode === 27) {
+      this.handleDrawerToggle();
+    }
+  }
+  componentDidMount() {
+    document.addEventListener("keydown", this.escFunction, false);
+  }
   render() {
     return (
       <div>
@@ -31,6 +39,7 @@ class AppBarComp extends React.Component {
               {this.props.title}
             </Typography>
           </Toolbar>
+          {/* Todo - Implement Search Bar */}
         </AppBar>
         <DrawerComp open={this.state.open} handler={this.handleDrawerToggle} />
       </div>

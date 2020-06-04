@@ -11,8 +11,8 @@ class DashComp extends React.Component {
       { id: 3, title: "Quarterly GMV", value: "20 Cr" },
     ];
     const infoBoxComponent = infoBoxData.map((data) => (
-      <Grid item xs={12} sm={12} md={4} lg={4}>
-        <InfoBox title={data.title} value={data.value} key={data.id} />
+      <Grid item xs={12} sm={12} md={4} lg={4} key={data.id}>
+        <InfoBox title={data.title} value={data.value} />
       </Grid>
     ));
     return (
