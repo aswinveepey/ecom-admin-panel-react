@@ -15,7 +15,7 @@ class AppBarComp extends React.Component {
   };
   escFunction = (event)=>{
     if (event.keyCode === 27) {
-      this.handleDrawerToggle();
+      this.setState({ open: false });
     }
   }
   componentDidMount() {

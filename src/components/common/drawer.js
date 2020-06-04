@@ -32,7 +32,7 @@ class DrawerComp extends React.Component {
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Users" component="a" href="home">
+            <ListItem button key="Users" component="a" href="user">
               <ListItemIcon>
                 <GroupIcon />
               </ListItemIcon>
