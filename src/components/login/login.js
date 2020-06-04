@@ -10,7 +10,7 @@ import {
   Link,
   CircularProgress,
 } from "@material-ui/core";
-import {BRAND_NAME} from '../../constants'
+import {BRAND_NAME, BASE_URL} from '../../constants'
 
 class Login extends React.Component {
   state = {
@@ -25,17 +25,27 @@ class Login extends React.Component {
     event.preventDefault();
     this.setState({ progress: true });
     this.setState({ usernameerror: false, passworderror: false });
-    const {username, password} = await this.state;
-    if (username === "admin@littech.in") {
-      if (password === "secret") {
-        this.props.history.push("/home");
-      } else {
-        this.setState({ passworderror: true });
-      }
+    const {username, password} = this.state;
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 'username':  username, 'password': password}),
+    };
+    const authResponse = await fetch(BASE_URL, requestOptions);
+    const {status} = authResponse;
+    if(status === 200){
+      this.props.history.push("/home");
     } else {
-      this.setState({ usernameerror: true });
+      authResponse.json().then((data) => {
+        const { message } = data;
+        if (message === "Username Error") {
+          this.setState({ usernameerror: true });
+        } else if (message === "Password Error") {
+          this.setState({ passworderror: true });
+        }
+      });
     }
-    this.setState({ progress: false });
+  this.setState({ progress: false });
   };
   render() {
     return (
