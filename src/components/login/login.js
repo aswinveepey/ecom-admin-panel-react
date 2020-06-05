@@ -1,4 +1,5 @@
 import React from "react";
+import Cookies from "js-cookie";
 import {
   Button,
   TextField,
@@ -42,8 +43,12 @@ class Login extends React.Component {
     const { status } = authResponse;
     if (status === 200) {
       const { token } = await authResponse.json();
-      console.log(token);
-      // this.props.history.push("/home");
+      try {
+        Cookies.set("token", token, { expires: 30 });
+      } catch (error) {
+        console.log('Unable to set cookie');
+      }
+      this.props.history.push("/home");
     } else {
       authResponse.json().then((data) => {
         const { message } = data;

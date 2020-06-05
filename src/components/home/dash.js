@@ -2,8 +2,40 @@ import React from 'react'
 import { Grid } from "@material-ui/core";
 import InfoBox from '../common/infobox'
 import DashChartComp from './dashchart'
+import Cookies from "js-cookie";
+
+import { BASE_URL } from "../../constants";
 
 class DashComp extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  state = {
+    authStatus: 'loading',
+  };
+  componentDidMount(){
+    this.fetchDashData();
+  }
+  fetchDashData = async ()=>{
+    let token;
+    try {
+      token = Cookies.get("token");
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Authorization: token },
+    };
+    const fetchResponse = await fetch(BASE_URL + "dash/", requestOptions);
+    const { status } = fetchResponse;
+    if (status===200){
+      this.setState({ authStatus: "authenticated" });
+    } else {
+      this.setState({ authStatus: "unAuthenticated" });
+    }
+  }
   render() {
     const infoBoxData = [
       { id: 1, title: "No of Customers", value: "2340" },
@@ -15,6 +47,27 @@ class DashComp extends React.Component {
         <InfoBox title={data.title} value={data.value} />
       </Grid>
     ));
+    const chartData = {
+      datasets: [
+        {
+          data: [10, 20, 30],
+          label: "Category Wise GMV",
+          backgroundColor: ["#93948d", "#eaf2b6", "rgb(255, 99, 134)"],
+        },
+      ],
+
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: ["Category1", "Category2", "Category3"],
+    };
+    const chartOptions = {
+      legend: { display: true, position: "left" },
+      maintainAspectRatio: false,
+    };
+    if (this.state.authStatus === "unAuthenticated") {
+      return <div>Not Authenticated</div>;
+    } else if (this.state.authStatus === "loading") {
+      return <div>Loading Data. Please Wait.</div>;
+    }
     return (
       <Grid container direction="column" justify="space-evenly">
         <Grid item style={{ margin: "15px" }}>
@@ -23,7 +76,7 @@ class DashComp extends React.Component {
           </Grid>
         </Grid>
         <Grid item style={{ margin: "15px" }}>
-          <DashChartComp />
+          <DashChartComp data={chartData} options={chartOptions} />
         </Grid>
       </Grid>
     );

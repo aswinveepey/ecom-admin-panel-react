@@ -4,11 +4,11 @@ import DashComp from "./dash"
 
 class Home extends React.Component {
   render(){
-    return (
+    return(
       <div>
-        <AppBarComp title="Dashboard" />
-        <DashComp />
-      </div>
+      <AppBarComp title="Dashboard" />
+      <DashComp />
+    </div>
     );
   }
 }
