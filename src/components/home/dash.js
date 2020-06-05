@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid } from "@material-ui/core";
+import { Grid, LinearProgress, Link, Typography } from "@material-ui/core";
 import InfoBox from '../common/infobox'
 import DashChartComp from './dashchart'
 import Cookies from "js-cookie";
@@ -64,9 +64,16 @@ class DashComp extends React.Component {
       maintainAspectRatio: false,
     };
     if (this.state.authStatus === "unAuthenticated") {
-      return <div>Not Authenticated</div>;
+      return (
+        <div>
+          <Typography variant='overline'>
+            Not Authenticated. Try refreshing the page or{" "}
+            <Link href="/">logging in</Link> again
+          </Typography>
+        </div>
+      );
     } else if (this.state.authStatus === "loading") {
-      return <div>Loading Data. Please Wait.</div>;
+      return <LinearProgress color='secondary'/>;
     }
     return (
       <Grid container direction="column" justify="space-evenly">
