@@ -10,6 +10,8 @@ import {
   Link,
   CircularProgress,
 } from "@material-ui/core";
+
+import SnackBarComp from '../common/snackbar'
 import {BRAND_NAME, BASE_URL} from '../../constants'
 
 class Login extends React.Component {
@@ -19,33 +21,42 @@ class Login extends React.Component {
     usernameerror: false,
     passworderror: false,
     progress: false,
+    snackbaropen: false,
   };
 
+  //handle login form submit
   handleSubmit = async (event) => {
     event.preventDefault();
     this.setState({ progress: true });
     this.setState({ usernameerror: false, passworderror: false });
-    const {username, password} = this.state;
+    const { username, password } = this.state;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 'username':  username, 'password': password}),
+      body: JSON.stringify({ username: username, password: password }),
     };
-    const authResponse = await fetch(BASE_URL, requestOptions);
-    const {status} = authResponse;
-    if(status === 200){
-      this.props.history.push("/home");
+    const authResponse = await fetch(
+      BASE_URL + "auth/authenticate",
+      requestOptions
+    );
+    const { status } = authResponse;
+    if (status === 200) {
+      const { token } = await authResponse.json();
+      console.log(token);
+      // this.props.history.push("/home");
     } else {
       authResponse.json().then((data) => {
         const { message } = data;
         if (message === "Username Error") {
-          this.setState({ usernameerror: true });
+          this.setState({ usernameerror: true});
         } else if (message === "Password Error") {
           this.setState({ passworderror: true });
+        } else {
+          this.setState({snackbaropen: true });
         }
       });
     }
-  this.setState({ progress: false });
+    this.setState({ progress: false });
   };
   render() {
     return (
@@ -59,11 +70,7 @@ class Login extends React.Component {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Grid
-          container
-          direction="column"
-          spacing={3}
-        >
+        <Grid container direction="column" spacing={3}>
           <Grid item>
             <Grid container spacing={0} justify="center">
               <Grid item>
@@ -158,6 +165,12 @@ class Login extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {this.state.snackbaropen && (
+          <SnackBarComp
+            snackbaropen={true}
+            message="Something went wrong. We are not sure what"
+          />
+        )}
       </div>
     );
   }
