@@ -3,9 +3,6 @@ import { Pie } from "react-chartjs-2";
 import {Paper, Typography, Grid} from '@material-ui/core'
 
 class DashChartComp extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   state = {
     data: this.props.data,
     options: this.props.options,

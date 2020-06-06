@@ -26,31 +26,31 @@ class DrawerComp extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button key="Home" component="a" href="home">
+            <ListItem button key="Home" component="a" href="/home">
               <ListItemIcon>
                 <Dashboard />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Users" component="a" href="user">
+            <ListItem button key="Users" component="a" href="/user">
               <ListItemIcon>
                 <GroupIcon />
               </ListItemIcon>
               <ListItemText primary="Users" />
             </ListItem>
-            <ListItem button key="Customers" component="a" href="home">
+            <ListItem button key="Customers" component="a" href="/home">
               <ListItemIcon>
                 <Contacts />
               </ListItemIcon>
               <ListItemText primary="Customers" />
             </ListItem>
-            <ListItem button key="Orders" component="a" href="order">
+            <ListItem button key="Orders" component="a" href="/order">
               <ListItemIcon>
                 <Queue />
               </ListItemIcon>
               <ListItemText primary="Orders" />
             </ListItem>
-            <ListItem button key="Invoices" component="a" href="home">
+            <ListItem button key="Invoices" component="a" href="/home">
               <ListItemIcon>
                 <Receipt />
               </ListItemIcon>

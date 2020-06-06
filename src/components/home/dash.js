@@ -7,9 +7,6 @@ import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
 class DashComp extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   state = {
     authStatus: 'loading',
   };
