@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router } from "react-router-dom";
+import CssBaseline from "@material-ui/core/CssBaseline";
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { Router } from "react-router-dom";
 import history from "./history";
 
 ReactDOM.render(
   <Router history={history}>
+    <CssBaseline />
     <App />
   </Router>,
   document.getElementById("root")

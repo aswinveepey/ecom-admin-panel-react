@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from './components/login/login.js';
 import Home from './components/home/home.js';
-import Order from './components/order/order.js';
+import Order from './components/order/orderindex.js';
 import UserIndexComp from './components/user/userindex';
 import UserComp from './components/user/user';
 

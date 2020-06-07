@@ -1,11 +1,15 @@
 import React from "react";
 import AppBarComp from "../common/appbar";
-import DataTableComp from "../common/datatable";
+
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-material.css";
+
 import Cookies from "js-cookie";
 
 import { BASE_URL } from "../../constants";
 import EditCellRenderer from "../common/editcellrenderer";
-import {LinearProgress} from '@material-ui/core'
+import { LinearProgress, Grid, Paper, Typography } from "@material-ui/core";
 
 
 class UserIndexComp extends React.Component {
@@ -73,11 +77,28 @@ class UserIndexComp extends React.Component {
     return (
       <div>
         <AppBarComp title="Users" />
-        {this.state.fetchstatus==='loading' &&(
-          <LinearProgress color='secondary'/>
+        {this.state.fetchstatus === "loading" && (
+          <LinearProgress color="secondary" />
         )}
         {this.state.fetchstatus === "fetched" && (
-          <DataTableComp data={gridData} title="Manage Users" />
+          <Paper
+            className="paper-container"
+          >
+            <Grid container direction="column">
+              <Grid item>
+                <div
+                  className="ag-theme-material"
+                >
+                  <Typography variant="h6">Manager Users</Typography>
+                  <AgGridReact
+                    gridOptions={gridData.gridOptions}
+                    columnDefs={gridData.columnDefs}
+                    rowData={gridData.rowData}
+                  ></AgGridReact>
+                </div>
+              </Grid>
+            </Grid>
+          </Paper>
         )}
       </div>
     );

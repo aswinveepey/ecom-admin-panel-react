@@ -1,8 +1,12 @@
 import React from 'react'
 import AppBarComp from "../common/appbar";
-import DataTableComp from "../common/datatable";
+import { LinearProgress, Grid, Paper, Typography } from "@material-ui/core";
 
-class Order extends React.Component{
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-material.css";
+
+class OrderIndex extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -12,7 +16,7 @@ class Order extends React.Component{
     }
   }
   render(){
-    const data = {
+    const gridData = {
       gridOptions: {
         rowSelection: "multiple",
         pagination: true,
@@ -62,10 +66,34 @@ class Order extends React.Component{
       <div>
         <AppBarComp title="Orders" />
         {this.state.indexFlag && (
-          <DataTableComp data={data} title="Manage Orders" />
+          <Paper
+            className="paper-container"
+            elevation={3}
+          >
+            <Grid container direction="column">
+              <Grid item>
+                <Grid container style={{ padding: "15px" }}>
+                  <Grid item>
+                    <Typography variant="h6">Manager Orders</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <div
+                  className="ag-theme-material"
+                >
+                  <AgGridReact
+                    gridOptions={gridData.gridOptions}
+                    columnDefs={gridData.columnDefs}
+                    rowData={gridData.rowData}
+                  ></AgGridReact>
+                </div>
+              </Grid>
+            </Grid>
+          </Paper>
         )}
       </div>
     );
   }
 }
-export default Order;
+export default OrderIndex;

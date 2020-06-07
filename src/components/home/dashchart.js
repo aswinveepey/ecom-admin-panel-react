@@ -10,20 +10,28 @@ class DashChartComp extends React.Component {
   render() {
     return (
       <Grid container direction="row" spacing={2}>
-        <Grid item lg={6}>
-          <Paper style={{ padding: "15px" }}>
+        <Grid item lg={6} md={12} sm={12}>
+          <Paper className="chart-box" elevation={2}>
             <Typography gutterBottom={true} variant="h6">
               Category Wise GMV
             </Typography>
-            <Pie data={this.state.data} options={this.state.options} height={200} />
+            <Pie
+              data={this.state.data}
+              options={this.state.options}
+              height={200}
+            />
           </Paper>
         </Grid>
-        <Grid item lg={6}>
-          <Paper style={{ padding: "15px" }}>
+        <Grid item lg={6} md={12} sm={12}>
+          <Paper className="chart-box" elevation={2}>
             <Typography gutterBottom={true} variant="h6">
               Category Wise GMV
             </Typography>
-            <Pie data={this.state.data} options={this.state.options} height={200} />
+            <Pie
+              data={this.state.data}
+              options={this.state.options}
+              height={200}
+            />
           </Paper>
         </Grid>
       </Grid>

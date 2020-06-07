@@ -73,13 +73,13 @@ class DashComp extends React.Component {
       return <LinearProgress color='secondary'/>;
     }
     return (
-      <Grid container direction="column" justify="space-evenly">
-        <Grid item style={{ margin: "15px" }}>
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
           <Grid container spacing={2}>
             {infoBoxComponent}
           </Grid>
         </Grid>
-        <Grid item style={{ margin: "15px" }}>
+        <Grid item>
           <DashChartComp data={chartData} options={chartOptions} />
         </Grid>
       </Grid>
