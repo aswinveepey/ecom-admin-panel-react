@@ -31,15 +31,15 @@ MuiPaper {
 .paper-container{
   padding: 15px;
   margin: 20px;
+  min-height: 90vh;
 }
 
 .ag-theme-material{
-  height: 90vh;
+  height: 80vh;
 }
 
 .info-box{
   padding: 15px;
-  height: 250px;
 }
 
 .chart-box{

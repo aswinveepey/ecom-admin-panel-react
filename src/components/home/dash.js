@@ -44,22 +44,6 @@ class DashComp extends React.Component {
         <InfoBox title={data.title} value={data.value} />
       </Grid>
     ));
-    const chartData = {
-      datasets: [
-        {
-          data: [10, 20, 30],
-          label: "Category Wise GMV",
-          backgroundColor: ["#93948d", "#eaf2b6", "rgb(255, 99, 134)"],
-        },
-      ],
-
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: ["Category1", "Category2", "Category3"],
-    };
-    const chartOptions = {
-      legend: { display: true, position: "left" },
-      maintainAspectRatio: false,
-    };
     if (this.state.authStatus === "unAuthenticated") {
       return (
         <div>
@@ -75,12 +59,12 @@ class DashComp extends React.Component {
     return (
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             {infoBoxComponent}
           </Grid>
         </Grid>
         <Grid item>
-          <DashChartComp data={chartData} options={chartOptions} />
+          <DashChartComp />
         </Grid>
       </Grid>
     );

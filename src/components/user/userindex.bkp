@@ -9,7 +9,13 @@ import Cookies from "js-cookie";
 
 import { BASE_URL } from "../../constants";
 import EditCellRenderer from "../common/editcellrenderer";
-import { LinearProgress, Grid, Paper, Typography } from "@material-ui/core";
+import {
+  LinearProgress,
+  Grid,
+  Paper,
+  Typography,
+  Divider,
+} from "@material-ui/core";
 
 
 class UserIndexComp extends React.Component {
@@ -81,15 +87,12 @@ class UserIndexComp extends React.Component {
           <LinearProgress color="secondary" />
         )}
         {this.state.fetchstatus === "fetched" && (
-          <Paper
-            className="paper-container"
-          >
+          <Paper className="paper-container">
             <Grid container direction="column">
               <Grid item>
-                <div
-                  className="ag-theme-material"
-                >
+                <div className="ag-theme-material">
                   <Typography variant="h6">Manager Users</Typography>
+                  <Divider />
                   <AgGridReact
                     gridOptions={gridData.gridOptions}
                     columnDefs={gridData.columnDefs}
