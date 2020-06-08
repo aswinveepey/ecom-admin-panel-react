@@ -6,7 +6,6 @@ import {
   Typography,
   Divider,
   Avatar,
-  CardActionArea,
 } from "@material-ui/core";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";

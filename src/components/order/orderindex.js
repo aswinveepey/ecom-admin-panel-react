@@ -10,9 +10,8 @@ class OrderIndex extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      indexFlag: true,
-      createFlag: false,
-      editFlag: false
+      fetchStatus: 'fetched',
+
     }
   }
   render(){
@@ -65,11 +64,11 @@ class OrderIndex extends React.Component{
     return (
       <div>
         <AppBarComp title="Orders" />
-        {this.state.indexFlag && (
-          <Paper
-            className="paper-container"
-            elevation={3}
-          >
+        {this.state.fetchStatus === "loading" && (
+          <LinearProgress color="secondary" />
+        )}
+        {this.state.fetchStatus === "fetched" && (
+          <Paper className="paper-container" elevation={3}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container style={{ padding: "15px" }}>
@@ -79,9 +78,7 @@ class OrderIndex extends React.Component{
                 </Grid>
               </Grid>
               <Grid item>
-                <div
-                  className="ag-theme-material"
-                >
+                <div className="ag-theme-material">
                   <AgGridReact
                     gridOptions={gridData.gridOptions}
                     columnDefs={gridData.columnDefs}

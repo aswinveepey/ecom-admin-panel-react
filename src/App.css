@@ -33,6 +33,12 @@ MuiPaper {
   margin: 20px;
   min-height: 90vh;
 }
+.paper-box{
+  padding: 15px;
+  /* margin: 20px; */
+  margin-left: 2rem;
+  min-height: 90vh;
+}
 
 .ag-theme-material{
   height: 80vh;

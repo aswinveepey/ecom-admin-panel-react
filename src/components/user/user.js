@@ -8,7 +8,7 @@ import {
   Paper,
   Typography,
   Divider,
-  Fab
+  Fab,
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add'
 class UserComp extends React.Component {
@@ -35,11 +35,11 @@ class UserComp extends React.Component {
         {this.state.fetchstatus === "fetched" && (
           <Paper className="paper-container">
             <Grid container direction="row" spacing={0}>
-              <Grid item lg={3} sm={2}>
+              <Grid item lg={2} sm={2} md={2} xs={2}>
                 <UserCardList onSelect={this.selectUser} />
               </Grid>
               <Divider orientation="vertical" flexItem={true} />
-              <Grid item>
+              <Grid item lg={9} sm={9} md={9} xs={9}>
                 <UserDetailComp userId={this.state.selectedId} />
               </Grid>
             </Grid>
