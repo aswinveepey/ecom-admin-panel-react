@@ -12,6 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Divider from "@material-ui/core/Divider";
 //material ui lab imports
 import Autocomplete from "@material-ui/lab/Autocomplete";
 //material ui icon imports
@@ -24,6 +25,7 @@ import { BASE_URL } from "../../constants";
 
 class UserDetailComp extends React.Component {
   state = {
+    paperelevation: 0,
     userid: "",
     userdata: "",
     fetchstatus: "init",
@@ -128,9 +130,13 @@ class UserDetailComp extends React.Component {
         )}
         {/* Show user details */}
         {this.state.fetchstatus === "fetched" && (
-          <Paper className="paper-box" variant="outlined">
+          <Paper
+            className="paper-box"
+            variant="elevation"
+            elevation={this.state.paperelevation}
+          >
             <form onSubmit={this.handleSubmit}>
-              <Grid container direction="column" spacing={1}>
+              <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <Grid container direction="row" alignContent="center">
                     <Grid item style={{ paddingTop: "10px" }}>
@@ -145,7 +151,12 @@ class UserDetailComp extends React.Component {
                     <Grid item>
                       {!this.state.editTogggle && (
                         <IconButton
-                          onClick={() => this.setState({ editTogggle: true })}
+                          onClick={() =>
+                            this.setState({
+                              editTogggle: true,
+                              paperelevation: 24,
+                            })
+                          }
                         >
                           <EditIcon color="secondary" />
                         </IconButton>
@@ -155,7 +166,10 @@ class UserDetailComp extends React.Component {
                         <div>
                           <IconButton
                             onClick={() =>
-                              this.setState({ editTogggle: false })
+                              this.setState({
+                                editTogggle: false,
+                                paperelevation: 0,
+                              })
                             }
                           >
                             <CloseIcon color="secondary" />
@@ -163,7 +177,10 @@ class UserDetailComp extends React.Component {
                           <IconButton
                             type="submit"
                             onClick={() =>
-                              this.setState({ editTogggle: false })
+                              this.setState({
+                                editTogggle: false,
+                                paperelevation: 0,
+                              })
                             }
                           >
                             <CheckIcon color="primary" />
@@ -176,145 +193,163 @@ class UserDetailComp extends React.Component {
                 {/* Show user details inside form to enable submit. Editable state controlled using edittoggle */}
                 <Grid item>
                   <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.firstname}
-                        label="First Name"
-                        name="firstname"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
+                    <Grid item xs={3}>
+                      <Typography variant="subtitle1">
+                        Contact Details
+                      </Typography>
                     </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.lastname}
-                        label="Last Name"
-                        name="lastname"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.contactnumber}
-                        label="Contact Number"
-                        name="contactnumber"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.designation}
-                        label="Designation"
-                        name="designation"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        value={this.state.userdata.contactaddress}
-                        label="Contact Address"
-                        name="contactaddress"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Autocomplete
-                        disabled={!this.state.editTogggle}
-                        options={this.state.roledata}
-                        getOptionSelected={(option, value) =>
-                          option.name === value.name
-                        }
-                        getOptionLabel={(option) => option.name}
-                        defaultValue={this.state.userdata.role}
-                        renderInput={(params) => (
+                    <Grid item xs={9}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
                           <TextField
-                            {...params}
+                            value={this.state.userdata.firstname}
+                            label="First Name"
+                            name="firstname"
                             variant="outlined"
-                            label="Role"
+                            fullWidth={true}
                             disabled={!this.state.editTogggle}
                           />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Autocomplete
-                        multiple
-                        disabled={!this.state.editTogggle}
-                        options={this.state.territorydata}
-                        getOptionSelected={(option, value) =>
-                          option.name === value.name
-                        }
-                        getOptionLabel={(option) => option.name}
-                        defaultValue={this.state.userdata.territories.map(
-                          (data) => data.name
-                        )}
-                        filterSelectedOptions
-                        renderInput={(params) => (
+                        </Grid>
+                        <Grid item xs={12}>
                           <TextField
-                            {...params}
+                            value={this.state.userdata.lastname}
+                            label="Last Name"
+                            name="lastname"
                             variant="outlined"
-                            label="Territories"
+                            fullWidth={true}
                             disabled={!this.state.editTogggle}
                           />
-                        )}
-                      />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={this.state.userdata.contactnumber}
+                            label="Contact Number"
+                            name="contactnumber"
+                            variant="outlined"
+                            fullWidth={true}
+                            disabled={!this.state.editTogggle}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={this.state.userdata.designation}
+                            label="Designation"
+                            name="designation"
+                            variant="outlined"
+                            fullWidth={true}
+                            disabled={!this.state.editTogggle}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={this.state.userdata.contactaddress}
+                            label="Contact Address"
+                            name="contactaddress"
+                            variant="outlined"
+                            fullWidth={true}
+                            disabled={!this.state.editTogggle}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Autocomplete
+                            disabled={!this.state.editTogggle}
+                            options={this.state.roledata}
+                            getOptionSelected={(option, value) =>
+                              option.name === value.name
+                            }
+                            getOptionLabel={(option) => option.name}
+                            defaultValue={this.state.userdata.role}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Role"
+                                disabled={!this.state.editTogggle}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Autocomplete
+                            multiple
+                            disabled={!this.state.editTogggle}
+                            options={this.state.territorydata}
+                            getOptionSelected={(option, value) =>
+                              option.name === value.name
+                            }
+                            getOptionLabel={(option) => option.name}
+                            defaultValue={this.state.userdata.territories.map(
+                              (data) => data.name
+                            )}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Territories"
+                                disabled={!this.state.editTogggle}
+                              />
+                            )}
+                          />
+                        </Grid>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">
+                  </Grid>
+                </Grid>
+                <Divider />
+                <Grid item>
+                  <Grid container spacing={1}>
+                    <Grid item sm={3}>
+                      <Typography variant="subtitle1">
                         Authentication Details
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.auth.username}
-                        label="User Name"
-                        name="username"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.auth.email}
-                        label="Registered Email"
-                        name="email"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        value={this.state.userdata.auth.mobilenumber}
-                        label="Registered Mobile Number"
-                        name="mobilenumber"
-                        variant="outlined"
-                        fullWidth={true}
-                        disabled={!this.state.editTogggle}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={this.state.userdata.auth.status}
-                            disabled={!this.state.editTogggle}
-                            color="primary"
+                    <Grid item sm={9}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={this.state.userdata.auth.status}
+                                disabled={!this.state.editTogggle}
+                                color="primary"
+                              />
+                            }
+                            label="User status"
+                            labelPlacement="start"
                           />
-                        }
-                        label='User status'
-                        labelPlacement='start'
-                      />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={this.state.userdata.auth.username}
+                            label="User Name"
+                            name="username"
+                            variant="outlined"
+                            fullWidth={true}
+                            disabled={!this.state.editTogggle}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={this.state.userdata.auth.email}
+                            label="Registered Email"
+                            name="email"
+                            variant="outlined"
+                            fullWidth={true}
+                            disabled={!this.state.editTogggle}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={this.state.userdata.auth.mobilenumber}
+                            label="Registered Mobile Number"
+                            name="mobilenumber"
+                            variant="outlined"
+                            fullWidth={true}
+                            disabled={!this.state.editTogggle}
+                          />
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
