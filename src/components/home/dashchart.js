@@ -5,7 +5,7 @@ import {Paper, Typography, Grid} from '@material-ui/core'
 class DashChartComp extends React.Component {
   state = {
     line1: {
-      title: "Category Wise GMV",
+      title: "Monthly GMV",
       data: {
         labels: ["January", "February", "March", "April", "May", "June"],
         datasets: [
@@ -31,23 +31,23 @@ class DashChartComp extends React.Component {
       },
     },
     pie1: {
-      title: "Category Wise GMV",
+      title: "Division Wise GMV",
       data: {
         datasets: [
           {
             data: [10, 20, 30],
-            label: "Category Wise GMV",
+            label: "Division Wise GMV",
             backgroundColor: ["#93948d", "#eaf2b6", "rgb(255, 99, 134)"],
           },
         ],
 
         // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: ["Category1", "Category2", "Category3"],
+        labels: ["Floor Tiles", "Kitchen Fittings", "Bathroom Fittings"],
       },
       options: {
         title: {
           display: true,
-          text: "Category Wise GMV",
+          text: "Division Wise GMV",
           fontSize: 20,
         },
         legend: { display: true, position: "right" },
