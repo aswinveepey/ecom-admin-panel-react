@@ -10,6 +10,8 @@ import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 //material ui lab imports
 import Autocomplete from "@material-ui/lab/Autocomplete";
 //material ui icon imports
@@ -132,7 +134,12 @@ class UserDetailComp extends React.Component {
                 <Grid item>
                   <Grid container direction="row" alignContent="center">
                     <Grid item style={{ paddingTop: "10px" }}>
-                      <Typography variant="h6">User Details&nbsp;</Typography>
+                      <Typography variant="h6">
+                        {this.state.userdata.firstname +
+                          " " +
+                          this.state.userdata.lastname}
+                        &nbsp;
+                      </Typography>
                       {/* Default state - show user option to edit fields */}
                     </Grid>
                     <Grid item>
@@ -259,6 +266,54 @@ class UserDetailComp extends React.Component {
                             disabled={!this.state.editTogggle}
                           />
                         )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        Authentication Details
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        value={this.state.userdata.auth.username}
+                        label="User Name"
+                        name="username"
+                        variant="outlined"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        value={this.state.userdata.auth.email}
+                        label="Registered Email"
+                        name="email"
+                        variant="outlined"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        value={this.state.userdata.auth.mobilenumber}
+                        label="Registered Mobile Number"
+                        name="mobilenumber"
+                        variant="outlined"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={this.state.userdata.auth.status}
+                            disabled={!this.state.editTogggle}
+                            color="primary"
+                          />
+                        }
+                        label='User status'
+                        labelPlacement='start'
                       />
                     </Grid>
                   </Grid>

@@ -101,8 +101,8 @@ class Login extends React.Component {
                         <Grid container direction="column" spacing={2}>
                           <Grid item>
                             <TextField
-                              type="email"
-                              label="Email"
+                              type='text'
+                              label="Username"
                               name="username"
                               variant="outlined"
                               value={this.state.username}
