@@ -15,6 +15,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 //material ui icon imports
 import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
 //constants relative import
 import { BASE_URL } from "../../constants";
 
@@ -31,7 +32,22 @@ class UserDetailComp extends React.Component {
       {
         name: 'agent'
       }
-    ]
+    ],
+    territorydata:[
+      {
+        name: 'APAC'
+      },
+      {
+        name: 'EMEA'
+      },
+      {
+        name: 'Europe'
+      },
+      {
+        name: 'US'
+      },
+    ],
+
   };
   // check and update changes based on props change from parent
   componentDidUpdate(prevProps) {
@@ -65,6 +81,10 @@ class UserDetailComp extends React.Component {
       this.setState({ fetchstatus: "unAuthenticated" });
     }
   };
+  handlesubmit = async (event)=>{
+    event.preventDefault();
+    this.setState({ editTogggle: false });
+  }
   render() {
     return (
       <React.Fragment>
@@ -86,30 +106,46 @@ class UserDetailComp extends React.Component {
         {/* Show user details */}
         {this.state.fetchstatus === "fetched" && (
           <Paper className="paper-box" variant="outlined">
-            <Grid container direction="column" spacing={1}>
-              <Grid item>
-                <Typography variant="h6">
-                  User Details&nbsp;
-                  {/* Default state - show user option to edit fields */}
-                  {!this.state.editTogggle && (
-                    <IconButton
-                      onClick={() => this.setState({ editTogggle: true })}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  )}
-                  {/* If editing, show submit and cancel options */}
-                  {this.state.editTogggle && (
-                    <IconButton
-                      onClick={() => this.setState({ editTogggle: false })}
-                    >
-                      <CheckIcon color="action" />
-                    </IconButton>
-                  )}
-                </Typography>
-              </Grid>
-              {/* Show user details inside form to enable submit. Editable state controlled using edittoggle */}
-              <form>
+            <form onSubmit={this.handleSubmit}>
+              <Grid container direction="column" spacing={1}>
+                <Grid item>
+                  <Grid container direction="row" alignContent="center">
+                    <Grid item style={{ paddingTop: "10px" }}>
+                      <Typography variant="h6">User Details&nbsp;</Typography>
+                      {/* Default state - show user option to edit fields */}
+                    </Grid>
+                    <Grid item>
+                      {!this.state.editTogggle && (
+                        <IconButton
+                          onClick={() => this.setState({ editTogggle: true })}
+                        >
+                          <EditIcon color="secondary" />
+                        </IconButton>
+                      )}
+                      {/* If editing, show submit and cancel options */}
+                      {this.state.editTogggle && (
+                        <div>
+                          <IconButton
+                            onClick={() =>
+                              this.setState({ editTogggle: false })
+                            }
+                          >
+                            <CloseIcon color="secondary" />
+                          </IconButton>
+                          <IconButton
+                            type="submit"
+                            onClick={() =>
+                              this.setState({ editTogggle: false })
+                            }
+                          >
+                            <CheckIcon color="primary" />
+                          </IconButton>
+                        </div>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {/* Show user details inside form to enable submit. Editable state controlled using edittoggle */}
                 <Grid item>
                   <Grid container spacing={1}>
                     <Grid item xs={6}>
@@ -181,10 +217,33 @@ class UserDetailComp extends React.Component {
                         )}
                       />
                     </Grid>
+                    <Grid item xs={12}>
+                      <Autocomplete
+                        multiple
+                        disabled={!this.state.editTogggle}
+                        options={this.state.territorydata}
+                        getOptionSelected={(option, value) =>
+                          option.name === value.name
+                        }
+                        getOptionLabel={(option) => option.name}
+                        defaultValue={this.state.userdata.territories.map(
+                          (data) => data.name
+                        )}
+                        filterSelectedOptions
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            label="Territories"
+                            disabled={!this.state.editTogggle}
+                          />
+                        )}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </form>
-            </Grid>
+              </Grid>
+            </form>
           </Paper>
         )}
       </React.Fragment>
