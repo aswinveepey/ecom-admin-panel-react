@@ -32,14 +32,23 @@ class UserDetailComp extends React.Component {
     editTogggle: false,
     roledata: [],
     territorydata: [],
+    divisiondata: [],
     token: Cookies.get("token"),
-    formData:{
-      username:null,
-    }
+    formData: {
+      username: null,
+    },
   };
+  //Life cycle methods
   componentDidMount() {
     this.fetchRoles();
     this.fetchTerritories();
+    this.fetchDivisions();
+  }
+  // check and update changes based on props change from parent
+  componentDidUpdate(prevProps) {
+    if (!(this.props.userId === prevProps.userId)) {
+      this.fetchUserData(this.props.userId);
+    }
   }
   //set the token
   //get data from roles
@@ -51,10 +60,7 @@ class UserDetailComp extends React.Component {
         Authorization: this.state.token,
       },
     };
-    const fetchResponse = await fetch(
-      BASE_URL + "role/",
-      requestOptions
-    );
+    const fetchResponse = await fetch(BASE_URL + "role/", requestOptions);
     const { status } = fetchResponse;
     const roleResponse = await fetchResponse.json();
     if (status === 200) {
@@ -76,13 +82,22 @@ class UserDetailComp extends React.Component {
       this.setState({ territorydata: territoryResponse });
     }
   };
-  //get data from territories
-  // check and update changes based on props change from parent
-  componentDidUpdate(prevProps) {
-    if (!(this.props.userId === prevProps.userId)) {
-      this.fetchUserData(this.props.userId);
+  fetchDivisions = async () => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: this.state.token,
+      },
+    };
+    const fetchResponse = await fetch(BASE_URL + "division/", requestOptions);
+    const { status } = fetchResponse;
+    const divisionResponse = await fetchResponse.json();
+    if (status === 200) {
+      this.setState({ divisiondata: divisionResponse });
     }
-  }
+  };
+  //get data from territories
   // get the user data from api
   fetchUserData = async (userId) => {
     this.setState({ fetchstatus: "loading" });
@@ -99,7 +114,6 @@ class UserDetailComp extends React.Component {
     );
     const { status } = fetchResponse;
     const userResponse = await fetchResponse.json();
-    console.log(userResponse);
     if (status === 200) {
       this.setState({ fetchstatus: "fetched", userdata: userResponse.data });
     } else {
@@ -273,13 +287,44 @@ class UserDetailComp extends React.Component {
                           <Autocomplete
                             multiple
                             disabled={!this.state.editTogggle}
-                            options={this.state.territorydata}
+                            options={this.state.territorydata.map(
+                              (data) => data
+                            )}
                             getOptionSelected={(option, value) =>
-                              option.name === value.name
+                              option? option.name === value.name : false
                             }
-                            getOptionLabel={(option) => option.name}
+                            getOptionLabel={(option) =>
+                              option ? option.name : ""
+                            }
                             defaultValue={this.state.userdata.territories.map(
-                              (data) => data.name
+                              (data) => data
+                            )}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Territories"
+                                disabled={!this.state.editTogggle}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Autocomplete
+                            multiple
+                            disabled={!this.state.editTogggle}
+                            options={this.state.divisiondata.map(
+                              (data) => data
+                            )}
+                            getOptionSelected={(option, value) =>
+                              option? option.name === value.name : false
+                            }
+                            getOptionLabel={(option) =>
+                              option ? option.name : ""
+                            }
+                            defaultValue={this.state.userdata.divisions.map(
+                              (data) => data
                             )}
                             filterSelectedOptions
                             renderInput={(params) => (
