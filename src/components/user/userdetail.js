@@ -22,69 +22,90 @@ import { BASE_URL } from "../../constants";
 
 class UserDetailComp extends React.Component {
   state = {
+    userid: "",
     userdata: "",
     fetchstatus: "init",
     editTogggle: false,
-    roledata:[
-      {
-        name: 'admin'
-      },
-      {
-        name: 'agent'
-      }
-    ],
-    territorydata:[
-      {
-        name: 'APAC'
-      },
-      {
-        name: 'EMEA'
-      },
-      {
-        name: 'Europe'
-      },
-      {
-        name: 'US'
-      },
-    ],
-
+    roledata: [],
+    territorydata: [],
+    token: Cookies.get("token"),
+    formData:{
+      username:null,
+    }
   };
+  componentDidMount() {
+    this.fetchRoles();
+    this.fetchTerritories();
+  }
+  //set the token
+  //get data from roles
+  fetchRoles = async () => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: this.state.token,
+      },
+    };
+    const fetchResponse = await fetch(
+      BASE_URL + "role/",
+      requestOptions
+    );
+    const { status } = fetchResponse;
+    const roleResponse = await fetchResponse.json();
+    if (status === 200) {
+      this.setState({ roledata: roleResponse });
+    }
+  };
+  fetchTerritories = async () => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: this.state.token,
+      },
+    };
+    const fetchResponse = await fetch(BASE_URL + "territory/", requestOptions);
+    const { status } = fetchResponse;
+    const territoryResponse = await fetchResponse.json();
+    if (status === 200) {
+      this.setState({ territorydata: territoryResponse });
+    }
+  };
+  //get data from territories
   // check and update changes based on props change from parent
   componentDidUpdate(prevProps) {
     if (!(this.props.userId === prevProps.userId)) {
       this.fetchUserData(this.props.userId);
     }
-  };
+  }
   // get the user data from api
   fetchUserData = async (userId) => {
-    this.setState({fetchstatus: 'loading'})
-    let token;
-    try {
-      token = Cookies.get("token");
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+    this.setState({ fetchstatus: "loading" });
     const requestOptions = {
       method: "GET",
-      headers: { "Content-Type": "application/json", Authorization: token },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: this.state.token,
+      },
     };
     const fetchResponse = await fetch(
       BASE_URL + "user/" + userId,
       requestOptions
     );
     const { status } = fetchResponse;
-    const jsonResponse = await fetchResponse.json();
+    const userResponse = await fetchResponse.json();
+    console.log(userResponse);
     if (status === 200) {
-      this.setState({ fetchstatus: "fetched", userdata: jsonResponse.data });
+      this.setState({ fetchstatus: "fetched", userdata: userResponse.data });
     } else {
       this.setState({ fetchstatus: "unAuthenticated" });
     }
   };
-  handlesubmit = async (event)=>{
+  handlesubmit = async (event) => {
     event.preventDefault();
     this.setState({ editTogggle: false });
-  }
+  };
   render() {
     return (
       <React.Fragment>
