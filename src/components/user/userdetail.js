@@ -27,16 +27,13 @@ class UserDetailComp extends React.Component {
   state = {
     paperelevation: 0,
     userid: "",
-    userdata: "",
     fetchstatus: "init",
     editTogggle: false,
     roledata: [],
     territorydata: [],
     divisiondata: [],
     token: Cookies.get("token"),
-    formData: {
-      username: null,
-    },
+    formControls: ''
   };
   //Life cycle methods
   componentDidMount() {
@@ -115,7 +112,10 @@ class UserDetailComp extends React.Component {
     const { status } = fetchResponse;
     const userResponse = await fetchResponse.json();
     if (status === 200) {
-      this.setState({ fetchstatus: "fetched", userdata: userResponse.data });
+      this.setState({
+        fetchstatus: "fetched",
+        formControls: userResponse.data,
+      });
     } else {
       this.setState({ fetchstatus: "unAuthenticated" });
     }
@@ -123,6 +123,55 @@ class UserDetailComp extends React.Component {
   handlesubmit = async (event) => {
     event.preventDefault();
     this.setState({ editTogggle: false });
+  };
+  onChangeUserInput = async (event) => {
+    const formControls = this.state.formControls;
+    const name = event.target.name;
+    const value = event.target.value;
+    formControls[name] = value;
+    this.setState({
+      formControls: formControls
+      },
+    );
+  };
+  onChangeRoleInput = async (event, values) => {
+    const formControls = this.state.formControls;
+    formControls.role = values;
+    this.setState({
+      formControls: formControls
+      },
+    );
+    console.log(this.state.formControls)
+  };
+  onChangeTerritoryInput = async (event, values) => {
+    const formControls = this.state.formControls;
+    formControls.territories= values;
+    this.setState({
+      formControls: formControls
+      },
+    );
+  };
+  onChangeDivisionInput = async (event, values) => {
+    const formControls = this.state.formControls;
+    formControls.divisions = values;
+    this.setState({
+      formControls: formControls
+      },
+    );
+  };
+  onChangeAuthInput = async (event) => {
+    const formControls = this.state.formControls;
+    const name = event.target.name;
+    const value = event.target.value;
+    if(name==='status'){
+      formControls.auth[name] = event.target.checked;
+    } else{
+      formControls.auth[name] = value;
+    }
+    this.setState({
+      formControls: formControls
+      },
+    );
   };
   render() {
     return (
@@ -155,9 +204,9 @@ class UserDetailComp extends React.Component {
                   <Grid container direction="row" alignContent="center">
                     <Grid item style={{ paddingTop: "10px" }}>
                       <Typography variant="h6">
-                        {this.state.userdata.firstname +
+                        {this.state.formControls.firstname +
                           " " +
-                          this.state.userdata.lastname}
+                          this.state.formControls.lastname}
                         &nbsp;
                       </Typography>
                       {/* Default state - show user option to edit fields */}
@@ -216,52 +265,61 @@ class UserDetailComp extends React.Component {
                       <Grid container spacing={2}>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.firstname}
+                            value={this.state.formControls.firstname}
                             label="First Name"
                             name="firstname"
                             variant="outlined"
                             fullWidth={true}
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeUserInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.lastname}
+                            value={this.state.formControls.lastname}
                             label="Last Name"
                             name="lastname"
                             variant="outlined"
                             fullWidth={true}
+                            name="lastname"
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeUserInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.contactnumber}
+                            value={this.state.formControls.contactnumber}
                             label="Contact Number"
                             name="contactnumber"
                             variant="outlined"
                             fullWidth={true}
+                            name="contactnumber"
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeUserInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.designation}
+                            value={this.state.formControls.designation}
                             label="Designation"
                             name="designation"
                             variant="outlined"
+                            name="designation"
                             fullWidth={true}
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeUserInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.contactaddress}
+                            value={this.state.formControls.contactaddress}
                             label="Contact Address"
                             name="contactaddress"
                             variant="outlined"
                             fullWidth={true}
+                            name="contactaddress"
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeUserInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -272,7 +330,9 @@ class UserDetailComp extends React.Component {
                               option.name === value.name
                             }
                             getOptionLabel={(option) => option.name}
-                            defaultValue={this.state.userdata.role}
+                            defaultValue={this.state.formControls.role}
+                            name="name"
+                            onChange={this.onChangeRoleInput}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
@@ -291,15 +351,17 @@ class UserDetailComp extends React.Component {
                               (data) => data
                             )}
                             getOptionSelected={(option, value) =>
-                              option? option.name === value.name : false
+                              option ? option.name === value.name : false
                             }
                             getOptionLabel={(option) =>
                               option ? option.name : ""
                             }
-                            defaultValue={this.state.userdata.territories.map(
+                            defaultValue={this.state.formControls.territories.map(
                               (data) => data
                             )}
                             filterSelectedOptions
+                            name="name"
+                            onChange={this.onChangeTerritoryInput}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
@@ -318,20 +380,22 @@ class UserDetailComp extends React.Component {
                               (data) => data
                             )}
                             getOptionSelected={(option, value) =>
-                              option? option.name === value.name : false
+                              option ? option.name === value.name : false
                             }
                             getOptionLabel={(option) =>
                               option ? option.name : ""
                             }
-                            defaultValue={this.state.userdata.divisions.map(
+                            defaultValue={this.state.formControls.divisions.map(
                               (data) => data
                             )}
                             filterSelectedOptions
+                            name="name"
+                            onChange={this.onChangeDivisionInput}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
                                 variant="outlined"
-                                label="Territories"
+                                label="Divisions"
                                 disabled={!this.state.editTogggle}
                               />
                             )}
@@ -355,8 +419,10 @@ class UserDetailComp extends React.Component {
                           <FormControlLabel
                             control={
                               <Switch
-                                checked={this.state.userdata.auth.status}
+                                name="status"
+                                checked={this.state.formControls.auth.status}
                                 disabled={!this.state.editTogggle}
+                                onChange={this.onChangeAuthInput}
                                 color="primary"
                               />
                             }
@@ -366,32 +432,35 @@ class UserDetailComp extends React.Component {
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.auth.username}
+                            value={this.state.formControls.auth.username}
                             label="User Name"
                             name="username"
                             variant="outlined"
                             fullWidth={true}
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeAuthInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.auth.email}
+                            value={this.state.formControls.auth.email}
                             label="Registered Email"
                             name="email"
                             variant="outlined"
                             fullWidth={true}
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeAuthInput}
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
-                            value={this.state.userdata.auth.mobilenumber}
+                            value={this.state.formControls.auth.mobilenumber}
                             label="Registered Mobile Number"
                             name="mobilenumber"
                             variant="outlined"
                             fullWidth={true}
                             disabled={!this.state.editTogggle}
+                            onChange={this.onChangeAuthInput}
                           />
                         </Grid>
                       </Grid>
