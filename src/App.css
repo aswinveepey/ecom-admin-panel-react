@@ -52,3 +52,12 @@ MuiPaper {
   padding: 15px;
   width: 100%;
 }
+
+.fab {
+    margin: 0px;
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    position: fixed;
+};

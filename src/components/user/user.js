@@ -2,6 +2,7 @@ import React from 'react'
 import AppBarComp from "../common/appbar";
 import UserCardList from './usercardlist'
 import UserDetailComp from './userdetail'
+import UserNewComp from "./usernew";
 import {
   LinearProgress,
   Grid,
@@ -19,10 +20,12 @@ class UserComp extends React.Component {
   //declare initial states
   state = {
     fetchstatus: "fetched",
-    selectedId: "",
+    selectedId: null,
+    newuserflag: false
   };
   selectUser(userId){
-    this.setState({ selectedId: userId });
+    console.log(userId)
+    this.setState({ selectedId: userId, newuserflag: false });
   }
   //render
   render() {
@@ -37,15 +40,27 @@ class UserComp extends React.Component {
             <Grid container direction="row" spacing={0}>
               <Grid item lg={2} sm={2} md={2} xs={2}>
                 <UserCardList onSelect={this.selectUser} />
+                <Fab
+                  color="primary"
+                  aria-label="add"
+                  className="fab"
+                  onClick={() => {
+                    this.setState({ newuserflag: true });
+                  }}
+                >
+                  <AddIcon />
+                </Fab>
               </Grid>
               <Divider orientation="vertical" flexItem={true} />
               <Grid item lg={9} sm={9} md={9} xs={9}>
-                <UserDetailComp userId={this.state.selectedId} />
+                {!this.state.newuserflag && (
+                  <UserDetailComp userId={this.state.selectedId} />
+                )}
+                {this.state.newuserflag && (
+                  <UserNewComp/>
+                )}
               </Grid>
             </Grid>
-            {/* <Fab color="primary" aria-label="add">
-              <AddIcon />
-            </Fab> */}
           </Paper>
         )}
       </div>

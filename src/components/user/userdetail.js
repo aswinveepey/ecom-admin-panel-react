@@ -26,7 +26,7 @@ import { BASE_URL } from "../../constants";
 class UserDetailComp extends React.Component {
   state = {
     paperelevation: 0,
-    userid: "",
+    userid: this.props.userId,
     fetchstatus: "init",
     editTogggle: false,
     roledata: [],
@@ -40,6 +40,7 @@ class UserDetailComp extends React.Component {
     this.fetchRoles();
     this.fetchTerritories();
     this.fetchDivisions();
+    this.state.userid && this.fetchUserData(this.props.userId);
   }
   // check and update changes based on props change from parent
   componentDidUpdate(prevProps) {
@@ -97,6 +98,7 @@ class UserDetailComp extends React.Component {
   //get data from territories
   // get the user data from api
   fetchUserData = async (userId) => {
+    console.log("Function Called")
     this.setState({ fetchstatus: "loading" });
     const requestOptions = {
       method: "GET",
