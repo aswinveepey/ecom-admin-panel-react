@@ -98,7 +98,6 @@ class UserDetailComp extends React.Component {
   //get data from territories
   // get the user data from api
   fetchUserData = async (userId) => {
-    console.log("Function Called")
     this.setState({ fetchstatus: "loading" });
     const requestOptions = {
       method: "GET",

@@ -51,15 +51,14 @@ class UserCardList extends React.Component {
           {this.state.fetchstatus === "fetched" &&
             this.state.userdata.map((data) => {
               return (
-                <div>
+                <div key={data._id}>
                   <Grid item>
                     <Card
                       elevation={0}
-                      className='list-card-item'
+                      className="list-card-item"
                       onClick={(e) => {
                         this.handleCardClick(e, data._id);
                       }}
-                      key={data._id}
                     >
                       <CardContent>
                         <Grid container spacing={1} justify="flex-start">
