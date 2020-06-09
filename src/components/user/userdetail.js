@@ -120,9 +120,34 @@ class UserDetailComp extends React.Component {
       this.setState({ fetchstatus: "unAuthenticated" });
     }
   };
-  handlesubmit = async (event) => {
+  handlesubmit = async(event) => {
     event.preventDefault();
-    this.setState({ editTogggle: false });
+    this.setState({ editTogggle: false, paperelevation:0, poststatus:'loading' });
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: this.state.token,
+      },
+      body: JSON.stringify(this.state.formControls),
+    };
+    try {
+      const fetchResponse = await fetch(
+        BASE_URL + "user/" + this.state.formControls._id,
+        requestOptions
+      );
+      const { status } = fetchResponse;
+      const userResponse = await fetchResponse.json();
+      if (status === 200) {
+        this.setState({
+          poststatus: "succesful",
+        });
+      } else {
+        this.setState({ poststatus: "error" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   onChangeUserInput = async (event) => {
     const formControls = this.state.formControls;
@@ -141,7 +166,6 @@ class UserDetailComp extends React.Component {
       formControls: formControls
       },
     );
-    console.log(this.state.formControls)
   };
   onChangeTerritoryInput = async (event, values) => {
     const formControls = this.state.formControls;
@@ -198,7 +222,7 @@ class UserDetailComp extends React.Component {
             variant="elevation"
             elevation={this.state.paperelevation}
           >
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.handlesubmit}>
               <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <Grid container direction="row" alignContent="center">
@@ -239,12 +263,12 @@ class UserDetailComp extends React.Component {
                           </IconButton>
                           <IconButton
                             type="submit"
-                            onClick={() =>
-                              this.setState({
-                                editTogggle: false,
-                                paperelevation: 0,
-                              })
-                            }
+                            // onClick={() =>
+                            //   this.setState({
+                            //     editTogggle: false,
+                            //     paperelevation: 0,
+                            //   })
+                            // }
                           >
                             <CheckIcon color="primary" />
                           </IconButton>
@@ -278,7 +302,6 @@ class UserDetailComp extends React.Component {
                           <TextField
                             value={this.state.formControls.lastname}
                             label="Last Name"
-                            name="lastname"
                             variant="outlined"
                             fullWidth={true}
                             name="lastname"
@@ -293,7 +316,6 @@ class UserDetailComp extends React.Component {
                             name="contactnumber"
                             variant="outlined"
                             fullWidth={true}
-                            name="contactnumber"
                             disabled={!this.state.editTogggle}
                             onChange={this.onChangeUserInput}
                           />
@@ -304,7 +326,6 @@ class UserDetailComp extends React.Component {
                             label="Designation"
                             name="designation"
                             variant="outlined"
-                            name="designation"
                             fullWidth={true}
                             disabled={!this.state.editTogggle}
                             onChange={this.onChangeUserInput}
@@ -317,7 +338,6 @@ class UserDetailComp extends React.Component {
                             name="contactaddress"
                             variant="outlined"
                             fullWidth={true}
-                            name="contactaddress"
                             disabled={!this.state.editTogggle}
                             onChange={this.onChangeUserInput}
                           />
@@ -330,7 +350,7 @@ class UserDetailComp extends React.Component {
                               option.name === value.name
                             }
                             getOptionLabel={(option) => option.name}
-                            defaultValue={this.state.formControls.role}
+                            value={this.state.formControls.role}
                             name="name"
                             onChange={this.onChangeRoleInput}
                             renderInput={(params) => (
@@ -356,7 +376,7 @@ class UserDetailComp extends React.Component {
                             getOptionLabel={(option) =>
                               option ? option.name : ""
                             }
-                            defaultValue={this.state.formControls.territories.map(
+                            value={this.state.formControls.territories.map(
                               (data) => data
                             )}
                             filterSelectedOptions
@@ -385,7 +405,7 @@ class UserDetailComp extends React.Component {
                             getOptionLabel={(option) =>
                               option ? option.name : ""
                             }
-                            defaultValue={this.state.formControls.divisions.map(
+                            value={this.state.formControls.divisions.map(
                               (data) => data
                             )}
                             filterSelectedOptions
