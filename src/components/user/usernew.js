@@ -270,6 +270,7 @@ class UserNewComp extends React.Component {
       <Grid container spacing={1}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Autocomplete
+            disabled={disabled}
             options={this.state.roledata}
             getOptionSelected={(option, value) => option.name === value.name}
             getOptionLabel={(option) => option.name}
@@ -278,7 +279,6 @@ class UserNewComp extends React.Component {
             onChange={this.onChangeRoleInput}
             renderInput={(params) => (
               <TextField
-                disabled={disabled}
                 {...params}
                 variant="standard"
                 label="Role"
@@ -289,6 +289,7 @@ class UserNewComp extends React.Component {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Autocomplete
+            disabled={disabled}
             multiple
             options={
               this.state.territorydata &&
@@ -317,6 +318,7 @@ class UserNewComp extends React.Component {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Autocomplete
+            disabled={disabled}
             multiple
             options={
               this.state.divisiondata &&
@@ -357,10 +359,15 @@ class UserNewComp extends React.Component {
       default:
         return (
           <form onSubmit={this.handleSubmit}>
-            <Grid container direction='column'>
+            <Grid container direction="column">
               <Grid item>{this.varComp(true).authComp}</Grid>
               <Grid item>{this.varComp(true).userComp}</Grid>
               <Grid item>{this.varComp(true).mapComp}</Grid>
+              <Grid item>
+                <Button color="primary" variant="contained" type="submit">
+                  Verify & Submit
+                </Button>
+              </Grid>
             </Grid>
           </form>
         );
@@ -381,29 +388,23 @@ class UserNewComp extends React.Component {
                   <Grid container direction="column" spacing={2}>
                     <Grid item>{this.getStepContent(index)}</Grid>
                     <Grid item>
-                      <Grid container spacing={1}>
-                        <Grid item>
-                          <Button
-                            disabled={this.state.activeStep <= 0}
-                            onClick={() => {
-                              this.setState({
-                                activeStep: this.state.activeStep - 1,
-                              });
-                            }}
-                          >
-                            Back
-                          </Button>
-                        </Grid>
-                        <Grid item>
-                          {this.state.activeStep === this.steps.length - 1 ? (
+                      {this.state.activeStep === this.steps.length - 1 ? (
+                        <div></div>
+                      ) : (
+                        <Grid container spacing={1}>
+                          <Grid item>
                             <Button
-                              color="primary"
-                              variant="contained"
-                              type="submit"
+                              disabled={this.state.activeStep <= 0}
+                              onClick={() => {
+                                this.setState({
+                                  activeStep: this.state.activeStep - 1,
+                                });
+                              }}
                             >
-                              Submit
+                              Back
                             </Button>
-                          ) : (
+                          </Grid>
+                          <Grid item>
                             <Button
                               color="primary"
                               variant="contained"
@@ -415,9 +416,9 @@ class UserNewComp extends React.Component {
                             >
                               Next
                             </Button>
-                          )}
+                          </Grid>
                         </Grid>
-                      </Grid>
+                      )}
                     </Grid>
                   </Grid>
                 </StepContent>

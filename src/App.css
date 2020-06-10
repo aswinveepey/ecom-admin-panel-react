@@ -34,7 +34,7 @@ MuiPaper {
 .paper-box{
   padding: 3%;
   margin-left: 2%;
-  height: 90vh;
+  min-height: 90vh;
   /* width: 100%; */
   /* overflow: scroll; */
 }
