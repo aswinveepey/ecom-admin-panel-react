@@ -281,14 +281,14 @@ class UserDetailComp extends React.Component {
                 {/* Show user details inside form to enable submit. Editable state controlled using edittoggle */}
                 <Grid item>
                   <Grid container spacing={1}>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={12} lg={3} md={3}>
                       <Typography variant="subtitle1">
                         Contact Details
                       </Typography>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={12} sm={12} lg={9} md={9}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.firstname}
                             label="First Name"
@@ -299,7 +299,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeUserInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.lastname}
                             label="Last Name"
@@ -310,7 +310,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeUserInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.contactnumber}
                             label="Contact Number"
@@ -321,7 +321,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeUserInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.designation}
                             label="Designation"
@@ -332,7 +332,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeUserInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.contactaddress}
                             label="Contact Address"
@@ -343,7 +343,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeUserInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Autocomplete
                             disabled={!this.state.editTogggle}
                             options={this.state.roledata}
@@ -364,7 +364,7 @@ class UserDetailComp extends React.Component {
                             )}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                           <Autocomplete
                             multiple
                             disabled={!this.state.editTogggle}
@@ -393,7 +393,7 @@ class UserDetailComp extends React.Component {
                             )}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                           <Autocomplete
                             multiple
                             disabled={!this.state.editTogggle}
@@ -429,14 +429,14 @@ class UserDetailComp extends React.Component {
                 <Divider />
                 <Grid item>
                   <Grid container spacing={1}>
-                    <Grid item sm={3}>
+                    <Grid item xs={12} sm={12} lg={3} md={3}>
                       <Typography variant="subtitle1">
                         Authentication Details
                       </Typography>
                     </Grid>
-                    <Grid item sm={9}>
+                    <Grid item xs={12} sm={12} lg={9} md={9}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
                           <FormControlLabel
                             control={
                               <Switch
@@ -451,7 +451,7 @@ class UserDetailComp extends React.Component {
                             labelPlacement="start"
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.auth.username}
                             label="User Name"
@@ -462,7 +462,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeAuthInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.auth.email}
                             label="Registered Email"
@@ -473,7 +473,7 @@ class UserDetailComp extends React.Component {
                             onChange={this.onChangeAuthInput}
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                           <TextField
                             value={this.state.formControls.auth.mobilenumber}
                             label="Registered Mobile Number"

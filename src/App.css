@@ -29,12 +29,12 @@ MuiPaper {
   width: 100%;
 }
 .paper-container{
-  padding: 15px;
-  margin: 20px;
+  padding: 2rem;
+  margin: 2rem;
   min-height: 90vh;
 }
 .paper-box{
-  padding: 15px;
+  padding: 2rem;
   /* margin: 20px; */
   margin-left: 2rem;
   min-height: 90vh;
