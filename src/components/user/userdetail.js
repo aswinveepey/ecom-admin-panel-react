@@ -21,6 +21,8 @@ import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 //constants relative import
 import { BASE_URL } from "../../constants";
+//component import
+import SnackBarComp from '../common/snackbar'
 
 
 class UserDetailComp extends React.Component {
@@ -33,7 +35,9 @@ class UserDetailComp extends React.Component {
     territorydata: [],
     divisiondata: [],
     token: Cookies.get("token"),
-    formControls: ''
+    formControls: null,
+    snackbaropen: false,
+    snackbarmessage: null
   };
   //Life cycle methods
   componentDidMount() {
@@ -121,9 +125,13 @@ class UserDetailComp extends React.Component {
       this.setState({ fetchstatus: "unAuthenticated" });
     }
   };
-  handlesubmit = async(event) => {
+  handlesubmit = async (event) => {
     event.preventDefault();
-    this.setState({ editTogggle: false, paperelevation:0, poststatus:'loading' });
+    this.setState({
+      editTogggle: false,
+      paperelevation: 0,
+      poststatus: "loading",
+    });
     const requestOptions = {
       method: "POST",
       headers: {
@@ -142,9 +150,15 @@ class UserDetailComp extends React.Component {
       if (status === 200) {
         this.setState({
           poststatus: "succesful",
+          snackbaropen: true,
+          snackbarmessage: "Succesfully Updated the User"
         });
       } else {
-        this.setState({ poststatus: "error" });
+        this.setState({
+          poststatus: "error",
+          snackbaropen: true,
+          snackbarmessage: "Uh-Oh! Something Went Wrong",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -156,47 +170,42 @@ class UserDetailComp extends React.Component {
     const value = event.target.value;
     formControls[name] = value;
     this.setState({
-      formControls: formControls
-      },
-    );
+      formControls: formControls,
+    });
   };
   onChangeRoleInput = async (event, values) => {
     const formControls = this.state.formControls;
     formControls.role = values;
     this.setState({
-      formControls: formControls
-      },
-    );
+      formControls: formControls,
+    });
   };
   onChangeTerritoryInput = async (event, values) => {
     const formControls = this.state.formControls;
-    formControls.territories= values;
+    formControls.territories = values;
     this.setState({
-      formControls: formControls
-      },
-    );
+      formControls: formControls,
+    });
   };
   onChangeDivisionInput = async (event, values) => {
     const formControls = this.state.formControls;
     formControls.divisions = values;
     this.setState({
-      formControls: formControls
-      },
-    );
+      formControls: formControls,
+    });
   };
   onChangeAuthInput = async (event) => {
     const formControls = this.state.formControls;
     const name = event.target.name;
     const value = event.target.value;
-    if(name==='status'){
+    if (name === "status") {
       formControls.auth[name] = event.target.checked;
-    } else{
+    } else {
       formControls.auth[name] = value;
     }
     this.setState({
-      formControls: formControls
-      },
-    );
+      formControls: formControls,
+    });
   };
   render() {
     return (
@@ -490,6 +499,10 @@ class UserDetailComp extends React.Component {
                 </Grid>
               </Grid>
             </form>
+            <SnackBarComp
+              snackbaropen={this.state.snackbaropen}
+              message={this.state.snackbarmessage}
+            />
           </Paper>
         )}
       </React.Fragment>

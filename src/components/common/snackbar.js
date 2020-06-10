@@ -4,14 +4,15 @@ import {IconButton, Snackbar} from '@material-ui/core'
 import CloseIcon from "@material-ui/icons/Close"
 
 class SnackBarComp extends React.Component {
-  constructor(props) {
-    super(props);
-    console.log(props);
-    
-    this.state = {
-      snackbaropen: props.snackbaropen,
-      message: props.message,
-    };
+  state = {
+    snackbaropen: this.props.snackbaropen,
+    message: this.props.message,
+  };
+  // check and update changes based on props change from parent
+  componentDidUpdate(prevProps) {
+    if (!(this.props.snackbaropen === prevProps.snackbaropen)) {
+      this.setState({snackbaropen: this.props.snackbaropen, message: this.props.message});
+    }
   }
   //handle snackbar close click
   handleSnackBarClose = (event) => {

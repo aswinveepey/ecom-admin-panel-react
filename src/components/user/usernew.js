@@ -2,6 +2,9 @@ import React from 'react'
 import Paper from '@material-ui/core/Paper'
 
 class UserNewComp extends React.Component{
+  handleSubmit = async(event)=>{
+    event.preventDefault();
+  }
   render(){
     return(
       <React.Fragment>
@@ -9,7 +12,11 @@ class UserNewComp extends React.Component{
             className="paper-box"
             variant="elevation"
             elevation={24}
-          ></Paper>
+          >
+            <form onSubmit={this.handleSubmit}>
+
+            </form>
+          </Paper>
       </React.Fragment>
     )
   }
