@@ -66,7 +66,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <AppBar position="static" alignitems="center" color="primary">
+        <AppBar position="static" alignitems="center" color="primary" className='appbar'>
           <Toolbar>
             <Grid container justify="center" wrap="wrap">
               <Grid item>
@@ -75,101 +75,103 @@ class Login extends React.Component {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Grid container direction="column">
-          <Grid item>
-            <Grid container spacing={0} justify="center">
-              <Grid item>
-                <Paper
-                  variant="elevation"
-                  elevation={2}
-                  className="login-background"
-                >
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    spacing={2}
-                    // className="login-form"
+        <Paper className='paper-container'>
+          <Grid container direction="column">
+            <Grid item>
+              <Grid container spacing={0} justify="center">
+                <Grid item>
+                  <Paper
+                    variant="elevation"
+                    elevation={1}
+                    className="login-background"
+                    square
                   >
-                    <Grid item>
-                      <Typography component="h1" variant="h5">
-                        Sign in
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <form onSubmit={this.handleSubmit}>
-                        <Grid container direction="column" spacing={2}>
-                          <Grid item>
-                            <TextField
-                              type='text'
-                              label="Username"
-                              name="username"
-                              variant="outlined"
-                              value={this.state.username}
-                              onChange={(event) =>
-                                this.setState({
-                                  [event.target.name]: event.target.value,
-                                })
-                              }
-                              required
-                              autoFocus
-                              error={this.state.usernameerror}
-                              helperText={
-                                this.state.usernameerror
-                                  ? "Invalid Username"
-                                  : ""
-                              }
-                            />
+                    <Grid
+                      container
+                      direction="column"
+                      justify="center"
+                      spacing={2}
+                    >
+                      <Grid item>
+                        <Typography component="h1" variant="h5">
+                          Sign in
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <form onSubmit={this.handleSubmit}>
+                          <Grid container direction="column" spacing={2}>
+                            <Grid item>
+                              <TextField
+                                type="text"
+                                label="Username"
+                                name="username"
+                                variant="outlined"
+                                value={this.state.username}
+                                onChange={(event) =>
+                                  this.setState({
+                                    [event.target.name]: event.target.value,
+                                  })
+                                }
+                                required
+                                autoFocus
+                                error={this.state.usernameerror}
+                                helperText={
+                                  this.state.usernameerror
+                                    ? "Invalid Username"
+                                    : ""
+                                }
+                              />
+                            </Grid>
+                            <Grid item>
+                              <TextField
+                                type="password"
+                                label="Password"
+                                name="password"
+                                variant="outlined"
+                                value={this.state.password}
+                                onChange={(event) =>
+                                  this.setState({
+                                    [event.target.name]: event.target.value,
+                                  })
+                                }
+                                required
+                                error={this.state.passworderror}
+                                helperText={
+                                  this.state.passworderror
+                                    ? "Invalid Password"
+                                    : ""
+                                }
+                              />
+                            </Grid>
+                            <Grid item>
+                              {this.state.progress ? (
+                                <CircularProgress />
+                              ) : (
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  type="submit"
+                                  className="button-block"
+                                >
+                                  Submit
+                                </Button>
+                              )}
+                            </Grid>
                           </Grid>
-                          <Grid item>
-                            <TextField
-                              type="password"
-                              label="Password"
-                              name="password"
-                              variant="outlined"
-                              value={this.state.password}
-                              onChange={(event) =>
-                                this.setState({
-                                  [event.target.name]: event.target.value,
-                                })
-                              }
-                              required
-                              error={this.state.passworderror}
-                              helperText={
-                                this.state.passworderror
-                                  ? "Invalid Password"
-                                  : ""
-                              }
-                            />
-                          </Grid>
-                          <Grid item>
-                            {this.state.progress ? (
-                              <CircularProgress />
-                            ) : (
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                className="button-block"
-                              >
-                                Submit
-                              </Button>
-                            )}
-                          </Grid>
-                        </Grid>
-                      </form>
+                        </form>
+                      </Grid>
+                      <Grid item>
+                        <Link href="#" variant="body2">
+                          Forgot Password?
+                        </Link>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Link href="#" variant="body2">
-                        Forgot Password?
-                      </Link>
-                    </Grid>
-                  </Grid>
-                </Paper>
+                  </Paper>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Paper>
         {this.state.snackbaropen && (
           <SnackBarComp
             snackbaropen={true}

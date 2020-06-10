@@ -81,8 +81,8 @@ class DashChartComp extends React.Component {
   };
   render() {
     return (
-      <Grid container direction="row" spacing={2}>
-        <Grid item lg={12} md={12} sm={12}>
+      <Grid container direction="row" spacing={1}>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
           <Paper className="chart-box" variant="outlined">
             <Typography gutterBottom={true} variant="h6">
               {/* {this.state.pie1.title} */}
@@ -94,7 +94,7 @@ class DashChartComp extends React.Component {
             />
           </Paper>
         </Grid>
-        <Grid item lg={6} md={12} sm={12}>
+        <Grid item lg={6} md={12} sm={12} xs={12}>
           <Paper className="chart-box" variant="outlined">
             <Typography gutterBottom={true} variant="h6">
               {/* {this.state.pie1.title} */}
@@ -106,7 +106,7 @@ class DashChartComp extends React.Component {
             />
           </Paper>
         </Grid>
-        <Grid item lg={6} md={12} sm={12}>
+        <Grid item lg={6} md={12} sm={12} xs={12}>
           <Paper className="chart-box" variant="outlined">
             <Typography gutterBottom={true} variant="h6">
               {/* {this.state.pie2.title} */}

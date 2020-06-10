@@ -1,11 +1,6 @@
 MuiPaper {
   padding: 20%;
 }
-.login-form
-{
-    justify-content: center;
-    min-height: 90vh;
-}
 .button-block{
   width: 100%;
 }
@@ -15,6 +10,7 @@ MuiPaper {
     min-height: 30vh;
     padding: 50px;
     margin-top:40%;
+    position: relative;
 }
 .navbar-search {
   width: 100%;
@@ -23,22 +19,24 @@ MuiPaper {
   padding: 15px;
 }
 
-.navbar-brand{
-  color: white!important;
-}
 .appbar{
   width: 100%;
+  height: 15vh!important;
 }
 .paper-container{
   padding: 1%;
-  margin: 1%;
+  margin: 2%;
   min-height: 90vh;
+  top: -8vh;
+  position: relative;
+  /* background: lightblue!important; */
 }
 .paper-box{
-  padding: 1%;
-  margin: 1%;
-  min-height: 90vh;
+  padding: 3%;
+  margin-left: 2%;
+  height: 90vh;
   width: 100%;
+  overflow: scroll;
 }
 
 .ag-theme-material{
@@ -47,6 +45,7 @@ MuiPaper {
 
 .info-box{
   padding: 1%;
+  height: 10rem
 }
 
 .chart-box{
@@ -54,11 +53,11 @@ MuiPaper {
 }
 
 .fab {
-    /* top: auto;
-    left: auto; */
-    bottom: 1em;
-    left: auto;
-    position: fixed;
+    bottom: auto;
+    top: -1em;
+    /* right: -1rem; */
+    float: right;
+    position: relative;
 }
 .list-card-item{
 height: 100%;

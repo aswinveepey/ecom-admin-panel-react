@@ -3,14 +3,10 @@ import AppBarComp from "../common/appbar";
 import UserCardList from './usercardlist'
 import UserDetailComp from './userdetail'
 import UserNewComp from "./usernew";
-import {
-  LinearProgress,
-  Grid,
-  Paper,
-  Typography,
-  Divider,
-  Fab,
-} from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 class UserComp extends React.Component {
   constructor(props){
@@ -29,18 +25,18 @@ class UserComp extends React.Component {
   //render
   render() {
     return (
-      <div>
+      <div className='body-class'>
         <AppBarComp title="Users" />
         {this.state.fetchstatus === "loading" && (
           <LinearProgress color="secondary" />
         )}
         {this.state.fetchstatus === "fetched" && (
-          <Paper className="paper-container">
+          <Paper className="paper-container" >
             <Grid container direction="row" spacing={0}>
               <Grid item lg={2} sm={3} md={3} xs={4}>
-                <UserCardList onSelect={this.selectUser} />
                 <Fab
-                  color="primary"
+                  size='small'
+                  color="secondary"
                   aria-label="add"
                   className="fab"
                   onClick={() => {
@@ -49,15 +45,14 @@ class UserComp extends React.Component {
                 >
                   <AddIcon />
                 </Fab>
+                <UserCardList onSelect={this.selectUser} />
               </Grid>
-              <Divider orientation="vertical" flexItem={true} />
+              {/* <Divider orientation="vertical" flexItem={true} /> */}
               <Grid item lg={9} sm={8} md={8} xs={7}>
                 {!this.state.newuserflag && (
                   <UserDetailComp userId={this.state.selectedId} />
                 )}
-                {this.state.newuserflag && (
-                  <UserNewComp/>
-                )}
+                {this.state.newuserflag && <UserNewComp />}
               </Grid>
             </Grid>
           </Paper>

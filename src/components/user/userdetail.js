@@ -1,10 +1,10 @@
 //standard react import
-import React from 'react'
+import React from "react";
 //cookie library import
 import Cookies from "js-cookie";
 //material ui core imports
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
@@ -22,12 +22,11 @@ import CloseIcon from "@material-ui/icons/Close";
 //constants relative import
 import { BASE_URL } from "../../constants";
 //component import
-import SnackBarComp from '../common/snackbar'
-
+import SnackBarComp from "../common/snackbar";
 
 class UserDetailComp extends React.Component {
   state = {
-    paperelevation: 0,
+    paperelevation: 1,
     userid: this.props.userId,
     fetchstatus: "init",
     editTogggle: false,
@@ -37,7 +36,7 @@ class UserDetailComp extends React.Component {
     token: Cookies.get("token"),
     formControls: null,
     snackbaropen: false,
-    snackbarmessage: null
+    snackbarmessage: null,
   };
   //Life cycle methods
   componentDidMount() {
@@ -151,7 +150,7 @@ class UserDetailComp extends React.Component {
         this.setState({
           poststatus: "succesful",
           snackbaropen: true,
-          snackbarmessage: "Succesfully Updated the User"
+          snackbarmessage: "Succesfully Updated the User",
         });
       } else {
         this.setState({
@@ -212,11 +211,15 @@ class UserDetailComp extends React.Component {
       <React.Fragment>
         {/* Initial conditions - ask user to select a user */}
         {this.state.fetchstatus === "init" && (
-          <Container>
+          <Paper
+            className="paper-box"
+            variant="elevation"
+            elevation={this.state.paperelevation}
+          >
             <Typography variant="h6">
               Select a User to see the details
             </Typography>
-          </Container>
+          </Paper>
         )}
         {/* Show loading indication to user */}
         {this.state.fetchstatus === "loading" && (
@@ -290,210 +293,194 @@ class UserDetailComp extends React.Component {
                 {/* Show user details inside form to enable submit. Editable state controlled using edittoggle */}
                 <Grid item>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} sm={12} lg={3} md={3}>
-                      <Typography variant="subtitle1">
-                        Contact Details
-                      </Typography>
+                    <Grid item xs={12} sm={12} lg={12} md={12}>
+                      <Typography variant="h5">Contact Details</Typography>
                     </Grid>
-                    <Grid item xs={12} sm={12} lg={9} md={9}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.firstname}
-                            label="First Name"
-                            name="firstname"
-                            variant="outlined"
-                            fullWidth={true}
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeUserInput}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.lastname}
-                            label="Last Name"
-                            variant="outlined"
-                            fullWidth={true}
-                            name="lastname"
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeUserInput}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.contactnumber}
-                            label="Contact Number"
-                            name="contactnumber"
-                            variant="outlined"
-                            fullWidth={true}
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeUserInput}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.designation}
-                            label="Designation"
-                            name="designation"
-                            variant="outlined"
-                            fullWidth={true}
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeUserInput}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.contactaddress}
-                            label="Contact Address"
-                            name="contactaddress"
-                            variant="outlined"
-                            fullWidth={true}
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeUserInput}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <Autocomplete
-                            disabled={!this.state.editTogggle}
-                            options={this.state.roledata}
-                            getOptionSelected={(option, value) =>
-                              option.name === value.name
-                            }
-                            getOptionLabel={(option) => option.name}
-                            value={this.state.formControls.role}
-                            name="name"
-                            onChange={this.onChangeRoleInput}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                label="Role"
-                                disabled={!this.state.editTogggle}
-                              />
-                            )}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                          <Autocomplete
-                            multiple
-                            disabled={!this.state.editTogggle}
-                            options={this.state.territorydata.map(
-                              (data) => data
-                            )}
-                            getOptionSelected={(option, value) =>
-                              option ? option.name === value.name : false
-                            }
-                            getOptionLabel={(option) =>
-                              option ? option.name : ""
-                            }
-                            value={this.state.formControls.territories.map(
-                              (data) => data
-                            )}
-                            filterSelectedOptions
-                            name="name"
-                            onChange={this.onChangeTerritoryInput}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                label="Territories"
-                                disabled={!this.state.editTogggle}
-                              />
-                            )}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                          <Autocomplete
-                            multiple
-                            disabled={!this.state.editTogggle}
-                            options={this.state.divisiondata.map(
-                              (data) => data
-                            )}
-                            getOptionSelected={(option, value) =>
-                              option ? option.name === value.name : false
-                            }
-                            getOptionLabel={(option) =>
-                              option ? option.name : ""
-                            }
-                            value={this.state.formControls.divisions.map(
-                              (data) => data
-                            )}
-                            filterSelectedOptions
-                            name="name"
-                            onChange={this.onChangeDivisionInput}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                label="Divisions"
-                                disabled={!this.state.editTogggle}
-                              />
-                            )}
-                          />
-                        </Grid>
-                      </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.firstname}
+                        label="First Name"
+                        name="firstname"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeUserInput}
+                      />
                     </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.lastname}
+                        label="Last Name"
+                        variant="standard"
+                        fullWidth={true}
+                        name="lastname"
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeUserInput}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.contactnumber}
+                        label="Contact Number"
+                        name="contactnumber"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeUserInput}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.designation}
+                        label="Designation"
+                        name="designation"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeUserInput}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.contactaddress}
+                        label="Contact Address"
+                        name="contactaddress"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeUserInput}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <Autocomplete
+                        disabled={!this.state.editTogggle}
+                        options={this.state.roledata}
+                        getOptionSelected={(option, value) =>
+                          option.name === value.name
+                        }
+                        getOptionLabel={(option) => option.name}
+                        value={this.state.formControls.role}
+                        name="name"
+                        onChange={this.onChangeRoleInput}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            label="Role"
+                            disabled={!this.state.editTogggle}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Autocomplete
+                        multiple
+                        disabled={!this.state.editTogggle}
+                        options={this.state.territorydata.map((data) => data)}
+                        getOptionSelected={(option, value) =>
+                          option ? option.name === value.name : false
+                        }
+                        getOptionLabel={(option) => (option ? option.name : "")}
+                        value={this.state.formControls.territories.map(
+                          (data) => data
+                        )}
+                        filterSelectedOptions
+                        name="name"
+                        onChange={this.onChangeTerritoryInput}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            label="Territories"
+                            disabled={!this.state.editTogggle}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Autocomplete
+                        multiple
+                        disabled={!this.state.editTogggle}
+                        options={this.state.divisiondata.map((data) => data)}
+                        getOptionSelected={(option, value) =>
+                          option ? option.name === value.name : false
+                        }
+                        getOptionLabel={(option) => (option ? option.name : "")}
+                        value={this.state.formControls.divisions.map(
+                          (data) => data
+                        )}
+                        filterSelectedOptions
+                        name="name"
+                        onChange={this.onChangeDivisionInput}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            label="Divisions"
+                            disabled={!this.state.editTogggle}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    {/* </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
                 <Divider />
                 <Grid item>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12} sm={12} lg={3} md={3}>
-                      <Typography variant="subtitle1">
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12} lg={12} md={12}>
+                      <Typography variant="h5">
                         Authentication Details
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={12} lg={9} md={9}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                          <FormControlLabel
-                            control={
-                              <Switch
-                                name="status"
-                                checked={this.state.formControls.auth.status}
-                                disabled={!this.state.editTogggle}
-                                onChange={this.onChangeAuthInput}
-                                color="primary"
-                              />
-                            }
-                            label="User status"
-                            labelPlacement="start"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.auth.username}
-                            label="User Name"
-                            name="username"
-                            variant="outlined"
-                            fullWidth={true}
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            name="status"
+                            checked={this.state.formControls.auth.status}
                             disabled={!this.state.editTogggle}
                             onChange={this.onChangeAuthInput}
+                            color="primary"
                           />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.auth.email}
-                            label="Registered Email"
-                            name="email"
-                            variant="outlined"
-                            fullWidth={true}
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeAuthInput}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <TextField
-                            value={this.state.formControls.auth.mobilenumber}
-                            label="Registered Mobile Number"
-                            name="mobilenumber"
-                            variant="outlined"
-                            fullWidth={true}
-                            disabled={!this.state.editTogggle}
-                            onChange={this.onChangeAuthInput}
-                          />
-                        </Grid>
-                      </Grid>
+                        }
+                        label="User status"
+                        labelPlacement="start"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.auth.username}
+                        label="User Name"
+                        name="username"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeAuthInput}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.auth.email}
+                        label="Registered Email"
+                        name="email"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeAuthInput}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <TextField
+                        value={this.state.formControls.auth.mobilenumber}
+                        label="Registered Mobile Number"
+                        name="mobilenumber"
+                        variant="standard"
+                        fullWidth={true}
+                        disabled={!this.state.editTogggle}
+                        onChange={this.onChangeAuthInput}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

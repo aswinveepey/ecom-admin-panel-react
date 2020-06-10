@@ -25,7 +25,7 @@ class AppBarComp extends React.Component {
     return (
       <div>
         {/* <CssBaseline /> */}
-        <AppBar position="relative" className="appbar">
+        <AppBar position="static" className="appbar">
           <Toolbar>
             <IconButton
               color="inherit"
