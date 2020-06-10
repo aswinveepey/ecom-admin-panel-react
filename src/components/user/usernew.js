@@ -357,8 +357,10 @@ class UserNewComp extends React.Component {
       default:
         return (
           <form onSubmit={this.handleSubmit}>
-            <Grid container>
+            <Grid container direction='column'>
               <Grid item>{this.varComp(true).authComp}</Grid>
+              <Grid item>{this.varComp(true).userComp}</Grid>
+              <Grid item>{this.varComp(true).mapComp}</Grid>
             </Grid>
           </form>
         );
@@ -376,7 +378,7 @@ class UserNewComp extends React.Component {
                   <Typography>{label}</Typography>
                 </StepLabel>
                 <StepContent>
-                  <Grid container direction="column" spacing={1}>
+                  <Grid container direction="column" spacing={2}>
                     <Grid item>{this.getStepContent(index)}</Grid>
                     <Grid item>
                       <Grid container spacing={1}>
