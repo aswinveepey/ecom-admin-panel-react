@@ -47,7 +47,7 @@ class UserCardList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Grid container direction="column" justify="flex-start">
+        <Grid container direction="column" wrap='nowrap'>
           {this.state.fetchstatus === "fetched" &&
             this.state.userdata.map((data) => {
               return (

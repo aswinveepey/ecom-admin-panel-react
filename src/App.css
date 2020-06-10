@@ -1,5 +1,5 @@
 MuiPaper {
-  padding: 100px;
+  padding: 20%;
 }
 .login-form
 {
@@ -11,9 +11,10 @@ MuiPaper {
 }
 .login-background
 {
-    justify-content: center;
+    /* justify-content: center; */
     min-height: 30vh;
     padding: 50px;
+    margin-top:40%;
 }
 .navbar-search {
   width: 100%;
@@ -29,15 +30,15 @@ MuiPaper {
   width: 100%;
 }
 .paper-container{
-  padding: 2rem;
-  margin: 2rem;
+  padding: 1%;
+  margin: 1%;
   min-height: 90vh;
 }
 .paper-box{
-  padding: 2rem;
-  /* margin: 20px; */
-  margin-left: 2rem;
+  padding: 1%;
+  margin: 1%;
   min-height: 90vh;
+  width: 100%;
 }
 
 .ag-theme-material{
@@ -45,21 +46,22 @@ MuiPaper {
 }
 
 .info-box{
-  padding: 15px;
+  padding: 1%;
 }
 
 .chart-box{
-  padding: 15px;
-  width: 100%;
+  padding: 1%;
 }
 
 .fab {
-    /* margin: 0px; */
-    top: auto;
+    /* top: auto;
+    left: auto; */
+    bottom: 1em;
     left: auto;
-    bottom: 1rem;
-    right: 1rem;
     position: fixed;
+}
+.list-card-item{
+height: 100%;
 }
 .list-card-item:hover {
   cursor: pointer;

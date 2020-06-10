@@ -75,7 +75,7 @@ class Login extends React.Component {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Grid container direction="column" spacing={3}>
+        <Grid container direction="column">
           <Grid item>
             <Grid container spacing={0} justify="center">
               <Grid item>

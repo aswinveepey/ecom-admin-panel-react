@@ -24,7 +24,6 @@ class UserComp extends React.Component {
     newuserflag: false
   };
   selectUser(userId){
-    console.log(userId)
     this.setState({ selectedId: userId, newuserflag: false });
   }
   //render
