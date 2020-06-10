@@ -36,7 +36,7 @@ MuiPaper {
   margin-left: 2%;
   height: 90vh;
   /* width: 100%; */
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .ag-theme-material{
