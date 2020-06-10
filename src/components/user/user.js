@@ -38,7 +38,7 @@ class UserComp extends React.Component {
         {this.state.fetchstatus === "fetched" && (
           <Paper className="paper-container">
             <Grid container direction="row" spacing={0}>
-              <Grid item lg={2} sm={3} md={3} xs={3}>
+              <Grid item lg={2} sm={4} md={4} xs={4}>
                 <UserCardList onSelect={this.selectUser} />
                 <Fab
                   color="primary"
@@ -52,7 +52,7 @@ class UserComp extends React.Component {
                 </Fab>
               </Grid>
               <Divider orientation="vertical" flexItem={true} />
-              <Grid item lg={9} sm={8} md={8} xs={8}>
+              <Grid item lg={8} sm={6} md={6} xs={6}>
                 {!this.state.newuserflag && (
                   <UserDetailComp userId={this.state.selectedId} />
                 )}

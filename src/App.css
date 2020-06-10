@@ -54,11 +54,11 @@ MuiPaper {
 }
 
 .fab {
-    margin: 0px;
+    /* margin: 0px; */
     top: auto;
-    right: 20px;
-    bottom: 20px;
     left: auto;
+    bottom: 1rem;
+    right: 1rem;
     position: fixed;
 }
 .list-card-item:hover {

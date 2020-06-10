@@ -51,36 +51,34 @@ class UserCardList extends React.Component {
           {this.state.fetchstatus === "fetched" &&
             this.state.userdata.map((data) => {
               return (
-                <div key={data._id}>
-                  <Grid item>
-                    <Card
-                      elevation={0}
-                      className="list-card-item"
-                      onClick={(e) => {
-                        this.handleCardClick(e, data._id);
-                      }}
-                    >
-                      <CardContent>
-                        <Grid container spacing={1} justify="flex-start">
-                          <Grid item>
-                            <Avatar>
-                              {data.firstname[0] + data.lastname[0]}
-                            </Avatar>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="body1">
-                              {data.firstname}&nbsp;{data.lastname}
-                            </Typography>
-                            <Typography variant="body2">
-                              {data.role.name}
-                            </Typography>
-                          </Grid>
+                <Grid item key={data._id}>
+                  <Card
+                    elevation={0}
+                    className="list-card-item"
+                    onClick={(e) => {
+                      this.handleCardClick(e, data._id);
+                    }}
+                  >
+                    <CardContent>
+                      <Grid container spacing={1} justify="flex-start">
+                        <Grid item>
+                          <Avatar>
+                            {data.firstname[0] + data.lastname[0]}
+                          </Avatar>
                         </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                        <Grid item>
+                          <Typography variant="body1">
+                            {data.firstname}&nbsp;{data.lastname}
+                          </Typography>
+                          <Typography variant="body2">
+                            {data.role.name}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
                   <Divider />
-                </div>
+                </Grid>
               );
             })}
         </Grid>
