@@ -25,30 +25,30 @@ class UserComp extends React.Component {
   //render
   render() {
     return (
-      <div className='body-class'>
+      <div className="body-class">
         <AppBarComp title="Users" />
         {this.state.fetchstatus === "loading" && (
           <LinearProgress color="secondary" />
         )}
         {this.state.fetchstatus === "fetched" && (
-          <Paper className="paper-container" >
+          <Paper className="paper-container">
+            <Fab
+              size="small"
+              color="secondary"
+              aria-label="add"
+              className="fab"
+              onClick={() => {
+                this.setState({ newuserflag: true });
+              }}
+            >
+              <AddIcon />
+            </Fab>
             <Grid container direction="row" spacing={0}>
               <Grid item lg={2} sm={3} md={3} xs={4}>
-                <Fab
-                  size='small'
-                  color="secondary"
-                  aria-label="add"
-                  className="fab"
-                  onClick={() => {
-                    this.setState({ newuserflag: true });
-                  }}
-                >
-                  <AddIcon />
-                </Fab>
                 <UserCardList onSelect={this.selectUser} />
               </Grid>
               {/* <Divider orientation="vertical" flexItem={true} /> */}
-              <Grid item lg={9} sm={8} md={8} xs={7}>
+              <Grid item lg={10} sm={9} md={9} xs={8}>
                 {!this.state.newuserflag && (
                   <UserDetailComp userId={this.state.selectedId} />
                 )}

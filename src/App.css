@@ -35,7 +35,7 @@ MuiPaper {
   padding: 3%;
   margin-left: 2%;
   height: 90vh;
-  width: 100%;
+  /* width: 100%; */
   overflow: scroll;
 }
 
@@ -54,10 +54,11 @@ MuiPaper {
 
 .fab {
     bottom: auto;
-    top: -1em;
+    top: -2em;
+    left: 5rem;
     /* right: -1rem; */
-    float: right;
-    position: relative;
+    float: left;
+    position: absolute;
 }
 .list-card-item{
 height: 100%;
