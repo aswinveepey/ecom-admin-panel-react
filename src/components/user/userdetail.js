@@ -292,7 +292,7 @@ class UserDetailComp extends React.Component {
                 </Grid>
                 {/* Show user details inside form to enable submit. Editable state controlled using edittoggle */}
                 <Grid item>
-                  <Grid container spacing={1}>
+                  <Grid container spacing={1} className="form-container">
                     <Grid item xs={12} sm={12} lg={12} md={12}>
                       <Typography variant="h5">Contact Details</Typography>
                     </Grid>
@@ -428,7 +428,7 @@ class UserDetailComp extends React.Component {
                 </Grid>
                 <Divider />
                 <Grid item>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={1} className="form-container">
                     <Grid item xs={12} sm={12} lg={12} md={12}>
                       <Typography variant="h5">
                         Authentication Details
