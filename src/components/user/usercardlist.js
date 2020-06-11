@@ -15,6 +15,8 @@ class UserCardList extends React.Component {
   state = {
     userdata: "",
     fetchstatus: 'loading',
+    cardelevation: 0,
+    selectedId: null
   };
   componentDidMount() {
     this.fetchUserData();
@@ -43,6 +45,7 @@ class UserCardList extends React.Component {
   };
   async handleCardClick(e, userId){
     e.preventDefault();
+    this.setState({selectedId: userId})
     await this.props.onSelect(userId);
   }
   render() {
@@ -55,7 +58,7 @@ class UserCardList extends React.Component {
                 return (
                   <Grid item key={data._id}>
                     <Card
-                      elevation={0}
+                      elevation={(this.state.selectedId===data._id)?2:this.state.cardelevation}
                       className="list-card-item"
                       onClick={(e) => {
                         this.handleCardClick(e, data._id);
