@@ -144,7 +144,7 @@ class UserDetailComp extends React.Component {
         BASE_URL + "user/" + this.state.formControls._id,
         requestOptions
       );
-      const { status } = await fetchResponse;
+      const { status } = fetchResponse;
       // const userResponse = await fetchResponse.json();
       if (status === 200) {
         this.setState({

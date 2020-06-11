@@ -100,7 +100,36 @@ class UserNewComp extends React.Component {
   };
   handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(this.state.formControls);
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: this.state.token,
+      },
+      body: JSON.stringify(this.state.formControls),
+    };
+    try {
+      const fetchResponse = await fetch(
+        BASE_URL + "user/",
+        requestOptions
+      );
+      const { status } = fetchResponse;
+      // const userResponse = await fetchResponse.json();
+      if (status === 200) {
+        this.setState({
+          poststatus: "succesful",
+        });
+        window.location.reload();
+      } else {
+        this.setState({
+          poststatus: "error",
+          snackbaropen: true,
+          snackbarmessage: "Uh-Oh! Something Went Wrong",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   onChangeUserInput = async (event) => {
     const formControls = this.state.formControls;
