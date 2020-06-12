@@ -5,6 +5,7 @@ import Login from './components/login/login.js';
 import Home from './components/home/home.js';
 import Order from './components/order/orderindex.js';
 import UserComp from "./components/user/user";
+import NotFoundComp from "./components/404";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/home" component={Home}></Route>
         <Route exact path="/order" component={Order}></Route>
         <Route exact path="/user" component={UserComp}></Route>
+        <Route component={NotFoundComp}></Route>
       </Switch>
     </Router>
   );

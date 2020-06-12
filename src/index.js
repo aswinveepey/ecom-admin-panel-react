@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import {ThemeProvider} from "@material-ui/styles";
 
+import theme from './theme/muitheme'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -11,7 +13,9 @@ import history from "./history";
 ReactDOM.render(
   <Router history={history}>
     <CssBaseline />
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </Router>,
   document.getElementById("root")
 );

@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Divider from "@material-ui/core/Divider";
+// import Divider from "@material-ui/core/Divider";
 //material ui lab imports
 import Autocomplete from "@material-ui/lab/Autocomplete";
 //material ui icon imports

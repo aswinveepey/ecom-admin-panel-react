@@ -10,7 +10,7 @@ import InputBase from "@material-ui/core/InputBase";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 //styles import
-import { fade, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 //Relative imports
 import DrawerComp from "./drawer"; //sidebar drawer
 
@@ -70,6 +70,9 @@ const styles = (theme) => ({
   },
 });
 class AppBarComp extends React.Component {
+  static defaultProps = {
+    search: true,
+  };
   state = { open: false };
   handleDrawerToggle = () => {
     this.setState({ open: !this.state.open });
@@ -101,19 +104,21 @@ class AppBarComp extends React.Component {
             <Typography variant="h6" noWrap className={classes.title}>
               {this.props.title}
             </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+            {this.props.search && (
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="Search…"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ "aria-label": "search" }}
+                />
               </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div>
+            )}
           </Toolbar>
           {/* Todo - Implement Search Bar */}
         </AppBar>
