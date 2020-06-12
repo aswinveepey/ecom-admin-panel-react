@@ -66,7 +66,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <AppBar position="static" alignitems="center" color="primary" className='appbar'>
+        <AppBar position="static" alignitems="center" color="primary" className='login-appbar'>
           <Toolbar>
             <Grid container justify="center" wrap="wrap">
               <Grid item>

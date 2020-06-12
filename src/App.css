@@ -10,6 +10,7 @@ MuiPaper {
     min-height: 30vh;
     padding: 50px;
     margin-top:40%;
+    margin-bottom:40%;
     position: relative;
 }
 .navbar-search {
@@ -21,13 +22,20 @@ MuiPaper {
 
 .appbar{
   width: 100%;
-  height: 15vh!important;
+  height: 30vh!important;
+}
+.login-appbar{
+  width: 100%;
+  height: 30vh!important;
+}
+.app-toolbar{
+  top:2vh!important;
 }
 .paper-container{
   padding: 1%;
   margin: 2%;
-  min-height: 90vh;
-  top: -8vh;
+  min-height: 52vh;
+  top: -18vh;
   position: relative;
   /* background: lightblue!important; */
 }
