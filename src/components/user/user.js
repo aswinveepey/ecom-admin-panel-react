@@ -1,12 +1,17 @@
+//library imports
 import React from 'react'
+import queryString from "query-string";
+//relative imports
 import AppBarComp from "../common/appbar";
 import UserCardList from './usercardlist'
 import UserDetailComp from './userdetail'
 import UserNewComp from "./usernew";
+//material ui core imports
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Fab from '@material-ui/core/Fab'
+//material ui icon imports
 import AddIcon from '@material-ui/icons/Add'
 class UserComp extends React.Component {
   constructor(props){
@@ -21,6 +26,10 @@ class UserComp extends React.Component {
   };
   selectUser(userId){
     this.setState({ selectedId: userId, newuserflag: false });
+  }
+  componentDidMount(){
+    const values = queryString.parse(this.props.location.search);
+    values && this.setState({ selectedId: values.userId });
   }
   //render
   render() {

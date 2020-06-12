@@ -426,7 +426,6 @@ class UserDetailComp extends React.Component {
                     </Grid> */}
                   </Grid>
                 </Grid>
-                <Divider />
                 <Grid item>
                   <Grid container spacing={1} className="form-container">
                     <Grid item xs={12} sm={12} lg={12} md={12}>
