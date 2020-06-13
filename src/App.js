@@ -16,6 +16,7 @@ function App() {
         <Route exact path="/home" component={Home}></Route>
         <Route exact path="/order" component={Order}></Route>
         <Route exact path="/user" component={UserComp}></Route>
+        <Route exact path="/user/:userid" component={UserComp}></Route>
         <Route component={NotFoundComp}></Route>
       </Switch>
     </Router>

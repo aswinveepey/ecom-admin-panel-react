@@ -28,8 +28,10 @@ class UserComp extends React.Component {
     this.setState({ selectedId: userId, newuserflag: false });
   }
   componentDidMount(){
+    const { userid } = this.props.match.params;
     const values = queryString.parse(this.props.location.search);
-    values && this.setState({ selectedId: values.userId });
+    // values && this.setState({ selectedId: values.userId });
+    userid && this.setState({ selectedId: userid });
   }
   //render
   render() {

@@ -2,14 +2,12 @@ import React from 'react'
 //cookie library import
 import Cookies from "js-cookie";
 //material ui core import
-import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+//history hook
+import { useHistory } from "react-router-dom";
 //relative imports
 import { BASE_URL } from "../../constants";
 
@@ -56,19 +54,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AppSearchComp() {
+export default function AppSearchComp(props) {
   const classes = useStyles();
   const [search, setSearch] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const token = Cookies.get("token");
-
+  const history = useHistory();
+  //handle search changes
   function handleSearchChange(event){
     event.preventDefault();
     setSearch(event.target.value);
   }
-
+  //handle input changes
+  function handleInputChange(data) {
+    // event.preventDefault();
+    // console.log(data.id);
+    data && history.push("/user/" + data._id);
+  }
+  //useeffect
   React.useEffect(()=>{
-    console.log(search);
+    // console.log(search);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -83,13 +88,14 @@ export default function AppSearchComp() {
         requestOptions
       ).then(async (data)=>{
         const response = await data.json()
-        console.log(response)
+        // console.log(response)
         setOptions(response)
       }).catch(err=>console.log(err));
     } catch (error) {
       
     }
-  },[search])
+  },[search, token])
+  //return
   return (
     <div className={classes.search}>
       <div className={classes.searchIcon}>
@@ -101,9 +107,10 @@ export default function AppSearchComp() {
         autoComplete
         options={options}
         getOptionLabel={(option) => option.firstname || ""}
+        onInputChange={(event) => handleInputChange(options[event.target.value])}
         renderInput={(params) => {
           const { InputProps, InputLabelProps, ...childParams } = params;
-          console.log(InputProps);
+          // console.log(InputProps);
           return (
             <InputBase
               {...childParams}
