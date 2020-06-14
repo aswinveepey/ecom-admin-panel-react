@@ -79,25 +79,25 @@ export default function AppSearchComp(props) {
   //useeffect
   React.useEffect(()=>{
     // console.log(search);
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: search }),
-    };
-    try {
-      fetch(
-        BASE_URL + "search/user/",
-        requestOptions
-      ).then(async (data)=>{
-        const response = await data.json()
-        setOptions(response);
-        console.log(response)
-      }).catch(err=>console.log(err));
-    } catch (error) {
-      
+    if(search.length>3){
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: search }),
+      };
+      try {
+        fetch(BASE_URL + "search/user/", requestOptions)
+          .then(async (data) => {
+            const response = await data.json();
+            // console.log(response);
+            setOptions(response);
+            // console.log(options)
+          })
+          .catch((err) => console.log(err));
+      } catch (error) {}
     }
   },[search, token])
   //return
@@ -107,34 +107,52 @@ export default function AppSearchComp(props) {
         <SearchIcon />
       </div>
       <Autocomplete
-        filterSelectedOptions
-        includeInputInList
-        autoComplete
         disablePortal
-        noOptionsText="No results"
         options={options}
-        getOptionLabel={(option) => option.firstname || ""}
+        getOptionLabel={(option) => {
+          if (typeof option === "string") {
+            return option;
+          }
+          return option.firstname+option.lastname;
+        }}
         // onInputChange={(event) =>
         //   handleInputChange(options[event.target.value])
         // }
-        renderOption={(option) => (
-          <React.Fragment>
-            <Grid container>
-              <Grid item sm={4} lg={4} md={4} xs={4} style={{ padding: "2%" }}>
-                <Typography>User</Typography>
+        renderOption={(option) => {
+          // console.log(option);
+          return (
+            <React.Fragment>
+              <Grid container>
+                <Grid
+                  item
+                  sm={4}
+                  lg={4}
+                  md={4}
+                  xs={4}
+                  style={{ padding: "2%" }}
+                >
+                  <Typography>User</Typography>
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid
+                  item
+                  sm={6}
+                  lg={6}
+                  md={6}
+                  xs={6}
+                  style={{ padding: "2%" }}
+                >
+                  <Link href={"/user/" + option._id}>
+                    <Typography>
+                      {option.firstname + " " + option.lastname}
+                    </Typography>
+                  </Link>
+                </Grid>
               </Grid>
-              <Divider orientation="vertical" flexItem />
-              <Grid item sm={6} lg={6} md={6} xs={6} style={{ padding: "2%" }}>
-                <Link href={"/user/"+option._id}>
-                  <Typography>
-                    {option.firstname + " " + option.lastname}
-                  </Typography>
-                </Link>
-              </Grid>
-            </Grid>
-            <Divider flexItem />
-          </React.Fragment>
-        )}
+              <Divider flexItem />
+            </React.Fragment>
+          );
+        }}
         renderInput={(params) => {
           const { InputProps, InputLabelProps, ...childParams } = params;
           // console.log(InputProps);
