@@ -75,13 +75,7 @@ export default function LoginFormComp(props){
     setSubmitprogress(false);
   };
   return (
-    <Grid
-      container
-      direction="column"
-      alignContent="center"
-      spacing={2}
-      styles={{ margin: "auto" }}
-    >
+    <Grid container direction="column" alignContent="center" spacing={2}>
       <Grid item>
         <Typography component="h1" variant="h5">
           Sign in
@@ -89,7 +83,7 @@ export default function LoginFormComp(props){
       </Grid>
       <Grid item>
         <form onSubmit={handleSubmit}>
-          <Grid container direction="column" spacing={2}>
+          <Grid container direction="column" spacing={2} alignContent='center'>
             <Grid item>
               <TextField
                 type="text"

@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   },
   loginForm: {
     width: "100%",
-    // height: "100%",
     height: "100vh",
   },
 }));
@@ -38,13 +37,16 @@ export default function Login(props){
         </Paper>
       </Grid>
       <Grid item lg={3} md={4} sm={12} xs={12}>
-        <div className={classes.loginForm}>
-          <Grid container style={{ padding: "15%" }} alignContent="center">
+        <Grid
+            container
+            justify="center"
+            alignContent="center"
+            className={classes.loginForm}
+          >
             <Grid item>
               <LoginFormComp />
             </Grid>
           </Grid>
-        </div>
       </Grid>
     </Grid>
   );
