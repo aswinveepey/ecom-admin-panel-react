@@ -75,6 +75,7 @@ export default function AppSearchComp(props) {
   //   console.log(data);
   //   data && history.push("/user/" + data._id);
   // }
+
   //useeffect
   React.useEffect(()=>{
     // console.log(search);
@@ -92,8 +93,8 @@ export default function AppSearchComp(props) {
         requestOptions
       ).then(async (data)=>{
         const response = await data.json()
+        setOptions(response);
         console.log(response)
-        setOptions(response)
       }).catch(err=>console.log(err));
     } catch (error) {
       

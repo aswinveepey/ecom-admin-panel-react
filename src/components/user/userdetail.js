@@ -110,7 +110,7 @@ class UserDetailComp extends React.Component {
       },
     };
     const fetchResponse = await fetch(
-      BASE_URL + "user/" + userId,
+      BASE_URL + "user/id/" + userId,
       requestOptions
     );
     const { status } = fetchResponse;
@@ -141,7 +141,7 @@ class UserDetailComp extends React.Component {
     };
     try {
       const fetchResponse = await fetch(
-        BASE_URL + "user/" + this.state.formControls._id,
+        BASE_URL + "user/id/" + this.state.formControls._id,
         requestOptions
       );
       const { status } = fetchResponse;
