@@ -31,7 +31,7 @@ function Login(props){
   return (
     <Grid container>
       <Hidden mdDown>
-        <Grid item lg={9} md={12} sm={12} xs={12}>
+        <Grid item lg={8} md={12} sm={12} xs={12}>
           <Paper className={classes.loginPaper}>
             <img
               src={hhysImage}
@@ -41,7 +41,7 @@ function Login(props){
           </Paper>
         </Grid>
       </Hidden>
-      <Grid item lg={3} md={12} sm={12} xs={12}>
+      <Grid item lg={4} md={12} sm={12} xs={12} >
         <Grid
           container
           justify="center"
