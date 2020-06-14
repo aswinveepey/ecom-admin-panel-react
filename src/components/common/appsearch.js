@@ -11,7 +11,7 @@ import Link from '@material-ui/core/Link'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 //history hook
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 //relative imports
 import { BASE_URL } from "../../constants";
 
@@ -63,18 +63,18 @@ export default function AppSearchComp(props) {
   const [search, setSearch] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const token = Cookies.get("token");
-  const history = useHistory();
+  // const history = useHistory();
   //handle search changes
   function handleSearchChange(event){
     event.preventDefault();
     setSearch(event.target.value);
   }
   //handle input changes
-  function handleInputChange(data) {
-    // event.preventDefault();
-    console.log(data);
-    data && history.push("/user/" + data._id);
-  }
+  // function handleInputChange(data) {
+  //   // event.preventDefault();
+  //   console.log(data);
+  //   data && history.push("/user/" + data._id);
+  // }
   //useeffect
   React.useEffect(()=>{
     // console.log(search);
@@ -113,9 +113,9 @@ export default function AppSearchComp(props) {
         noOptionsText="No results"
         options={options}
         getOptionLabel={(option) => option.firstname || ""}
-        onInputChange={(event) =>
-          handleInputChange(options[event.target.value])
-        }
+        // onInputChange={(event) =>
+        //   handleInputChange(options[event.target.value])
+        // }
         renderOption={(option) => (
           <React.Fragment>
             <Grid container>
