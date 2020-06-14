@@ -1,19 +1,25 @@
 import React from 'react';
 import AppBarComp from "../common/appbar";
 import DashComp from "./dash"
-import {Paper} from '@material-ui/core'
+import Paper from '@material-ui/core/Paper'
 
-class Home extends React.Component {
-  render(){
-    return (
-      <div>
-        <AppBarComp title="Dashboard" />
-        <Paper className="paper-container">
-          <DashComp />
-        </Paper>
-      </div>
-    );
-  }
+// import { makeStyles } from "@material-ui/core/styles";
+
+
+// const useStyles = makeStyles((theme) => ({
+//   containerPaper: {
+//     minHeight: "52vh",
+//     top: "-18vh",
+//   },
+// }));
+
+export default function Home(props){
+  return (
+    <div>
+      <AppBarComp title="Dashboard" />
+      <Paper className="paper-container">
+        <DashComp />
+      </Paper>
+    </div>
+  );
 }
-
-export default Home;

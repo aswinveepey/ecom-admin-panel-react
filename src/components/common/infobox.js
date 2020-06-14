@@ -8,13 +8,18 @@ class InfoBox extends React.Component{
   render(){
     return (
       <div>
-        <Paper className="info-box" variant="elevation" elevation={1} square>
-          <Grid container>
+        <Paper className="info-box" variant="outlined">
+          <Grid
+            container
+            alignContent="center"
+            justify="center"
+            alignItems='center'
+          >
             <Grid item xs={4}>
               <DashboardIcon />
             </Grid>
             <Grid item xs={8}>
-              <Grid container direction="column" justify="center">
+              <Grid container direction="column">
                 <Grid item xs={12}>
                   <Typography variant="h6">{this.props.title}</Typography>
                 </Grid>

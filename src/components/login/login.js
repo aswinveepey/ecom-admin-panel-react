@@ -1,7 +1,10 @@
 import React from "react";
-import Cookies from "js-cookie";
+import PropTypes from "prop-types";
+// import Cookies from "js-cookie";
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
+import Hidden from "@material-ui/core/Hidden";
+import withWidth from "@material-ui/core/withWidth";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -24,20 +27,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props){
+function Login(props){
   const classes = useStyles();
   return (
     <Grid container>
-      <Grid item lg={9} md={8} sm={12} xs={12}>
-        <Paper className={classes.loginPaper}>
-          <img
-            src={hhysImage}
-            style={{ width: "100%", height: "100%" }}
-            alt="Not Found"
-          />
-        </Paper>
-      </Grid>
-      <Grid item lg={3} md={4} sm={12} xs={12}>
+      <Hidden mdDown>
+        <Grid item lg={9} md={12} sm={12} xs={12}>
+          <Paper className={classes.loginPaper}>
+            <img
+              src={hhysImage}
+              style={{ width: "100%", height: "100%" }}
+              alt="Not Found"
+            />
+          </Paper>
+        </Grid>
+      </Hidden>
+      <Grid item lg={3} md={12} sm={12} xs={12}>
         <Grid
           container
           justify="center"
@@ -52,3 +57,8 @@ export default function Login(props){
     </Grid>
   );
 }
+Login.propTypes = {
+  width: PropTypes.oneOf(["lg", "md", "sm", "xl", "xs"]).isRequired,
+};
+
+export default withWidth()(Login);
