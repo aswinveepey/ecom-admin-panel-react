@@ -6,6 +6,10 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+import Grid from '@material-ui/core/Grid'
+import Link from '@material-ui/core/Link'
+import Divider from '@material-ui/core/Divider'
+import Typography from '@material-ui/core/Typography'
 //history hook
 import { useHistory } from "react-router-dom";
 //relative imports
@@ -68,7 +72,7 @@ export default function AppSearchComp(props) {
   //handle input changes
   function handleInputChange(data) {
     // event.preventDefault();
-    // console.log(data.id);
+    console.log(data);
     data && history.push("/user/" + data._id);
   }
   //useeffect
@@ -88,7 +92,7 @@ export default function AppSearchComp(props) {
         requestOptions
       ).then(async (data)=>{
         const response = await data.json()
-        // console.log(response)
+        console.log(response)
         setOptions(response)
       }).catch(err=>console.log(err));
     } catch (error) {
@@ -105,9 +109,31 @@ export default function AppSearchComp(props) {
         filterSelectedOptions
         includeInputInList
         autoComplete
+        disablePortal
+        noOptionsText="No results"
         options={options}
         getOptionLabel={(option) => option.firstname || ""}
-        onInputChange={(event) => handleInputChange(options[event.target.value])}
+        onInputChange={(event) =>
+          handleInputChange(options[event.target.value])
+        }
+        renderOption={(option) => (
+          <React.Fragment>
+            <Grid container>
+              <Grid item sm={4} lg={4} md={4} xs={4} style={{ padding: "2%" }}>
+                <Typography>User</Typography>
+              </Grid>
+              <Divider orientation="vertical" flexItem />
+              <Grid item sm={6} lg={6} md={6} xs={6} style={{ padding: "2%" }}>
+                <Link href={"/user/"+option._id}>
+                  <Typography>
+                    {option.firstname + " " + option.lastname}
+                  </Typography>
+                </Link>
+              </Grid>
+            </Grid>
+            <Divider flexItem />
+          </React.Fragment>
+        )}
         renderInput={(params) => {
           const { InputProps, InputLabelProps, ...childParams } = params;
           // console.log(InputProps);
