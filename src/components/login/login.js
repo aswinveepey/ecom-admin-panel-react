@@ -1,14 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 // import Cookies from "js-cookie";
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Hidden from "@material-ui/core/Hidden";
-import withWidth from "@material-ui/core/withWidth";
+// import withWidth from "@material-ui/core/withWidth";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import brandImage from "../../assets/brand-large.png";
+// import brandImage from "../../assets/brand-large.png";
 import hhysImage from "../../assets/hhys-full.png";
 import LoginFormComp from './loginform'
 // import {BRAND_NAME, BASE_URL} from '../../constants'
@@ -16,7 +16,6 @@ import LoginFormComp from './loginform'
 
 const useStyles = makeStyles((theme) => ({
   loginPaper: {
-    background: "#009be5",
     width: "100%",
     // height: "100%",
     height: "100vh",
@@ -57,8 +56,6 @@ function Login(props){
     </Grid>
   );
 }
-Login.propTypes = {
-  width: PropTypes.oneOf(["lg", "md", "sm", "xl", "xs"]).isRequired,
-};
 
-export default withWidth()(Login);
+// export default withWidth()(Login);
+export default Login;

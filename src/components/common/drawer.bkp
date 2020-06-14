@@ -1,13 +1,5 @@
-import React from 'react'
-
-// import Hidden from '@material-ui/core/Hidden'
-import Divider from '@material-ui/core/Divider'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import Drawer from '@material-ui/core/Drawer'
-
+import React from 'react';
+import {Divider, List, ListItem, ListItemIcon, ListItemText, Drawer} from '@material-ui/core'
 import Dashboard from "@material-ui/icons/Dashboard";
 import Contacts from "@material-ui/icons/Contacts";
 import GroupIcon from "@material-ui/icons/Group";
@@ -16,28 +8,14 @@ import Queue from "@material-ui/icons/Queue";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
 
-import { makeStyles } from '@material-ui/core/styles';
-
 import { BRAND_NAME } from "../../constants";
 
-const useStyles = makeStyles((theme) => (null))
+class DrawerComp extends React.Component {
 
-function DrawerComp(props){
-  // const drawerInitState = props.open;
-  const classes = useStyles();
-  const [drawerOpen, setDrawerOpen] = React.useState(props.open);
-  
-  const handleDrawerToggle = () => {
-    props.handler();
-  };
-  React.useEffect(() => {
-    console.log(drawerOpen);
-    setDrawerOpen(props.open);
-  }, [props.open]);
-
-  const drawer = (
+  render() {
+    const drawer = (
       <div style={{width:'240px'}}>
-        <IconButton onClick={handleDrawerToggle}>
+        <IconButton onClick={this.props.handler}>
           <ChevronLeftIcon />
         </IconButton>
         <Divider />
@@ -84,12 +62,18 @@ function DrawerComp(props){
         </div>
       </div>
     );
-
-  return (
-    <Drawer variant="persistent" open={drawerOpen} anchor="left">
-      {drawer}
-    </Drawer>
-  );
+    return (
+        <Drawer
+          variant="persistent"
+          anchor="left"
+          open={this.props.open}
+          // ModalProps={{
+          //   keepMounted: true, // Better open performance on mobile.
+          // }}
+        >
+          {drawer}
+        </Drawer>
+    );
+  }
 }
-
 export default DrawerComp;

@@ -4,7 +4,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
 // import TextField from "@material-ui/core/TextField";
 // import Grid from "@material-ui/core/Grid";
 //Material labs import
@@ -62,7 +61,6 @@ class AppBarComp extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        {/* <CssBaseline /> */}
         <AppBar position="static" className="appbar">
           <Toolbar className="app-toolbar">
             <IconButton
@@ -77,9 +75,7 @@ class AppBarComp extends React.Component {
             <Typography variant="h6" noWrap className={classes.title}>
               {this.props.title}
             </Typography>
-            {this.props.search && (
-              <AppSearchComp/>
-            )}
+            {this.props.search && <AppSearchComp />}
           </Toolbar>
         </AppBar>
         <DrawerComp open={this.state.open} handler={this.handleDrawerToggle} />
