@@ -25,7 +25,7 @@ class DashComp extends React.Component {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     };
-    const fetchResponse = await fetch(BASE_URL + "dash/", requestOptions);
+    const fetchResponse = await fetch(BASE_URL + "user/dash/", requestOptions);
     const { status } = fetchResponse;
     if (status===200){
       this.setState({ authStatus: "authenticated" });

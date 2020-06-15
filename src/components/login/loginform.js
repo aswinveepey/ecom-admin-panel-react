@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 //Constants Import
 import { BASE_URL } from "../../constants";
+import hhysLogo from "../../assets/hhyslogo.png";
 
 
 const useStyles = makeStyles((theme) => null);
@@ -75,64 +76,69 @@ export default function LoginFormComp(props){
     setSubmitprogress(false);
   };
   return (
-    <Grid container direction="column" alignContent="center" spacing={2}>
-      <Grid item>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+    // <Grid container direction="column" alignContent="center" spacing={2}>
+    //   <Grid item>
+    <form onSubmit={handleSubmit}>
+      <Grid container direction="column" spacing={1} alignContent="center">
+        <Grid item style={{ maxWidth: "30%" }}>
+          <img src={hhysLogo} style={{ maxWidth: "100%" }} alt="Not Found" />
+        </Grid>
+        <Grid item>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            type="text"
+            label="Username"
+            name="username"
+            variant="outlined"
+            value={username}
+            onChange={(event) => handleUsernameChange(event)}
+            required
+            autoFocus
+            error={usernameError}
+            helperText={usernameError ? "Invalid Username" : ""}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            type="password"
+            label="Password"
+            name="password"
+            variant="outlined"
+            value={password}
+            onChange={(event) => handlePasswordChange(event)}
+            required
+            error={passwordError}
+            helperText={passwordError ? "Invalid Password" : ""}
+          />
+        </Grid>
+        <Grid item>
+          {submitprogress ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              className="button-block"
+            >
+              Submit
+            </Button>
+          )}
+        </Grid>
+        <Grid item>
+          <Link href="#" variant="body2">
+            Forgot Password?
+          </Link>
+        </Grid>
       </Grid>
-      <Grid item>
-        <form onSubmit={handleSubmit}>
-          <Grid container direction="column" spacing={2} alignContent='center'>
-            <Grid item>
-              <TextField
-                type="text"
-                label="Username"
-                name="username"
-                variant="outlined"
-                value={username}
-                onChange={(event) => handleUsernameChange(event)}
-                required
-                autoFocus
-                error={usernameError}
-                helperText={usernameError ? "Invalid Username" : ""}
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                type="password"
-                label="Password"
-                name="password"
-                variant="outlined"
-                value={password}
-                onChange={(event) => handlePasswordChange(event)}
-                required
-                error={passwordError}
-                helperText={passwordError ? "Invalid Password" : ""}
-              />
-            </Grid>
-            <Grid item>
-              {submitprogress ? (
-                <CircularProgress />
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  className="button-block"
-                >
-                  Submit
-                </Button>
-              )}
-            </Grid>
-          </Grid>
-        </form>
-      </Grid>
-      <Grid item>
-        <Link href="#" variant="body2">
-          Forgot Password?
-        </Link>
-      </Grid>
-    </Grid>
+    </form>
+    // </Grid>
+    // </Grid>
   );
 }
