@@ -1,6 +1,6 @@
 //library imports
 import React from 'react'
-import queryString from "query-string";
+// import queryString from "query-string";
 //relative imports
 import AppBarComp from "../common/appbar";
 import UserCardList from './usercardlist'
@@ -29,7 +29,7 @@ class UserComp extends React.Component {
   }
   componentDidMount(){
     const { userid } = this.props.match.params;
-    const values = queryString.parse(this.props.location.search);
+    // const values = queryString.parse(this.props.location.search);
     // values && this.setState({ selectedId: values.userId });
     userid && this.setState({ selectedId: userid });
   }

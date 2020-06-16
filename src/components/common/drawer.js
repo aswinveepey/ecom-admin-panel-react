@@ -21,7 +21,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from '@material-ui/core/styles';
 
 //realtive imports
-import { BRAND_NAME } from "../../constants";
+// import { BRAND_NAME } from "../../constants";
 import { BASE_URL } from "../../constants";
 import hhysLogo from "../../assets/hhyslogo.png";
 
@@ -59,12 +59,13 @@ function DrawerComp(props){
         .then(async (data) => {
           const response = await data.json();
           // console.log(response);
-          setNavData(response);
+          const {status} = data;
+          status===200 && setNavData(response);
           // console.log(options)
         })
         .catch((err) => console.log(err));
     } catch (error) {}
-  }, []);
+  }, [token]);
 
   //open drawer
   React.useEffect(() => {
@@ -72,25 +73,27 @@ function DrawerComp(props){
     setDrawerOpen(props.open);
   }, [props.open]);
   function renderIcon(param) {
+    var SwitchComp;
     switch (param) {
       case "home":
-        return <Dashboard />
+        SwitchComp = <Dashboard />
         break;
       case "users":
-        return <Contacts />;
+        SwitchComp = <Contacts />;
         break;
       case "customer":
-        return <GroupIcon />;
+        SwitchComp = <GroupIcon />;
         break;
       case "orders":
-        return <Receipt />;
+        SwitchComp = <Receipt />;
         break;
       case "invoices":
-        return <Queue />;
+        SwitchComp = <Queue />;
         break;
       default:
-        return <Dashboard />
+        SwitchComp = <Dashboard />
     }
+    return SwitchComp;
   }
 
 
