@@ -16,7 +16,11 @@ import { BASE_URL } from "../../constants";
 import hhysLogo from "../../assets/hhyslogo.png";
 
 
-const useStyles = makeStyles((theme) => null);
+const useStyles = makeStyles((theme) => ({
+  loginContainer:{
+    padding:'15%'
+  }
+}));
 
 export default function LoginFormComp(props){
   const classes = useStyles();
@@ -79,9 +83,9 @@ export default function LoginFormComp(props){
     // <Grid container direction="column" alignContent="center" spacing={2}>
     //   <Grid item>
     <form onSubmit={handleSubmit}>
-      <Grid container direction="column" spacing={1} alignContent="center">
+      <Grid container direction="column" spacing={1} className={classes.loginContainer}>
         <Grid item style={{ maxWidth: "30%" }}>
-          <img src={hhysLogo} style={{ maxWidth: "100%" }} alt="Not Found" />
+          <img src={hhysLogo} style={{ maxWidth: "100%" }} alt="logo" />
         </Grid>
         <Grid item>
           <Typography component="h1" variant="h5">

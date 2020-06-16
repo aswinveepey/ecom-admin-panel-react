@@ -23,8 +23,16 @@ import { makeStyles } from '@material-ui/core/styles';
 //realtive imports
 import { BRAND_NAME } from "../../constants";
 import { BASE_URL } from "../../constants";
+import hhysLogo from "../../assets/hhyslogo.png";
 
-const useStyles = makeStyles((theme) => (null))
+const useStyles = makeStyles((theme) => ({
+  drawerdiv:{
+    width:'240px'
+  },
+  logoImg:{
+    width:'40%'
+  }
+}))
 
 function DrawerComp(props){
   // const drawerInitState = props.open;
@@ -88,15 +96,20 @@ function DrawerComp(props){
 
   return (
     <Drawer variant="persistent" open={drawerOpen} anchor="left">
-      <div style={{ width: "240px" }}>
+      <div className={classes.drawerdiv}>
         <IconButton onClick={handleDrawerToggle}>
           <ChevronLeftIcon />
         </IconButton>
         <Divider />
         <div>
           <List>
-            <ListItem>{BRAND_NAME}</ListItem>
-            <ListItem>Version 1.0</ListItem>
+            <ListItem>
+              <img
+                src={hhysLogo}
+                alt="logo"
+                className={classes.logoImg}
+              />
+            </ListItem>
           </List>
           <Divider />
           <List>
