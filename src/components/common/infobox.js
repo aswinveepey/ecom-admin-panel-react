@@ -8,7 +8,7 @@ class InfoBox extends React.Component{
   render(){
     return (
       <div>
-        <Paper className="info-box" variant="outlined">
+        <Paper className="info-box" variant="elevated" elevation={1}>
           <Grid
             container
             alignContent="center"
