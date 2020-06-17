@@ -224,7 +224,7 @@ class UserDetailComp extends React.Component {
         {/* Show loading indication to user */}
         {this.state.fetchstatus === "loading" && (
           <Container>
-            <Typography variant="h6">Loading</Typography>
+            {/* <Typography variant="h6">Loading</Typography> */}
             <LinearProgress color="secondary" />
           </Container>
         )}

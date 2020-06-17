@@ -193,21 +193,23 @@ class OrderIndex extends React.Component{
         {this.state.fetchStatus === "fetched" && (
           <Paper className="paper-container" elevation={3}>
             <Grid container direction="column">
-              <Grid item>
+              {/* <Grid item>
                 <Grid container style={{ padding: "15px" }}>
                   <Grid item>
                     <Typography variant="h6">Manager Orders</Typography>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
               <Grid item>
-                <div className="ag-theme-material">
-                  <AgGridReact
-                    gridOptions={gridData.gridOptions}
-                    columnDefs={gridData.columnDefs}
-                    rowData={gridData.rowData}
-                  ></AgGridReact>
-                </div>
+                <Paper className="paper-box">
+                  <div className="ag-theme-material">
+                    <AgGridReact
+                      gridOptions={gridData.gridOptions}
+                      columnDefs={gridData.columnDefs}
+                      rowData={gridData.rowData}
+                    ></AgGridReact>
+                  </div>
+                </Paper>
               </Grid>
             </Grid>
           </Paper>

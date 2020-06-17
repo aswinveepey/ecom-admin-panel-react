@@ -37,11 +37,12 @@ MuiPaper {
   min-height: 52vh;
   top: -18vh;
   position: relative;
+  background-color: transparent!important;
   /* background: lightblue!important; */
 }
 .paper-box{
-  padding: 3%;
-  margin-left: 2%;
+  padding: 2%;
+  margin-left: 1%;
   min-height: 90vh;
   /* width: 100%; */
   /* overflow: scroll; */
@@ -60,12 +61,12 @@ MuiPaper {
   padding: 1%;
 }
 
-.fab {
+.adduserfab {
     bottom: auto;
-    top: -2em;
-    left: 5rem;
+    top: -1em;
+    right: -1rem;
     /* right: -1rem; */
-    float: left;
+    float: right;
     position: absolute;
 }
 .list-card-item{

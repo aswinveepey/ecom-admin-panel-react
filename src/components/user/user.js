@@ -43,19 +43,19 @@ class UserComp extends React.Component {
         )}
         {this.state.fetchstatus === "fetched" && (
           <Paper className="paper-container">
-            <Fab
-              size="small"
-              color="secondary"
-              aria-label="add"
-              className="fab"
-              onClick={() => {
-                this.setState({ newuserflag: true });
-              }}
-            >
-              <AddIcon />
-            </Fab>
             <Grid container direction="row" spacing={0}>
               <Grid item lg={2} sm={3} md={3} xs={4}>
+                <Fab
+                  size="small"
+                  color="secondary"
+                  aria-label="add"
+                  className="adduserfab"
+                  onClick={() => {
+                    this.setState({ newuserflag: true });
+                  }}
+                >
+                  <AddIcon />
+                </Fab>
                 <UserCardList onSelect={this.selectUser} />
               </Grid>
               {/* <Divider orientation="vertical" flexItem={true} /> */}
