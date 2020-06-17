@@ -1,6 +1,8 @@
 import React from 'react'
 import AppBarComp from "../common/appbar";
-import { LinearProgress, Grid, Paper, Typography } from "@material-ui/core";
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
 
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";

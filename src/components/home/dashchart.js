@@ -11,9 +11,9 @@ class DashChartComp extends React.Component {
         datasets: [
           {
             label: "GMV",
-            fill: true,
+            fill: false,
             lineTension: 0.5,
-            backgroundColor: "rgba(75,192,192,1)",
+            backgroundColor: "#13424C",
             borderColor: "rgba(0,0,0,1)",
             borderWidth: 2,
             data: [55, 60, 68, 80, 98, 125],
@@ -37,7 +37,7 @@ class DashChartComp extends React.Component {
           {
             data: [10, 20, 30],
             label: "Division Wise GMV",
-            backgroundColor: ["#93948d", "#eaf2b6", "rgb(255, 99, 134)"],
+            backgroundColor: ["#13424C", "#1f6a7a", "#2a8ca2"],
           },
         ],
 
@@ -61,7 +61,7 @@ class DashChartComp extends React.Component {
           {
             data: [10, 20, 30],
             label: "Territory Wise GMV",
-            backgroundColor: ["#93948d", "#eaf2b6", "rgb(255, 99, 134)"],
+            backgroundColor: ["#13424C", "#1f6a7a", "#2a8ca2"],
           },
         ],
 

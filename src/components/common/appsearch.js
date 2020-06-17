@@ -56,6 +56,15 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  optionCategory:{
+    padding:"2rem"
+  },
+  optionDisplay:{
+    padding:"2rem"
+  },
+  optionGrid:{
+    width:"125ch"
+  }
 }));
 
 export default function AppSearchComp(props) {
@@ -122,14 +131,14 @@ export default function AppSearchComp(props) {
           // console.log(option);
           return (
             <React.Fragment>
-              <Grid container>
+              <Grid container className={classes.optionGrid}>
                 <Grid
                   item
                   sm={4}
                   lg={4}
                   md={4}
                   xs={4}
-                  style={{ padding: "2%" }}
+                  className={classes.optionCategory}
                 >
                   <Typography>User</Typography>
                 </Grid>
@@ -140,7 +149,7 @@ export default function AppSearchComp(props) {
                   lg={6}
                   md={6}
                   xs={6}
-                  style={{ padding: "2%" }}
+                  className={classes.optionDisplay}
                 >
                   <Link href={"/user/" + option._id}>
                     <Typography>
