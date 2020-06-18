@@ -122,7 +122,7 @@ export default function AppSearchComp(props) {
           if (typeof option === "string") {
             return option;
           }
-          return option.firstname+option.lastname;
+          return option.firstname + option.lastname;
         }}
         // onInputChange={(event) =>
         //   handleInputChange(options[event.target.value])

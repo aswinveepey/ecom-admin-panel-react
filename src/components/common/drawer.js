@@ -98,36 +98,34 @@ function DrawerComp(props){
 
 
   return (
-    <Drawer variant="persistent" open={drawerOpen} anchor="left">
-      <div className={classes.drawerdiv}>
-        <IconButton onClick={handleDrawerToggle}>
-          <ChevronLeftIcon />
-        </IconButton>
-        <Divider />
-        <div>
-          <List>
-            <ListItem>
-              <img
-                src={hhysLogo}
-                alt="logo"
-                className={classes.logoImg}
-              />
-            </ListItem>
-          </List>
+    <nav>
+      <Drawer variant="persistent" open={drawerOpen} anchor="left">
+        <div className={classes.drawerdiv}>
+          <IconButton onClick={handleDrawerToggle}>
+            <ChevronLeftIcon />
+          </IconButton>
           <Divider />
-          <List>
-            {navData.map((item) => (
-              <ListItem button key={item.name} component="a" href={item.nav}>
-                <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
-                <ListItemText primary={item.label} />
+          <div>
+            <List>
+              <ListItem>
+                <img src={hhysLogo} alt="logo" className={classes.logoImg} />
               </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <Divider />
+            </List>
+            <Divider />
+            <List>
+              {navData.map((item) => (
+                <ListItem button key={item.name} component="a" href={item.nav}>
+                  <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+            <Divider />
+          </div>
         </div>
-      </div>
-    </Drawer>
+      </Drawer>
+    </nav>
   );
 }
 
