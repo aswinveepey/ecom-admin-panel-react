@@ -3,6 +3,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Paper from '@material-ui/core/Paper'
 import CustomerIndexComp from './customerindex'
+import AccountIndexComp from './accountIndex'
 
 export default function CustomerTabbedComp(props){
   const [tabValue, setTabValue] = React.useState(0);
@@ -24,6 +25,7 @@ export default function CustomerTabbedComp(props){
         <Tab label="Account" />
       </Tabs>
       {(tabValue===0)&&(<CustomerIndexComp />)}
+      {(tabValue===1)&&(<AccountIndexComp />)}
     </Paper>
   );
 }

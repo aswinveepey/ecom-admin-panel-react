@@ -17,21 +17,34 @@ const gridData = {
     },
   },
   columnDefs: [
-    { headerName: "Name"       , valueGetter:(params)=>(params.data?.firstname+" "+params.data?.lastname)},
-    { headerName: "Gender"     , valueGetter:(params)=>(params.data?.gender)},
-    { headerName: "Type"       , valueGetter:(params)=>(params.data?.type)},
-    { headerName: "Account"    , valueGetter:(params)=>(params.data?.account?.name)},
-    { headerName: "Username"   , valueGetter:(params)=>(params.data?.auth?.username)},
-    { headerName: "Email"      , valueGetter:(params)=>(params.data?.auth?.email)},
-    { headerName: "Mob Number" , valueGetter:(params)=>(params.data?.auth?.mobilenumber)},
-    { headerName: "Status"     , valueGetter:(params)=>(params.data?.auth?.status===true?"Active":"Inactive")},
+    {
+      headerName: "Name",
+      valueGetter: (params) => params.data?.name,
+    },
+    { headerName: "Type", valueGetter: (params) => params.data?.type },
+    {
+      headerName: "Primary Contact",
+      valueGetter: (params) => params.data?.primarycontact?.name,
+    },
+    {
+      headerName: "Designation",
+      valueGetter: (params) => params.data?.primarycontact?.designation,
+    },
+    {
+      headerName: "Primary Email",
+      valueGetter: (params) => params.data?.primarycontact?.email,
+    },
+    {
+      headerName: "Primary Mobile",
+      valueGetter: (params) => params.data?.primarycontact?.mobile,
+    },
   ],
 };
-export default function CustomerIndexComp(props){
+export default function AccountIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const token = Cookies.get("token");
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -44,17 +57,17 @@ export default function CustomerIndexComp(props){
       },
     };
     //fetch data and set data
-    fetch(BASE_URL + "customer/", requestOptions, { signal: signal })
+    fetch(BASE_URL + "account/", requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
-    return function cleanup(){
+    return function cleanup() {
       abortController.abort();
-    }
-  },[token])
+    };
+  }, [token]);
   //return component
   return (
     <div className="ag-theme-material">
@@ -64,5 +77,5 @@ export default function CustomerIndexComp(props){
         rowData={rowData}
       ></AgGridReact>
     </div>
-  ); 
+  );
 }
