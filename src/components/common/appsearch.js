@@ -101,7 +101,7 @@ export default function AppSearchComp(props) {
         body: JSON.stringify({ searchString: search }),
       };
       try {
-        fetch(BASE_URL + "search/user/", requestOptions)
+        fetch(BASE_URL + "search/user/", requestOptions, { signal: signal })
           .then(async (data) => {
             const response = await data.json();
             // console.log(response);

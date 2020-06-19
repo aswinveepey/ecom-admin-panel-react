@@ -67,15 +67,23 @@ export default function CustomerDetailComp(props){
     }
     setFormControls(controls)
   }
-  const onchangeCustomerAccountInput = (event)=>{
+  const onchangeCustomerAccountInput = (event, value)=>{
     event.preventDefault();
-    setAccountSearchString(event.target.value)
+    // const name = event.target.name
+    // const value = event.target.value
+    const controls = {...formControls}
+    controls.account = value;
+    setFormControls(controls)
+  }
+  const onChangeAccountSearch = (event) => {
+    event.preventDefault();
+    setAccountSearchString(event.target.value);
     // const name = event.target.name
     // const value = event.target.value
     // const controls = {...formControls}
     // controls.account[name] = value;
     // setFormControls(controls)
-  }
+  };
   React.useEffect(()=>{
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -183,15 +191,16 @@ export default function CustomerDetailComp(props){
               <Grid item>
                 <Autocomplete
                   options={accounts}
-                  value={formControls?.account?.name}
-                  getOptionLabel={(option) => {
-                    if (typeof option === "string") {
-                      return option;
-                    }
-                    return option.name;
-                  }}
+                  freeSolo
+                  value={formControls.account || ""}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.name
+                  }
                   getOptionSelected={(option, value) =>
                     option ? option.name === value.name : false
+                  }
+                  onChange={(event, value) =>
+                    onchangeCustomerAccountInput(event, value)
                   }
                   renderInput={(params) => (
                     <TextField
@@ -200,7 +209,7 @@ export default function CustomerDetailComp(props){
                       name="account"
                       variant="standard"
                       fullWidth
-                      onChange={(event) => onchangeCustomerAccountInput(event)}
+                      onChange={(event) => onChangeAccountSearch(event)}
                     />
                   )}
                 />
