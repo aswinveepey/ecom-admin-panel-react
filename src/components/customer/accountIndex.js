@@ -92,7 +92,7 @@ export default function AccountIndexComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [token]);
+  }, [token, openDialog]);
   //return component
   return (
     <div className="ag-theme-material">

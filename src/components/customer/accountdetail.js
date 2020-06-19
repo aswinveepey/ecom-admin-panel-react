@@ -8,7 +8,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import MenuItem from "@material-ui/core/MenuItem";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+//cookie library import
+import Cookies from "js-cookie";
+import { BASE_URL } from "../../constants";
+
 export default function AccountDetailComp(props) {
+
+  const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
   const [accountTypes, setAccountTypes] = React.useState([
     { value: "Corporate", label: "Corporate" },
@@ -22,7 +28,7 @@ export default function AccountDetailComp(props) {
   ]);
 
   const onchangeAccountInput = (event) => {
-    console.log(event);
+    // console.log(event);
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -31,7 +37,7 @@ export default function AccountDetailComp(props) {
     setFormControls(controls);
   };
   const onchangePrimaryContactInput = (event) => {
-    console.log(event);
+    // console.log(event);
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -49,7 +55,33 @@ export default function AccountDetailComp(props) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event);
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(formControls),
+    };
+    //fetch data and set data
+    fetch(BASE_URL + "account/id/" + formControls?._id, requestOptions, {
+      signal: signal,
+    })
+      .then(async (data) => {
+        const response = await data.json();
+        const { status } = data;
+        if (status === 200) {
+          handleClose();
+        }
+      })
+      .catch((err) => console.log(err));
+    return function cleanup() {
+      abortController.abort();
+    };
   };
 
   return (

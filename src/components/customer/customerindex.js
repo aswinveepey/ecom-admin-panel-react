@@ -5,6 +5,8 @@ import CustomerDetailComp from "./customerdetail";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
+import LinearProgress from '@material-ui/core/LinearProgress'
+
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
@@ -12,6 +14,7 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 export default function CustomerIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false)
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const token = Cookies.get("token");
@@ -74,7 +77,8 @@ export default function CustomerIndexComp(props){
     setOpenDialog(false);
   }
   //fetch data
-  React.useEffect(()=>{
+  React.useEffect(() => {
+    setLoading(true);
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -94,13 +98,15 @@ export default function CustomerIndexComp(props){
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
-    return function cleanup(){
+    setLoading(false);
+    return function cleanup() {
       abortController.abort();
-    }
-  },[token])
+    };
+  }, [token, openDialog]);
   //return component
   return (
     <div className="ag-theme-material">
+      {loading && <LinearProgress color="secondary" />}
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}

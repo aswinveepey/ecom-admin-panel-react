@@ -35,18 +35,44 @@ export default function CustomerDetailComp(props){
     { value: "Delivery", label: "Delivery" },
     { value: "Billing", label: "Billing" },
   ]);
-
-  React.useEffect(()=>{
-    setFormControls(props.data)
-  },[props])
-
+  //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose()
   };
+  // handle dialog form submit
   const handleSubmit = (event)=>{
     event.preventDefault();
-    console.log(event)
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(formControls),
+    };
+    //fetch data and set data
+    fetch(
+      BASE_URL + "customer/id/" + formControls?._id, requestOptions, 
+      {
+      signal: signal,
+    })
+    .then(async (data) => {
+        const response = await data.json();
+        const { status } = data;
+        if (status === 200) {
+          handleClose();
+        }
+      })
+    .catch((err) => console.log(err));
+    return function cleanup(){
+      abortController.abort();
+    }
   }
+  //change customer input handle
   const onchangeCustomerInput = (event)=>{
     event.preventDefault();
     const name = event.target.name
@@ -55,6 +81,7 @@ export default function CustomerDetailComp(props){
     controls[name] = value
     setFormControls(controls)
   }
+  //change auth input handle - auth is a nested object of customer
   const onchangeCustomerAuthInput = (event)=>{
     event.preventDefault();
     const name = event.target.name
@@ -67,23 +94,23 @@ export default function CustomerDetailComp(props){
     }
     setFormControls(controls)
   }
+  //change account input handle
   const onchangeCustomerAccountInput = (event, value)=>{
     event.preventDefault();
-    // const name = event.target.name
-    // const value = event.target.value
     const controls = {...formControls}
     controls.account = value;
     setFormControls(controls)
   }
+  //Change search term - Account
   const onChangeAccountSearch = (event) => {
     event.preventDefault();
     setAccountSearchString(event.target.value);
-    // const name = event.target.name
-    // const value = event.target.value
-    // const controls = {...formControls}
-    // controls.account[name] = value;
-    // setFormControls(controls)
   };
+  //set form controls from props
+  React.useEffect(() => {
+    setFormControls(props.data);
+  }, [props]);
+  //get account from search string
   React.useEffect(()=>{
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -99,7 +126,6 @@ export default function CustomerDetailComp(props){
     };
     //fetch data and set data
     if (accountSearchString.length>3){
-      console.log(accountSearchString);
       fetch(
         BASE_URL + "account/search", 
         requestOptions, 
