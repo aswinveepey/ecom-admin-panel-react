@@ -87,6 +87,9 @@ export default function AppSearchComp(props) {
 
   //useeffect
   React.useEffect(()=>{
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     // console.log(search);
     if(search.length>3){
       const requestOptions = {
@@ -108,6 +111,9 @@ export default function AppSearchComp(props) {
           .catch((err) => console.log(err));
       } catch (error) {}
     }
+    return function cleanup() {
+      abortController.abort();
+    };
   },[search, token])
   //return
   return (

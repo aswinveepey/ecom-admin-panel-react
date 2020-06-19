@@ -9,11 +9,19 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
+//cookie library import
+import Cookies from "js-cookie";
+import { BASE_URL } from "../../constants";
 
 
 export default function CustomerDetailComp(props){
 
+  const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
+  const [accounts, setAccounts] = React.useState([]);
+  const [accountSearchString, setAccountSearchString] = React.useState("");
   const [customerTypes,setCustomerTypes] = React.useState([
     { value: "Regular", label: "Regular" },
     { value: "Business", label: "Business" },
@@ -59,6 +67,47 @@ export default function CustomerDetailComp(props){
     }
     setFormControls(controls)
   }
+  const onchangeCustomerAccountInput = (event)=>{
+    event.preventDefault();
+    setAccountSearchString(event.target.value)
+    // const name = event.target.name
+    // const value = event.target.value
+    // const controls = {...formControls}
+    // controls.account[name] = value;
+    // setFormControls(controls)
+  }
+  React.useEffect(()=>{
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ searchString: accountSearchString }),
+    };
+    //fetch data and set data
+    if (accountSearchString.length>3){
+      console.log(accountSearchString);
+      fetch(
+        BASE_URL + "account/search", 
+        requestOptions, 
+        { signal: signal }
+        )
+        .then(async (data) => {
+          const response = await data.json();
+          const { status } = data;
+          status === 200 && setAccounts(response);
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup(){
+      abortController.abort();
+    }
+  },[accountSearchString, token])
 
   return (
     <div>
@@ -132,13 +181,28 @@ export default function CustomerDetailComp(props){
               </Grid>
               {/* Account select */}
               <Grid item>
-                <TextField
+                <Autocomplete
+                  options={accounts}
                   value={formControls?.account?.name}
-                  label="Account"
-                  name="account"
-                  variant="standard"
-                  fullWidth
-                  // onChange={(event) => onchangeCustomerInput(event)}
+                  getOptionLabel={(option) => {
+                    if (typeof option === "string") {
+                      return option;
+                    }
+                    return option.name;
+                  }}
+                  getOptionSelected={(option, value) =>
+                    option ? option.name === value.name : false
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Account"
+                      name="account"
+                      variant="standard"
+                      fullWidth
+                      onChange={(event) => onchangeCustomerAccountInput(event)}
+                    />
+                  )}
                 />
               </Grid>
               <Grid item>

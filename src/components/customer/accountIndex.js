@@ -32,7 +32,14 @@ export default function AccountIndexComp(props) {
         headerName: "Name",
         valueGetter: (params) => params.data?.name,
       },
-      { headerName: "Type", valueGetter: (params) => params.data?.type },
+      { 
+        headerName: "Type", 
+        valueGetter: (params) => params.data?.type 
+      },
+      {
+        headerName: "GSTIN",
+        valueGetter: (params) => params.data?.primarycontact?.gstin,
+      },
       {
         headerName: "Primary Contact",
         valueGetter: (params) => params.data?.primarycontact?.name,
