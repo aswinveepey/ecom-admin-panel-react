@@ -1,6 +1,6 @@
 import React from "react";
 
-import CustomerEditComp from './customeredit'
+import CustomerDetailComp from "./customerdetail";
 //cookie library import
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
@@ -106,7 +106,7 @@ export default function CustomerIndexComp(props){
         columnDefs={gridData.columnDefs}
         rowData={rowData}
       ></AgGridReact>
-      <CustomerEditComp
+      <CustomerDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}
