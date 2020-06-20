@@ -98,7 +98,7 @@ export default function AccountDetailComp(props) {
         <DialogTitle id="account-dialog-title">
           {formControls?.name}
         </DialogTitle>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <DialogContent>
             {/* <DialogContentText>Form Comes here</DialogContentText> */}
             <Grid container direction="column" spacing={1}>
@@ -115,7 +115,7 @@ export default function AccountDetailComp(props) {
               <Grid item>
                 <TextField
                   select
-                  value={formControls?.type}
+                  value={formControls?.type || ""}
                   label="type"
                   name="type"
                   variant="standard"
