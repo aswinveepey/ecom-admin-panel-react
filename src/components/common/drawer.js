@@ -47,6 +47,9 @@ function DrawerComp(props){
 
   //fetch drawer data
   React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     const requestOptions = {
       method: "GET",
       headers: {
@@ -55,16 +58,21 @@ function DrawerComp(props){
       },
     };
     try {
-      fetch(BASE_URL + "user/nav/", requestOptions)
+      fetch(BASE_URL + "user/nav/", requestOptions, {
+        signal: signal,
+      })
         .then(async (data) => {
           const response = await data.json();
           // console.log(response);
-          const {status} = data;
-          status===200 && setNavData(response);
+          const { status } = data;
+          status === 200 && setNavData(response);
           // console.log(options)
         })
         .catch((err) => console.log(err));
     } catch (error) {}
+    return function cleanup() {
+      abortController.abort();
+    };
   }, [token]);
 
   //open drawer

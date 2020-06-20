@@ -8,6 +8,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Fab from "@material-ui/core/Fab";
 //icon imports - Material UI
 import AddIcon from "@material-ui/icons/Add";
+import { makeStyles } from "@material-ui/core/styles";
 
 import AccountDetailComp from "./accountdetail";
 
@@ -16,8 +17,19 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 
+const useStyles = makeStyles((theme) => ({
+  fab: {
+    float: "left",
+    position: "relative",
+    left: "-1rem",
+  },
+}));
+
 export default function AccountIndexComp(props) {
-  const [loading, setLoading] = React.useState(false);
+
+  const classes = useStyles();
+
+  const [loading, setLoading] = React.useState(true);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
@@ -83,7 +95,6 @@ export default function AccountIndexComp(props) {
   }
 
   React.useEffect(() => {
-    setLoading(true);
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -100,6 +111,7 @@ export default function AccountIndexComp(props) {
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
+        setLoading(false);
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
@@ -111,16 +123,20 @@ export default function AccountIndexComp(props) {
   //return component
   return (
     <div className="ag-theme-material">
-      {loading && <LinearProgress color="secondary" />}
       <Fab
         size="small"
         color="secondary"
         aria-label="add"
-        className="adduserfab"
+        className={classes.fab}
         onClick={handleNewAccountClick}
       >
         <AddIcon />
       </Fab>
+      {loading === true && (
+        <div>
+          <LinearProgress color="secondary" />
+        </div>
+      )}
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}
