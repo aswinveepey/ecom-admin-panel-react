@@ -42,6 +42,7 @@ export default function AccountDetailComp(props) {
     const name = event.target.name;
     const value = event.target.value;
     const controls = { ...formControls };
+    controls.primarycontact = controls.primarycontact || {};
     controls.primarycontact[name] = value;
     setFormControls(controls);
   };
@@ -130,7 +131,7 @@ export default function AccountDetailComp(props) {
               </Grid>
               <Grid item>
                 <TextField
-                  value={formControls?.primarycontact?.name}
+                  value={formControls?.primarycontact?.name || ""}
                   label="Primary Contact"
                   name="name"
                   variant="standard"
@@ -140,7 +141,7 @@ export default function AccountDetailComp(props) {
               </Grid>
               <Grid item>
                 <TextField
-                  value={formControls?.primarycontact?.email}
+                  value={formControls?.primarycontact?.email || ""}
                   label="Email"
                   name="email"
                   variant="standard"
@@ -150,7 +151,7 @@ export default function AccountDetailComp(props) {
               </Grid>
               <Grid item>
                 <TextField
-                  value={formControls?.primarycontact?.mobile}
+                  value={formControls?.primarycontact?.mobile || ""}
                   label="Mobile"
                   name="mobile"
                   variant="standard"
@@ -160,7 +161,7 @@ export default function AccountDetailComp(props) {
               </Grid>
               <Grid item>
                 <TextField
-                  value={formControls?.primarycontact?.designation}
+                  value={formControls?.primarycontact?.designation || ""}
                   label="Designation"
                   name="designation"
                   variant="standard"

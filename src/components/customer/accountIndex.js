@@ -3,6 +3,12 @@ import React from "react";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
+//core imports - Material UI
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Fab from "@material-ui/core/Fab";
+//icon imports - Material UI
+import AddIcon from "@material-ui/icons/Add";
+
 import AccountDetailComp from "./accountdetail";
 
 import { AgGridReact } from "ag-grid-react";
@@ -11,6 +17,7 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 
 export default function AccountIndexComp(props) {
+  const [loading, setLoading] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
@@ -65,11 +72,18 @@ export default function AccountIndexComp(props) {
     setOpenDialog(true);
   }
 
+  //new account
+  function handleNewAccountClick() {
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+
   function handleDialogClose() {
     setOpenDialog(false);
   }
 
   React.useEffect(() => {
+    setLoading(true);
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -89,6 +103,7 @@ export default function AccountIndexComp(props) {
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
+    setLoading(false);
     return function cleanup() {
       abortController.abort();
     };
@@ -96,6 +111,16 @@ export default function AccountIndexComp(props) {
   //return component
   return (
     <div className="ag-theme-material">
+      {loading && <LinearProgress color="secondary" />}
+      <Fab
+        size="small"
+        color="secondary"
+        aria-label="add"
+        className="adduserfab"
+        onClick={handleNewAccountClick}
+      >
+        <AddIcon />
+      </Fab>
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}

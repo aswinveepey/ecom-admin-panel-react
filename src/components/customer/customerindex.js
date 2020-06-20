@@ -76,7 +76,7 @@ export default function CustomerIndexComp(props){
     setDialogData(row.data);
     setOpenDialog(true);
   }
-  function handleNewCustomerClick(row) {
+  function handleNewCustomerClick() {
     setDialogData([]);
     setOpenDialog(true);
   }
