@@ -68,7 +68,8 @@ export default function AccountDetailComp(props) {
       body: JSON.stringify(formControls),
     };
     //fetch data and set data
-    fetch(BASE_URL + "account/id/" + formControls?._id, requestOptions, {
+    const SUFFIX_URL = formControls._id?"account/id/"+formControls._id:"account/"
+    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
       signal: signal,
     })
       .then(async (data) => {

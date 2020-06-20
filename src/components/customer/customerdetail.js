@@ -54,20 +54,22 @@ export default function CustomerDetailComp(props){
       },
       body: JSON.stringify(formControls),
     };
-    //fetch data and set data
-    fetch(
-      BASE_URL + "customer/id/" + formControls?._id, requestOptions, 
-      {
+    //differentiate between update & create
+    const SUFFIX_URL = formControls._id
+      ? "customer/id/" + formControls._id
+      : "customer/";
+    //POST customer data and handle
+    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
       signal: signal,
     })
-    .then(async (data) => {
+      .then(async (data) => {
         const response = await data.json();
         const { status } = data;
         if (status === 200) {
           handleClose();
         }
       })
-    .catch((err) => console.log(err));
+      .catch((err) => console.log(err));
     return function cleanup(){
       abortController.abort();
     }
@@ -87,6 +89,7 @@ export default function CustomerDetailComp(props){
     const name = event.target.name
     const value = event.target.value
     const controls = {...formControls}
+    controls.auth = controls.auth || {};
     if(name==='status'){
       controls.auth[name] = event.target.checked;
     } else{

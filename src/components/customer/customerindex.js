@@ -4,8 +4,11 @@ import CustomerDetailComp from "./customerdetail";
 //cookie library import
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
-
+//core imports - Material UI
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Fab from "@material-ui/core/Fab";
+//icon imports - Material UI
+import AddIcon from "@material-ui/icons/Add";
 
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -73,6 +76,10 @@ export default function CustomerIndexComp(props){
     setDialogData(row.data);
     setOpenDialog(true);
   }
+  function handleNewCustomerClick(row) {
+    setDialogData([]);
+    setOpenDialog(true);
+  }
   function handleDialogClose(){
     setOpenDialog(false);
   }
@@ -107,6 +114,15 @@ export default function CustomerIndexComp(props){
   return (
     <div className="ag-theme-material">
       {loading && <LinearProgress color="secondary" />}
+      <Fab
+        size="small"
+        color="secondary"
+        aria-label="add"
+        className="adduserfab"
+        onClick={handleNewCustomerClick}
+      >
+        <AddIcon />
+      </Fab>
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}
