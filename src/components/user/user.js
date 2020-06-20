@@ -11,6 +11,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Fab from '@material-ui/core/Fab'
+import Tooltip from "@material-ui/core/Tooltip";
 //material ui icon imports
 import AddIcon from '@material-ui/icons/Add'
 class UserComp extends React.Component {
@@ -45,17 +46,19 @@ class UserComp extends React.Component {
           <Paper className="paper-container">
             <Grid container direction="row" spacing={0}>
               <Grid item lg={2} sm={3} md={3} xs={4}>
-                <Fab
-                  size="small"
-                  color="secondary"
-                  aria-label="add"
-                  className="adduserfab"
-                  onClick={() => {
-                    this.setState({ newuserflag: true });
-                  }}
-                >
-                  <AddIcon />
-                </Fab>
+                <Tooltip title="Add User">
+                  <Fab
+                    size="small"
+                    color="secondary"
+                    aria-label="add"
+                    className="adduserfab"
+                    onClick={() => {
+                      this.setState({ newuserflag: true });
+                    }}
+                  >
+                    <AddIcon />
+                  </Fab>
+                </Tooltip>
                 <UserCardList onSelect={this.selectUser} />
               </Grid>
               {/* <Divider orientation="vertical" flexItem={true} /> */}

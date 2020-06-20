@@ -7,6 +7,7 @@ import { BASE_URL } from "../../constants";
 //core imports - Material UI
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/Tooltip";
 //icon imports - Material UI
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/core/styles";
@@ -125,19 +126,21 @@ export default function CustomerIndexComp(props){
   //return component
   return (
     <div className="ag-theme-material">
-      <Fab
-        size="small"
-        color="secondary"
-        aria-label="add"
-        className={classes.fab}
-        onClick={handleNewCustomerClick}
-      >
-        <AddIcon />
-      </Fab>
-      {loading===true && (
-      <div>
-        <LinearProgress color="secondary" />
-      </div>
+      <Tooltip title="Add Customer">
+        <Fab
+          size="small"
+          color="secondary"
+          aria-label="add"
+          className={classes.fab}
+          onClick={handleNewCustomerClick}
+        >
+          <AddIcon />
+        </Fab>
+      </Tooltip>
+      {loading === true && (
+        <div>
+          <LinearProgress color="secondary" />
+        </div>
       )}
       <AgGridReact
         gridOptions={gridData.gridOptions}
