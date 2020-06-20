@@ -128,7 +128,7 @@ export default function CustomerDetailComp(props){
       body: JSON.stringify({ searchString: accountSearchString }),
     };
     //fetch data and set data
-    if (accountSearchString.length>3){
+    if (accountSearchString.length>2){
       fetch(
         BASE_URL + "account/search", 
         requestOptions, 
@@ -185,7 +185,7 @@ export default function CustomerDetailComp(props){
               <Grid item>
                 <TextField
                   select
-                  value={formControls?.gender}
+                  value={formControls?.gender || ""}
                   label="gender"
                   name="gender"
                   variant="standard"
@@ -202,7 +202,7 @@ export default function CustomerDetailComp(props){
               <Grid item>
                 <TextField
                   select
-                  value={formControls?.type}
+                  value={formControls?.type || ""}
                   label="type"
                   name="type"
                   variant="standard"
