@@ -1,6 +1,10 @@
 import React from 'react'
 import Button from "@material-ui/core/Button";
 import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card'
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -285,6 +289,40 @@ export default function CustomerDetailComp(props){
                     />
                   }
                 />
+              </Grid>
+              <Grid item>
+                <Typography>Addresses:</Typography>
+                <Grid container spacing={1}>
+                  {formControls?.address?.map((item, index) => (
+                    <Grid item key={index} sm={12} xs={12} lg={4} md={4}>
+                      <Card variant="outlined">
+                        <CardContent>
+                          <Typography color="secondary" gutterBottom>
+                            {item?.type}
+                          </Typography>
+                          <Typography>{item?.address1}</Typography>
+                          <Typography>{item?.address2}</Typography>
+                          <Typography>{item?.landmark}</Typography>
+                          <Typography>
+                            {item?.area}, {item?.district}
+                          </Typography>
+                          <Typography>
+                            {item?.state}, {item?.country}
+                          </Typography>
+                          <Typography>{item?.pincode}</Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button size="small" color="secondary">
+                            Delete
+                          </Button>
+                          <Button size="small" color="secondary">
+                            Edit
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
             </Grid>
           </DialogContent>
