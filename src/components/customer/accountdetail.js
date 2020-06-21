@@ -1,4 +1,5 @@
 import React from "react";
+//import material ui core elements
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -11,12 +12,28 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import MenuItem from "@material-ui/core/MenuItem";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import ButtonBase from "@material-ui/core/ButtonBase";
+import AddIcon from "@material-ui/icons/Add";
+//styles - Material UI
+import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
+
+//define styles
+const useStyles = makeStyles((theme) => ({
+  addressitem: {
+    height: '100%'
+  },
+  addresscard: {
+    height: '100%'
+  },
+}));
+
 export default function AccountDetailComp(props) {
+
+  const classes = useStyles();
 
   const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
@@ -176,8 +193,33 @@ export default function AccountDetailComp(props) {
               <Grid item>
                 <Typography>Addresses:</Typography>
                 <Grid container spacing={1}>
+                  <Grid
+                    item
+                    sm={12}
+                    xs={12}
+                    lg={4}
+                    md={4}
+                    className={classes.addressitem}
+                  >
+                    <Card variant="outlined">
+                      <ButtonBase>
+                        <CardContent>
+                          <AddIcon />
+                          <Typography>Add address</Typography>
+                        </CardContent>
+                      </ButtonBase>
+                    </Card>
+                  </Grid>
                   {formControls?.address?.map((item, index) => (
-                    <Grid item key={index} sm={12} xs={12} lg={4} md={4}>
+                    <Grid
+                      item
+                      key={index}
+                      sm={12}
+                      xs={12}
+                      lg={4}
+                      md={4}
+                      className={classes.addressitem}
+                    >
                       <Card variant="outlined">
                         <CardContent>
                           <Typography color="secondary" gutterBottom>

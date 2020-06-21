@@ -1,5 +1,4 @@
 import React from "react";
-
 import CustomerDetailComp from "./customerdetail";
 //cookie library import
 import Cookies from "js-cookie";
@@ -11,7 +10,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 //icon imports - Material UI
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/core/styles";
-
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
