@@ -1,5 +1,5 @@
 {
-  "name": "admin-panel-template",
+  "name": "ahhys-dmin-panel",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +13,7 @@
     "ag-grid-react": "^23.1.1",
     "chart.js": "2.3",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
     "popper.js": "^1.16.1",
@@ -25,8 +26,10 @@
     "styled-components": "^4.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "env CI=false && react-scripts build && echo '/* /index.html  200' | cat >build/_redirects ",
+    "start": " env-cmd -f .env react-scripts start",
+    "build": "react-scripts build && echo '/* /index.html  200' | cat >build/_redirects ",
+    "build-dev": "env-cmd -f .env.development react-scripts build",
+    "build-prod": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
