@@ -65,7 +65,7 @@ class UserDetailComp extends React.Component {
     const { status } = fetchResponse;
     const roleResponse = await fetchResponse.json();
     if (status === 200) {
-      this.setState({ roledata: roleResponse });
+      this.setState({ roledata: roleResponse.data });
     }
   };
   fetchTerritories = async () => {
@@ -80,7 +80,7 @@ class UserDetailComp extends React.Component {
     const { status } = fetchResponse;
     const territoryResponse = await fetchResponse.json();
     if (status === 200) {
-      this.setState({ territorydata: territoryResponse });
+      this.setState({ territorydata: territoryResponse.data });
     }
   };
   fetchDivisions = async () => {
@@ -95,7 +95,7 @@ class UserDetailComp extends React.Component {
     const { status } = fetchResponse;
     const divisionResponse = await fetchResponse.json();
     if (status === 200) {
-      this.setState({ divisiondata: divisionResponse });
+      this.setState({ divisiondata: divisionResponse.data });
     }
   };
   //get data from territories

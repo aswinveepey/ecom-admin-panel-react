@@ -105,7 +105,7 @@ export default function AppSearchComp(props) {
           .then(async (data) => {
             const response = await data.json();
             // console.log(response);
-            setOptions(response);
+            setOptions(response.data);
             // console.log(options)
           })
           .catch((err) => console.log(err));

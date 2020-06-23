@@ -65,7 +65,7 @@ function DrawerComp(props){
           const response = await data.json();
           // console.log(response);
           const { status } = data;
-          status === 200 && setNavData(response);
+          status === 200 && setNavData(response.data);
           // console.log(options)
         })
         .catch((err) => console.log(err));
