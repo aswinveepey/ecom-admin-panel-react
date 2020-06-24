@@ -6,8 +6,12 @@ import { BASE_URL } from "../../../constants";
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
+import InputBase from "@material-ui/core/InputBase";
+import Paper from "@material-ui/core/Paper";
+import IconButton from "@material-ui/core/IconButton";
 //icon imports - Material UI
 import AddIcon from "@material-ui/icons/Add";
+import SearchIcon from "@material-ui/icons/Search";
 //aggrid
 import { makeStyles } from "@material-ui/core/styles";
 import { AgGridReact } from "ag-grid-react";
@@ -19,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
     float: "left",
     position: "relative",
     left: "-1rem",
+  },
+  searchbar: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+  },
+  searchinput: {
+    width: "100%",
   },
 }));
 
@@ -104,6 +116,15 @@ export default function CategoryIndexComp(params) {
           <LinearProgress color="secondary" />
         </div>
       )}
+      <Paper component="form" className={classes.searchbar}>
+        <InputBase
+          placeholder="Search Categories"
+          className={classes.searchinput}
+        />
+        <IconButton type="submit" aria-label="search products">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}

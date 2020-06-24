@@ -17,11 +17,14 @@ import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import Paper from "@material-ui/core/Paper";
 
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import AddIcon from "@material-ui/icons/Add";
+import SearchIcon from "@material-ui/icons/Search";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -47,6 +50,14 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     fontSize: "12px",
     color: "rgba(0, 0, 0, 0.54)",
+  },
+  searchbar: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+  },
+  searchinput: {
+    width: "100%",
   },
 }));
 function ExpandableRow(props){
@@ -145,6 +156,18 @@ export default function ProductIndexComp(props){
               <LinearProgress color="secondary" />
             </div>
           )}
+          <Paper component="form" className={classes.searchbar}>
+            <InputBase
+              placeholder="Search Products"
+              className={classes.searchinput}
+            />
+            <IconButton
+              type="submit"
+              aria-label="search products"
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
           <TableContainer>
             {rowData && (
               <Table aria-label="simple table" className={classes.table}>
