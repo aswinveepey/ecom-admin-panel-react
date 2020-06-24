@@ -135,6 +135,16 @@ export default function AccountDetailComp(props) {
               </Grid>
               <Grid item>
                 <TextField
+                  value={formControls?.gstin}
+                  label="GSTIN"
+                  name="gstin"
+                  variant="standard"
+                  fullWidth
+                  onChange={(event) => onchangeAccountInput(event)}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
                   select
                   value={formControls?.type || ""}
                   label="type"
