@@ -21,7 +21,7 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
-    position: "relative",
+    // position: "relative",
     // left: "-1rem",
   },
   searchbar: {

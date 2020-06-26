@@ -12,7 +12,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
@@ -31,7 +30,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
-    position: "relative",
+    // position: "relative",
     // left: "-1rem",
   },
   table: {
@@ -163,7 +162,7 @@ export default function ProductIndexComp(props){
   }, [token]);
 
   return (
-    <React.Fragment>
+    <div>
       <Tooltip title="Add Product">
         <Fab
           size="small"
@@ -213,6 +212,6 @@ export default function ProductIndexComp(props){
         <Grid item>
         </Grid>
       </Grid> */}
-    </React.Fragment>
+    </div>
   );
 }

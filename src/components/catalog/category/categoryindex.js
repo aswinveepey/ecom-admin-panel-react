@@ -21,7 +21,7 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
-    position: "relative",
+    // position: "relative",
     // left: "-1rem",
   },
   searchbar: {
@@ -105,7 +105,7 @@ export default function CategoryIndexComp(params) {
         <Fab
           size="small"
           color="secondary"
-          aria-label="add"
+          aria-label="add category"
           className={classes.fab}
           // onClick={handleNewCustomerClick}
         >

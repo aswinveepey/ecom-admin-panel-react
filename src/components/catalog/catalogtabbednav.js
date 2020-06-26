@@ -12,9 +12,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   raisedpaper: {
-    top:"-18vh",
-    position:'relative',
-    margin:'2%'
+    top: "-18vh",
+    position: "relative",
+    margin: "2%",
+    padding: "1%",
   },
 }));
 

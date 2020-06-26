@@ -6,9 +6,19 @@ import Link from "@material-ui/core/Link";
 import InfoBox from '../common/infobox'
 import DashChartComp from './dashchart'
 import Cookies from "js-cookie";
+import { withStyles } from "@material-ui/core/styles";
 
 import { BASE_URL } from "../../constants";
 
+
+const useStyles = (theme) => ({
+  raisedpaper: {
+    top: "-18vh",
+    position: "relative",
+    margin: "2%",
+    padding: "1%",
+  },
+});
 class DashComp extends React.Component {
   state = {
     authStatus: '',
@@ -37,6 +47,7 @@ class DashComp extends React.Component {
     }
   }
   render() {
+    const { classes } = this.props;
     const infoBoxData = [
       { id: 1, title: "No of Customers", value: "2340" },
       { id: 2, title: "Monthly GMV", value: "10 Cr" },
@@ -58,17 +69,19 @@ class DashComp extends React.Component {
       );
     } 
     return (
-      <Grid container direction="column" spacing={2}>
-        <Grid item>
-          <Grid container spacing={1}>
-            {infoBoxComponent}
+      <div className={classes.raisedpaper}>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Grid container spacing={1}>
+              {infoBoxComponent}
+            </Grid>
+          </Grid>
+          <Grid item>
+            <DashChartComp />
           </Grid>
         </Grid>
-        <Grid item>
-          <DashChartComp />
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 }
-export default DashComp;
+export default withStyles(useStyles)(DashComp);

@@ -31,15 +31,6 @@ MuiPaper {
 .app-toolbar{
   top:2vh!important;
 }
-.paper-container{
-  padding: 2%;
-  margin: 2%;
-  min-height: 52vh;
-  top: -18vh;
-  position: relative;
-  background-color: transparent!important;
-  /* background: lightblue!important; */
-}
 .paper-box{
   padding: 2%;
   margin-left: 1%;

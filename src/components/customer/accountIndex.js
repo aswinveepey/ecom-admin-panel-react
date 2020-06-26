@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
     position: "relative",
-    left: "-1rem",
+    // left: "-1rem",
   },
 }));
 

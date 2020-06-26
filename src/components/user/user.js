@@ -9,11 +9,20 @@ import UserNewComp from "./usernew";
 //material ui core imports
 // import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Fab from '@material-ui/core/Fab'
 import Tooltip from "@material-ui/core/Tooltip";
 //material ui icon imports
 import AddIcon from '@material-ui/icons/Add'
+import { withStyles } from "@material-ui/core/styles";
+
+const useStyles = (theme) => ({
+  raisedpaper: {
+    top: "-18vh",
+    position: "relative",
+    margin: "2%",
+    padding:'1%'
+  },
+});
 class UserComp extends React.Component {
   constructor(props){
     super(props);
@@ -36,44 +45,43 @@ class UserComp extends React.Component {
   }
   //render
   render() {
+    const { classes } = this.props;
     return (
       <div className="body-class">
         <AppBarComp title="Users" />
-        {/* {this.state.fetchstatus === "loading" && (
-          <LinearProgress color="secondary" />
-        )} */}
-        {this.state.fetchstatus === "fetched" && (
-          <Paper className="paper-container">
-            <Grid container direction="row" spacing={0}>
-              <Grid item lg={2} sm={3} md={3} xs={4}>
-                <Tooltip title="Add User">
-                  <Fab
-                    size="small"
-                    color="secondary"
-                    aria-label="add"
-                    className="adduserfab"
-                    onClick={() => {
-                      this.setState({ newuserflag: true });
-                    }}
-                  >
-                    <AddIcon />
-                  </Fab>
-                </Tooltip>
-                <UserCardList onSelect={this.selectUser} />
-              </Grid>
-              {/* <Divider orientation="vertical" flexItem={true} /> */}
-              <Grid item lg={10} sm={9} md={9} xs={8}>
-                {!this.state.newuserflag && (
-                  <UserDetailComp userId={this.state.selectedId} />
-                )}
-                {this.state.newuserflag && <UserNewComp />}
-              </Grid>
-            </Grid>
-          </Paper>
-        )}
+        <Grid
+          container
+          direction="row"
+          spacing={0}
+          className={classes.raisedpaper}
+        >
+          <Grid item lg={2} sm={3} md={3} xs={4}>
+            <Tooltip title="Add User">
+              <Fab
+                size="small"
+                color="secondary"
+                aria-label="add"
+                className="adduserfab"
+                onClick={() => {
+                  this.setState({ newuserflag: true });
+                }}
+              >
+                <AddIcon />
+              </Fab>
+            </Tooltip>
+            <UserCardList onSelect={this.selectUser} />
+          </Grid>
+          {/* <Divider orientation="vertical" flexItem={true} /> */}
+          <Grid item lg={10} sm={9} md={9} xs={8}>
+            {!this.state.newuserflag && (
+              <UserDetailComp userId={this.state.selectedId} />
+            )}
+            {this.state.newuserflag && <UserNewComp />}
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
 
-export default UserComp;
+export default withStyles(useStyles)(UserComp);
