@@ -1,6 +1,6 @@
 import React from 'react'
 import AppBarComp from "../common/appbar";
-import LinearProgress from '@material-ui/core/LinearProgress'
+// import LinearProgress from '@material-ui/core/LinearProgress'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 
@@ -189,9 +189,9 @@ class OrderIndex extends React.Component{
     return (
       <div>
         <AppBarComp title="Orders" />
-        {this.state.fetchStatus === "loading" && (
+        {/* {this.state.fetchStatus === "loading" && (
           <LinearProgress color="secondary" />
-        )}
+        )} */}
         {this.state.fetchStatus === "fetched" && (
           <Paper className="paper-container" elevation={3}>
             <Grid container direction="column">

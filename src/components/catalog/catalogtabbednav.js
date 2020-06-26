@@ -5,15 +5,27 @@ import Paper from "@material-ui/core/Paper";
 import CategoryIndexComp from "./category/categoryindex";
 import BrandIndexComp from "./brand/brandindex";
 import ProductIndexComp from "./product/productindex";
+
+import { makeStyles } from "@material-ui/core/styles";
 // import AccountIndexComp from "./accountIndex";
 
+
+const useStyles = makeStyles((theme) => ({
+  raisedpaper: {
+    top:"-18vh",
+    position:'relative',
+    margin:'2%'
+  },
+}));
+
 export default function CatalogTabbedComp(props) {
+  const classes = useStyles();
   const [tabValue, setTabValue] = React.useState(0);
   const handleChange = (event, newTabValue) => {
     setTabValue(newTabValue);
   };
   return (
-    <Paper className="paper-box">
+    <Paper className={classes.raisedpaper}>
       <Tabs
         value={tabValue}
         onChange={handleChange}

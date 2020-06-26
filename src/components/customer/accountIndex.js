@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
 //core imports - Material UI
-import LinearProgress from '@material-ui/core/LinearProgress'
+// import LinearProgress from '@material-ui/core/LinearProgress'
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 //icon imports - Material UI
@@ -30,7 +30,7 @@ export default function AccountIndexComp(props) {
 
   const classes = useStyles();
 
-  const [loading, setLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
@@ -116,11 +116,11 @@ export default function AccountIndexComp(props) {
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
-        setLoading(false);
+        // setLoading(false);
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
-    setLoading(false);
+    // setLoading(false);
     return function cleanup() {
       abortController.abort();
     };
@@ -139,11 +139,11 @@ export default function AccountIndexComp(props) {
           <AddIcon />
         </Fab>
       </Tooltip>
-      {loading === true && (
+      {/* {loading === true && (
         <div>
           <LinearProgress color="secondary" />
         </div>
-      )}
+      )} */}
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}

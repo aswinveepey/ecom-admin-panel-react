@@ -18,7 +18,7 @@ export default function Home(props){
   return (
     <div style={{height:'100%'}}>
       <AppBarComp title="Dashboard" />
-      <Paper className="paper-container">
+      <Paper className="paper-container" variant='outlined'>
         <DashComp />
       </Paper>
     </div>

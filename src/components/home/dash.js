@@ -1,5 +1,8 @@
 import React from 'react'
-import { Grid, LinearProgress, Link, Typography } from "@material-ui/core";
+// import LinearProgress from "@material-ui/core/LinearProgress";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
 import InfoBox from '../common/infobox'
 import DashChartComp from './dashchart'
 import Cookies from "js-cookie";
@@ -8,7 +11,7 @@ import { BASE_URL } from "../../constants";
 
 class DashComp extends React.Component {
   state = {
-    authStatus: 'loading',
+    authStatus: '',
   };
   componentDidMount(){
     this.fetchDashData();
@@ -53,9 +56,7 @@ class DashComp extends React.Component {
           </Typography>
         </div>
       );
-    } else if (this.state.authStatus === "loading") {
-      return <LinearProgress color='secondary'/>;
-    }
+    } 
     return (
       <Grid container direction="column" spacing={2}>
         <Grid item>

@@ -3,7 +3,7 @@ import React from "react";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../../constants";
 //core imports - Material UI
-import LinearProgress from "@material-ui/core/LinearProgress";
+// import LinearProgress from "@material-ui/core/LinearProgress";
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 import InputBase from "@material-ui/core/InputBase";
@@ -22,12 +22,13 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
     position: "relative",
-    left: "-1rem",
+    // left: "-1rem",
   },
   searchbar: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
+    margin: "1%",
   },
   searchinput: {
     width: "100%",
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 export default function BrandIndexComp(params) {
   const classes = useStyles();
   const [rowData, setRowData] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
   const token = Cookies.get("token");
   const gridData = {
     gridOptions: {
@@ -93,7 +94,7 @@ export default function BrandIndexComp(params) {
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
-        setLoading(false);
+        // setLoading(false);
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
@@ -115,11 +116,6 @@ export default function BrandIndexComp(params) {
           <AddIcon />
         </Fab>
       </Tooltip>
-      {loading === true && (
-        <div>
-          <LinearProgress color="secondary" />
-        </div>
-      )}
       <Paper component="form" className={classes.searchbar}>
         <InputBase
           placeholder="Search Brands"
@@ -129,6 +125,11 @@ export default function BrandIndexComp(params) {
           <SearchIcon />
         </IconButton>
       </Paper>
+      {/* {loading === true && (
+        <div>
+          <LinearProgress color="secondary" />
+        </div>
+      )} */}
       <AgGridReact
         gridOptions={gridData.gridOptions}
         columnDefs={gridData.columnDefs}

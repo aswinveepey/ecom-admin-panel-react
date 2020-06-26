@@ -5,7 +5,7 @@ import { BASE_URL } from "../../../constants";
 //<aterial UI
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
+// import LinearProgress from "@material-ui/core/LinearProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
     position: "relative",
-    left: "-1rem",
+    // left: "-1rem",
   },
   table: {
     minWidth: 700,
@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
+    margin: "1%",
   },
   searchinput: {
     width: "100%",
@@ -77,10 +78,10 @@ function ExpandableRow(props){
           </IconButton>
         </TableCell>
         <TableCell>
-          <img src={row.assets?.thumbnail} width="50" height="50" />
+          <img src={row.assets?.thumbnail} width="50" height="50" alt="product thumbnail"/>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.shortId}
+          {row.shortid}
         </TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.category.name}</TableCell>
@@ -94,6 +95,33 @@ function ExpandableRow(props){
               <Typography variant="h6" gutterBottom component="div">
                 SKUs
               </Typography>
+
+              <Table size="small" aria-label="skus">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>ID</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>MRP</TableCell>
+                    <TableCell>Selling Price</TableCell>
+                    <TableCell>Created At</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.skus?.map((sku) => (
+                    <TableRow key={sku.shortid}>
+                      <TableCell>{sku.shortid}</TableCell>
+                      <TableCell>{sku.name}</TableCell>
+                      <TableCell>
+                        {sku.price?.mrp?.$numberDecimal}
+                      </TableCell>
+                      <TableCell >
+                        {sku.price?.sellingprice?.$numberDecimal}
+                      </TableCell>
+                      <TableCell>{sku.createdat}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Box>
           </Collapse>
         </TableCell>
@@ -104,7 +132,7 @@ function ExpandableRow(props){
 export default function ProductIndexComp(props){
   const classes = useStyles();
   const [rowData, setRowData] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
   const token = Cookies.get("token");
 
   //fetch data
@@ -125,7 +153,7 @@ export default function ProductIndexComp(props){
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
-        setLoading(false);
+        // setLoading(false);
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
@@ -136,66 +164,55 @@ export default function ProductIndexComp(props){
 
   return (
     <React.Fragment>
-      <Grid container>
+      <Tooltip title="Add Product">
+        <Fab
+          size="small"
+          color="secondary"
+          aria-label="add"
+          className={classes.fab}
+          // onClick={handleNewCustomerClick}
+        >
+          <AddIcon />
+        </Fab>
+      </Tooltip>
+      <Paper component="form" className={classes.searchbar}>
+        <InputBase
+          placeholder="Search Products"
+          className={classes.searchinput}
+        />
+        <IconButton type="submit" aria-label="search products">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+      <TableContainer>
+        {rowData && (
+          <Table aria-label="simple table" className={classes.table}>
+            <TableHead>
+              <TableRow className={classes.tablerow}>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell className={classes.tableheader}>Id</TableCell>
+                <TableCell className={classes.tableheader}>Name</TableCell>
+                <TableCell className={classes.tableheader}>Category</TableCell>
+                <TableCell className={classes.tableheader}>Brand</TableCell>
+                <TableCell className={classes.tableheader}>
+                  Last updated at
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowData.map((row) => (
+                <ExpandableRow key={row.name} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </TableContainer>
+      {/* <Grid container direction="column" className={classes.tablegrid}>
+        <Grid item xs></Grid>
         <Grid item>
-          <Tooltip title="Add Product">
-            <Fab
-              size="small"
-              color="secondary"
-              aria-label="add"
-              className={classes.fab}
-              // onClick={handleNewCustomerClick}
-            >
-              <AddIcon />
-            </Fab>
-          </Tooltip>
         </Grid>
-        <Grid item className={classes.tablegrid}>
-          {loading === true && (
-            <div>
-              <LinearProgress color="secondary" />
-            </div>
-          )}
-          <Paper component="form" className={classes.searchbar}>
-            <InputBase
-              placeholder="Search Products"
-              className={classes.searchinput}
-            />
-            <IconButton
-              type="submit"
-              aria-label="search products"
-            >
-              <SearchIcon />
-            </IconButton>
-          </Paper>
-          <TableContainer>
-            {rowData && (
-              <Table aria-label="simple table" className={classes.table}>
-                <TableHead>
-                  <TableRow className={classes.tablerow}>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell className={classes.tableheader}>Id</TableCell>
-                    <TableCell className={classes.tableheader}>Name</TableCell>
-                    <TableCell className={classes.tableheader}>
-                      Category
-                    </TableCell>
-                    <TableCell className={classes.tableheader}>Brand</TableCell>
-                    <TableCell className={classes.tableheader}>
-                      Last updated at
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rowData.map((row) => (
-                    <ExpandableRow key={row.name} row={row} />
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </TableContainer>
-        </Grid>
-      </Grid>
+      </Grid> */}
     </React.Fragment>
   );
 }

@@ -7,7 +7,7 @@ import UserCardList from './usercardlist'
 import UserDetailComp from './userdetail'
 import UserNewComp from "./usernew";
 //material ui core imports
-import LinearProgress from "@material-ui/core/LinearProgress";
+// import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Fab from '@material-ui/core/Fab'
@@ -39,9 +39,9 @@ class UserComp extends React.Component {
     return (
       <div className="body-class">
         <AppBarComp title="Users" />
-        {this.state.fetchstatus === "loading" && (
+        {/* {this.state.fetchstatus === "loading" && (
           <LinearProgress color="secondary" />
-        )}
+        )} */}
         {this.state.fetchstatus === "fetched" && (
           <Paper className="paper-container">
             <Grid container direction="row" spacing={0}>
