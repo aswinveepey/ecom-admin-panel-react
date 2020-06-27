@@ -220,13 +220,6 @@ class UserDetailComp extends React.Component {
             </Typography>
           </Paper>
         )}
-        {/* Show loading indication to user */}
-        {/* {this.state.fetchstatus === "loading" && (
-          <Container>
-            <LinearProgress color="secondary" />
-          </Container>
-        )} */}
-        {/* Show user details */}
         {this.state.fetchstatus === "fetched" && (
           <Paper
             className="paper-box"
@@ -272,15 +265,7 @@ class UserDetailComp extends React.Component {
                           >
                             <CloseIcon color="secondary" />
                           </IconButton>
-                          <IconButton
-                            type="submit"
-                            // onClick={() =>
-                            //   this.setState({
-                            //     editTogggle: false,
-                            //     paperelevation: 0,
-                            //   })
-                            // }
-                          >
+                          <IconButton type="submit">
                             <CheckIcon color="primary" />
                           </IconButton>
                         </div>

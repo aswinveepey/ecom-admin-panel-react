@@ -1,21 +1,10 @@
 import React from 'react'
 import AppBarComp from "../common/appbar";
-import Paper from '@material-ui/core/Paper'
+import PaperBox from "../common/paperbox"
 
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
-
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme) => ({
-  raisedpaper: {
-    top: "-18vh",
-    position: "relative",
-    margin: "2%",
-    padding: "1%",
-  },
-}));
 
 const gridData = {
   gridOptions: {
@@ -188,11 +177,10 @@ const gridData = {
 };
 
 export default function OrderIndex(props){
-  const classes = useStyles();
   return (
     <div>
       <AppBarComp title="Orders" />
-      <Paper className={classes.raisedpaper}>
+      <PaperBox>
         <div className="ag-theme-material">
           <AgGridReact
             gridOptions={gridData.gridOptions}
@@ -200,7 +188,7 @@ export default function OrderIndex(props){
             rowData={gridData.rowData}
           ></AgGridReact>
         </div>
-      </Paper>
+      </PaperBox>
     </div>
   );
 };
