@@ -181,7 +181,7 @@ export default function OrderIndex(props){
     <div>
       <AppBarComp title="Orders" />
       <PaperBox>
-        <div className="ag-theme-material">
+        <div className="ag-theme-material" style={{ height: "800px" }}>
           <AgGridReact
             gridOptions={gridData.gridOptions}
             columnDefs={gridData.columnDefs}

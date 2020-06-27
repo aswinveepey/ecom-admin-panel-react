@@ -41,8 +41,13 @@ class UserComp extends React.Component {
       <React.Fragment>
         <AppBarComp title="Users" />
         <PaperBox>
-          <Grid container direction="row" spacing={0}>
-            <Grid item lg={2} sm={3} md={3} xs={4}>
+          <Grid
+            container
+            direction="row"
+            spacing={2}
+          >
+            <Grid item lg={2}>
+              {/* <PaperBox> */}
               <Tooltip title="Add User">
                 <Fab
                   size="small"
@@ -57,12 +62,15 @@ class UserComp extends React.Component {
                 </Fab>
               </Tooltip>
               <UserCardList onSelect={this.selectUser} />
+              {/* </PaperBox> */}
             </Grid>
-            <Grid item lg={10} sm={9} md={9} xs={8}>
+            <Grid item lg={10}>
+              {/* <PaperBox> */}
               {!this.state.newuserflag && (
                 <UserDetailComp userId={this.state.selectedId} />
               )}
               {this.state.newuserflag && <UserNewComp />}
+              {/* </PaperBox> */}
             </Grid>
           </Grid>
         </PaperBox>

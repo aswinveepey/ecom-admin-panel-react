@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 //aggrid imports
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-material.css";
+// import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export default function DataTableComp(props){
   const classes = useStyles();
   return (
-    <div className="ag-theme-material">
+    <div className="ag-theme-material" style={{height:'800px'}}>
       <Tooltip title={"Add " + props.title}>
         <Fab
           size="small"

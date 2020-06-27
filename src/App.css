@@ -1,39 +1,5 @@
-MuiPaper {
-  padding: 20%;
-}
 .button-block{
   width: 100%;
-}
-.login-background
-{
-    /* justify-content: center; */
-    min-height: 30vh;
-    padding: 50px;
-    margin-top:40%;
-    margin-bottom:40%;
-    position: relative;
-}
-.navbar-search {
-  width: 100%;
-}
-.section-title{
-  padding: 15px;
-}
-
-.appbar{
-  width: 100%;
-  height: 30vh!important;
-}
-.login-appbar{
-  width: 100%;
-  height: 30vh!important;
-}
-.app-toolbar{
-  top:2vh!important;
-}
-
-.ag-theme-material{
-  height: 80vh;
 }
 
 .info-box{
@@ -48,10 +14,10 @@ MuiPaper {
 .adduserfab {
     bottom: auto;
     top: -1em;
-    right: -1rem;
+    /* right: -1rem; */
     /* right: -1rem; */
     float: right;
-    position: absolute;
+    position: relative;
 }
 .list-card-item{
 height: 100%;

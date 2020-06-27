@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
+  appbar:{
+    height: '30vh !important'
+  },
+  apptoolbar:{
+    top: '2vh !important'
+  }
 }));
 
 export default function AppBarComp(props){
@@ -44,8 +50,8 @@ export default function AppBarComp(props){
   },[props])
   return (
     <div className={classes.root}>
-      <AppBar position="static" className="appbar">
-        <Toolbar className="app-toolbar">
+      <AppBar position="static" className={classes.appbar}>
+        <Toolbar className={classes.apptoolbar}>
           <IconButton
             color="inherit"
             aria-label="open drawer"

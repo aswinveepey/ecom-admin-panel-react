@@ -210,20 +210,13 @@ class UserDetailComp extends React.Component {
       <React.Fragment>
         {/* Initial conditions - ask user to select a user */}
         {this.state.fetchstatus === "init" && (
-          <Paper
-            className="paper-box"
-            variant="elevation"
-            elevation={this.state.paperelevation}
-          >
             <Typography variant="h6">
               Select a User to see the details
             </Typography>
-          </Paper>
         )}
         {this.state.fetchstatus === "fetched" && (
           <Paper
-            className="paper-box"
-            variant="elevation"
+            style={{padding:"10px"}}
             elevation={this.state.paperelevation}
           >
             <form onSubmit={this.handlesubmit}>

@@ -4,10 +4,13 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   raisedpaper: {
-    top: "-18vh",
-    position: "relative",
-    margin: "2%",
+    top: "10vh",
+    width:'96%',
+    margin:'2%',
+    position:"absolute",
     padding: "1%",
+    minHeight:"70vh",
+    // overflow:"auto"
   },
 }));
 

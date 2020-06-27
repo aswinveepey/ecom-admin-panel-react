@@ -69,7 +69,7 @@ class DashComp extends React.Component {
       );
     } 
     return (
-      <div className={classes.raisedpaper}>
+      <React.Fragment>
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <Grid container spacing={1}>
@@ -80,7 +80,7 @@ class DashComp extends React.Component {
             <DashChartComp />
           </Grid>
         </Grid>
-      </div>
+      </React.Fragment>
     );
   }
 }
