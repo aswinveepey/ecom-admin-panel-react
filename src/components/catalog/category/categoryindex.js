@@ -3,16 +3,19 @@ import React from "react";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../../constants";
 import DataTableComp from "../../common/datatable";
+import CategoryDetailComp from "./categorydetail";
 
 export default function CategoryIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
-  // const [loading, setLoading] = React.useState(true);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [dialogData, setDialogData] = React.useState([]);
+
   const token = Cookies.get("token");
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
       // rowHeight: 50,
-      // onRowDoubleClicked: handleRowDoubleClick,
+      onRowDoubleClicked: handleRowDoubleClick,
       pagination: true,
       defaultColDef: {
         resizable: true,
@@ -68,13 +71,16 @@ export default function CategoryIndexComp(params) {
   }, [token]);
     //handle double click
   function handleRowDoubleClick(row) {
-    // setDialogData(row.data);
-    // setOpenDialog(true);
+    setDialogData(row.data);
+    setOpenDialog(true);
   }
   //new account
   function handleNewClick() {
-    // setDialogData([]);
-    // setOpenDialog(true);
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+  function handleDialogClose() {
+    setOpenDialog(false);
   }
   //return component
   return (
@@ -86,11 +92,11 @@ export default function CategoryIndexComp(params) {
         gridData={gridData}
         rowData={rowData}
       />
-      {/* <CategoryDetailComp
+      <CategoryDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}
-      /> */}
+      />
     </React.Fragment>
   ); 
 }

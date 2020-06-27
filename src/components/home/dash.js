@@ -47,7 +47,6 @@ class DashComp extends React.Component {
     }
   }
   render() {
-    const { classes } = this.props;
     const infoBoxData = [
       { id: 1, title: "No of Customers", value: "2340" },
       { id: 2, title: "Monthly GMV", value: "10 Cr" },

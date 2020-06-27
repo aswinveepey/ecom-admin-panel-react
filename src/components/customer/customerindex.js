@@ -14,7 +14,7 @@ export default function CustomerIndexComp(props){
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
-      onRowDoubleClicked: props.handleRowDoubleClick,
+      onRowDoubleClicked: handleRowDoubleClick,
       pagination: true,
       defaultColDef: {
         resizable: true,
