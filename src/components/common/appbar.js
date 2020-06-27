@@ -37,9 +37,11 @@ export default function AppBarComp(props){
   function handleDrawerToggle(){
     setOpen(!open);
   }
-  if (props.search === false){
-    setSearch(false)
-  }
+  React.useEffect(()=>{
+    if (props.search === false) {
+      setSearch(false);
+    }
+  },[props])
   return (
     <div className={classes.root}>
       <AppBar position="static" className="appbar">

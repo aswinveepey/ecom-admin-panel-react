@@ -174,7 +174,9 @@ export default function CustomerDetailComp(props){
         aria-labelledby="customer-dialog"
       >
         <DialogTitle id="customer-dialog-title">
-          {formControls?.firstname + " " + formControls?.lastname}
+          {formControls.firstname &&(
+            formControls?.firstname + " " + formControls?.lastname
+          )}
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <DialogContent>

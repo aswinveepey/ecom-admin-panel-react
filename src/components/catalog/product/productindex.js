@@ -30,8 +30,8 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   fab: {
     float: "left",
-    // position: "relative",
-    // left: "-1rem",
+    position: "relative",
+    left: "-1rem",
   },
   table: {
     minWidth: 700,

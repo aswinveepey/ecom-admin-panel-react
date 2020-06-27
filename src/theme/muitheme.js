@@ -8,11 +8,13 @@ const theme = createMuiTheme({
     fontWeightRegular: 400,
     fontWeightMedium: 500,
   },
+  //enable dark theme
+  // palette: {
+  //   type: "dark",
+  // },
   palette: {
     primary: {
-      light: "#758afe",
       main: "#13424C",
-      dark: "#0D2E35",
       contrastText: "#fff",
     },
     secondary: {
