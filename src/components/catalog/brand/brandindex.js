@@ -3,16 +3,19 @@ import React from "react";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../../constants";
 import DataTableComp from "../../common/datatable";
+import BrandDetailComp from "./branddetail";
 
 export default function BrandIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
-  // const [loading, setLoading] = React.useState(true);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [dialogData, setDialogData] = React.useState([]);
+
   const token = Cookies.get("token");
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
       // rowHeight:50,
-      // onRowDoubleClicked: handleRowDoubleClick,
+      onRowDoubleClicked: handleRowDoubleClick,
       pagination: true,
       defaultColDef: {
         resizable: true,
@@ -36,7 +39,7 @@ export default function BrandIndexComp(params) {
       },
       {
         headerName: "Manufacturer",
-        valueGetter: (params) => params.data?.manufaturer,
+        valueGetter: (params) => params.data?.manufacturer,
       },
       {
         headerName: "Last Updated At",
@@ -70,15 +73,18 @@ export default function BrandIndexComp(params) {
       abortController.abort();
     };
   }, [token]);
-  //double click
+    //handle double click
   function handleRowDoubleClick(row) {
-    // setDialogData(row.data);
-    // setOpenDialog(true);
+    setDialogData(row.data);
+    setOpenDialog(true);
   }
-  //new click
+  //new account
   function handleNewClick() {
-    // setDialogData([]);
-    // setOpenDialog(true);
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+  function handleDialogClose() {
+    setOpenDialog(false);
   }
   //return component
   return (
@@ -90,11 +96,11 @@ export default function BrandIndexComp(params) {
         gridData={gridData}
         rowData={rowData}
       />
-      {/* <BrandDetailComp
+      <BrandDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}
-      /> */}
+      />
     </React.Fragment>
   );
 }

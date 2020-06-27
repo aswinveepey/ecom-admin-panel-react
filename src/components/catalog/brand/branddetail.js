@@ -7,7 +7,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 //styles - Material UI
 // import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
@@ -21,13 +20,11 @@ import { BASE_URL } from "../../../constants";
 //   },
 // }));
 
-export default function CategoryDetailComp(props) {
+export default function BrandDetailComp(props) {
   // const classes = useStyles();
 
   const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
-  const [parentSearchString, setParentSearchString] = React.useState([]);
-  const [categories, setCategories] = React.useState([]);
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose();
@@ -49,9 +46,9 @@ export default function CategoryDetailComp(props) {
     };
     //differentiate between update & create
     const SUFFIX_URL = formControls._id
-      ? "category/id/" + formControls._id
-      : "category/";
-    //POST category data and handle
+      ? "brand/id/" + formControls._id
+      : "brand/";
+    //POST customer data and handle
     fetch(BASE_URL + SUFFIX_URL, requestOptions, {
       signal: signal,
     })
@@ -67,8 +64,8 @@ export default function CategoryDetailComp(props) {
       abortController.abort();
     };
   };
-  //change category input handle
-  const onchangeCategoryInput = (event) => {
+  //change customer input handle
+  const onchangeBrandInput = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -76,51 +73,10 @@ export default function CategoryDetailComp(props) {
     controls[name] = value;
     setFormControls(controls);
   };
-
-  //change account input handle
-  const onchangeParentInput = (event, value) => {
-    event.preventDefault();
-    const controls = { ...formControls };
-    controls.parent = value;
-    setFormControls(controls);
-  };
-  //Change search term - Account
-  const onChangeParentSearch = (event) => {
-    event.preventDefault();
-    setParentSearchString(event.target.value);
-  };
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
   }, [props]);
-  //get account from search string
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: parentSearchString }),
-    };
-    //fetch data and set data
-    if (parentSearchString.length > 2) {
-      fetch(BASE_URL + "category/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setCategories(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [parentSearchString, token]);
 
   return (
     <React.Fragment>
@@ -129,9 +85,9 @@ export default function CategoryDetailComp(props) {
         onClose={handleClose}
         fullWidth={true}
         maxWidth={"sm"}
-        aria-labelledby="category-dialog"
+        aria-labelledby="brand-dialog"
       >
-        <DialogTitle id="category-dialog-title">
+        <DialogTitle id="brand-dialog-title">
           {formControls.name || ""}
         </DialogTitle>
         <form onSubmit={handleSubmit}>
@@ -140,36 +96,22 @@ export default function CategoryDetailComp(props) {
               <Grid item>
                 <TextField
                   value={formControls?.name}
-                  label="Category Name"
+                  label="Brand Name"
                   name="name"
                   variant="standard"
                   fullWidth
-                  onChange={(event) => onchangeCategoryInput(event)}
+                  onChange={(event) => onchangeBrandInput(event)}
                 />
               </Grid>
-              {/* Parent select */}
+              {/* Manufacturer */}
               <Grid item>
-                <Autocomplete
-                  options={categories}
-                  freeSolo
-                  value={formControls.parent || ""}
-                  getOptionLabel={(option) =>
-                    typeof option === "string" ? option : option.name
-                  }
-                  getOptionSelected={(option, value) =>
-                    option ? option.name === value.name : false
-                  }
-                  onChange={(event, value) => onchangeParentInput(event, value)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Parent Category"
-                      name="parent"
-                      variant="standard"
-                      fullWidth
-                      onChange={(event) => onChangeParentSearch(event)}
-                    />
-                  )}
+                <TextField
+                  value={formControls?.manufacturer}
+                  label="Manufacturer"
+                  name="name"
+                  variant="standard"
+                  fullWidth
+                  onChange={(event) => onchangeBrandInput(event)}
                 />
               </Grid>
             </Grid>
