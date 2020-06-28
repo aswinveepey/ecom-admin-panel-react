@@ -12,12 +12,11 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -28,10 +27,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  fab: {
-    float: "left",
-    position: "relative",
-    left: "-1rem",
+  button: {
+    margin:"1%"
   },
   table: {
     minWidth: 700,
@@ -54,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    margin: "1%",
+    marginLeft: "1%",
+    marginBottom: "1%",
   },
   searchinput: {
     width: "100%",
@@ -163,17 +161,15 @@ export default function ProductIndexComp(props){
 
   return (
     <div>
-      <Tooltip title="Add Product">
-        <Fab
-          size="small"
-          color="secondary"
+        <Button
+          color="primary"
+          variant="outlined"
           aria-label="add"
-          className={classes.fab}
+          className={classes.button}
           // onClick={handleNewCustomerClick}
         >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
+          Add Product
+        </Button>
       <Paper component="form" className={classes.searchbar}>
         <InputBase
           placeholder="Search Products"

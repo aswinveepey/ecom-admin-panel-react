@@ -90,7 +90,7 @@ export default function BrandIndexComp(params) {
   return (
     <React.Fragment>
       <DataTableComp
-        title="Accounts"
+        title="Brand"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}

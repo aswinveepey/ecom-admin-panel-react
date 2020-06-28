@@ -86,7 +86,7 @@ export default function CategoryIndexComp(params) {
   return (
     <React.Fragment>
       <DataTableComp
-        title="Accounts"
+        title="Category"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}

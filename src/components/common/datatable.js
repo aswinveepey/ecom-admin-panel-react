@@ -1,12 +1,10 @@
 import React from "react";
 //core imports - Material UI
 import Paper from "@material-ui/core/Paper";
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 //icon imports - Material UI
-import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 //style imports - material ui
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,37 +15,43 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 
 
 const useStyles = makeStyles((theme) => ({
-  fab: {
-    float: "left",
-    position: "relative",
-    left: "-1rem",
+  button: {
+    // float: "left",
+    // position: "fixed",
+    margin:"1%"
   },
   searchbar: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    margin: "1%",
+    marginLeft:'1%',
+    marginBottom:'1%'
   },
   searchinput: {
     width: "100%",
+  },
+  aggrid: {
+    // marginLeft: "3%",
   },
 }));
 
 export default function DataTableComp(props){
   const classes = useStyles();
   return (
-    <div className="ag-theme-material" style={{height:'800px'}}>
-      <Tooltip title={"Add " + props.title}>
-        <Fab
-          size="small"
-          color="secondary"
-          aria-label="add"
-          className={classes.fab}
-          onClick={props.handleNewClick}
-        >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
+    <div className="ag-theme-material" style={{ height: "800px" }}>
+      {/* <Tooltip title={"Add " + props.title}> */}
+      <Button
+        // size="small"
+        color="primary"
+        variant="outlined"
+        aria-label="Add"
+        className={classes.button}
+        onClick={props.handleNewClick}
+      >
+        {"Add " + props.title}
+        {/* <AddIcon /> */}
+      </Button>
+      {/* </Tooltip> */}
       <Paper component="form" className={classes.searchbar}>
         <InputBase
           placeholder={"Search " + props.title}
@@ -61,6 +65,7 @@ export default function DataTableComp(props){
         gridOptions={props.gridData?.gridOptions}
         columnDefs={props.gridData?.columnDefs}
         rowData={props.rowData}
+        className={classes.aggrid}
       ></AgGridReact>
     </div>
   );
