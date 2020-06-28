@@ -9,9 +9,9 @@ import Chip from "@material-ui/core/Chip";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  attrvalues: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "start",
     flexWrap: "wrap",
     "& > *": {
       margin: theme.spacing(0.5),
@@ -30,19 +30,26 @@ export default function AttributeComp(props) {
       <Table>
         <TableBody>
           {props.data?.map((attribute, index) => (
-            <TableRow key={attribute.name}>
+            <TableRow key={index}>
               <TableCell>
                 <TextField
                   value={attribute.name}
+                  data-index={index}
                   name="name"
                   variant="standard"
                   fullWidth
-                  // onChange={(event) => props.onchangeAttributeName(event)}
+                  onChange={(event) =>
+                    props.onchangeAttributeName(event, index)
+                  }
                 />
               </TableCell>
-              <TableCell>
+              <TableCell className={classes.attrvalues}>
                 {attribute.values?.map((value) => (
-                  <Chip label={value} key={value} onDelete={handleAttrValueDelete} />
+                  <Chip
+                    label={value}
+                    key={value}
+                    onDelete={handleAttrValueDelete}
+                  />
                 ))}
               </TableCell>
             </TableRow>

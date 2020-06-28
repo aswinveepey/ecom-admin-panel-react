@@ -92,6 +92,15 @@ export default function CategoryDetailComp(props) {
     controls.parent = value;
     setFormControls(controls);
   };
+  //change account input handle
+  const onchangeFilterAttributeName = (event, index) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.filterattributes[index][name] = value;
+    setFormControls(controls);
+  };
   //Change search term - Account
   const onChangeParentSearch = (event) => {
     event.preventDefault();
@@ -221,7 +230,7 @@ export default function CategoryDetailComp(props) {
               </Grid>
               <Grid item>
                 {/* filterattributes */}
-                <AttributeComp data={formControls.filterattributes} label="FilterAttributes"/>
+                <AttributeComp data={formControls.filterattributes} label="FilterAttributes" onchangeAttributeName={onchangeFilterAttributeName} />
               </Grid>
             </Grid>
           </DialogContent>
