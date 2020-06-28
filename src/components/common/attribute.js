@@ -38,6 +38,7 @@ export default function MultiAttributeComp(props) {
       <Button
         variant="outlined"
         size="small"
+        color="secondary"
         onClick={props.onAttributeAdd}
         className={classes.attrbutton}
       >
@@ -57,6 +58,7 @@ export default function MultiAttributeComp(props) {
               <TableCell>
                 <IconButton
                   size="small"
+                  color="secondary"
                   onClick={(event) => {
                     props.onAttributeDelete(event, index);
                   }}

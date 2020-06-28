@@ -113,6 +113,7 @@ export default function CategoryDetailComp(props) {
   const onAttributeAdd = (event)=>{
     event.preventDefault();
     const controls = { ...formControls };
+    !controls.filterattributes && (controls.filterattributes=[])
     controls.filterattributes.push({ name: "", values: [] });
     setFormControls(controls);
   }
@@ -215,6 +216,7 @@ export default function CategoryDetailComp(props) {
                   label="Category Name"
                   name="name"
                   variant="standard"
+                  required
                   fullWidth
                   onChange={(event) => onchangeCategoryInput(event)}
                 />
