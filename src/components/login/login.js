@@ -1,17 +1,13 @@
 import React from "react";
-// import PropTypes from "prop-types";
-// import Cookies from "js-cookie";
+
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Hidden from "@material-ui/core/Hidden";
-// import withWidth from "@material-ui/core/withWidth";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-// import brandImage from "../../assets/brand-large.png";
 import hhysImage from "../../assets/hhys-full.png";
 import LoginFormComp from './loginform'
-// import {BRAND_NAME, BASE_URL} from '../../constants'
 
 
 const useStyles = makeStyles((theme) => ({

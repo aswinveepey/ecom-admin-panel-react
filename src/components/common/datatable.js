@@ -24,14 +24,15 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    marginLeft:'1%',
+    // marginLeft:'1%',
     marginBottom:'1%'
   },
   searchinput: {
     width: "100%",
   },
-  aggrid: {
-    // marginLeft: "3%",
+  container: {
+    height: "inherit",
+    marginLeft:"1%"
   },
 }));
 
@@ -52,21 +53,23 @@ export default function DataTableComp(props){
         {/* <AddIcon /> */}
       </Button>
       {/* </Tooltip> */}
-      <Paper component="form" className={classes.searchbar}>
-        <InputBase
-          placeholder={"Search " + props.title}
-          className={classes.searchinput}
-        />
-        <IconButton type="submit" aria-label={"Search " + props.title}>
-          <SearchIcon />
-        </IconButton>
-      </Paper>
-      <AgGridReact
-        gridOptions={props.gridData?.gridOptions}
-        columnDefs={props.gridData?.columnDefs}
-        rowData={props.rowData}
-        className={classes.aggrid}
-      ></AgGridReact>
+      <div className={classes.container}>
+        <Paper component="form" className={classes.searchbar}>
+          <InputBase
+            placeholder={"Search " + props.title}
+            className={classes.searchinput}
+          />
+          <IconButton type="submit" aria-label={"Search " + props.title}>
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+        <AgGridReact
+          gridOptions={props.gridData?.gridOptions}
+          columnDefs={props.gridData?.columnDefs}
+          rowData={props.rowData}
+          className={classes.aggrid}
+        ></AgGridReact>
+      </div>
     </div>
   );
 

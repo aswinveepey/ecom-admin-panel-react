@@ -8,20 +8,21 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 //styles - Material UI
-// import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../../constants";
 
-//define styles
-// const useStyles = makeStyles((theme) => ({
-//   addressitem: {
-//     height: "100%",
-//   },
-// }));
+// define styles
+const useStyles = makeStyles((theme) => ({
+  img: {
+    height: "200px",
+    width: "200px",
+  },
+}));
 
 export default function BrandDetailComp(props) {
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
@@ -93,6 +94,32 @@ export default function BrandDetailComp(props) {
         <form onSubmit={handleSubmit}>
           <DialogContent>
             <Grid container direction="column" spacing={1}>
+              {formControls.assets && (
+                <Grid item>
+                  <Grid container alignItems="center" spacing={1}>
+                    <Grid item>
+                      <img
+                        src={formControls.assets.logo}
+                        className={classes.img}
+                        alt="category"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              )}
+              {formControls._id && (
+                <Grid item>
+                  <TextField
+                    value={formControls?._id}
+                    label="ID"
+                    disabled={true}
+                    name="_id"
+                    variant="standard"
+                    fullWidth
+                    // onChange={(event) => onchangeCategoryInput(event)}
+                  />
+                </Grid>
+              )}
               <Grid item>
                 <TextField
                   value={formControls?.name}

@@ -21,14 +21,13 @@ import Button from "@material-ui/core/Button";
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    margin:"1%"
+    margin: "1%",
   },
   table: {
     minWidth: 700,
@@ -51,11 +50,15 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    marginLeft: "1%",
+    // marginLeft: "1%",
     marginBottom: "1%",
   },
   searchinput: {
     width: "100%",
+  },
+  container: {
+    height: "inherit",
+    marginLeft: "1%",
   },
 }));
 function ExpandableRow(props){
@@ -161,53 +164,52 @@ export default function ProductIndexComp(props){
 
   return (
     <div>
-        <Button
-          color="primary"
-          variant="outlined"
-          aria-label="add"
-          className={classes.button}
-          // onClick={handleNewCustomerClick}
-        >
-          Add Product
-        </Button>
-      <Paper component="form" className={classes.searchbar}>
-        <InputBase
-          placeholder="Search Products"
-          className={classes.searchinput}
-        />
-        <IconButton type="submit" aria-label="search products">
-          <SearchIcon />
-        </IconButton>
-      </Paper>
-      <TableContainer>
-        {rowData && (
-          <Table aria-label="simple table" className={classes.table}>
-            <TableHead>
-              <TableRow className={classes.tablerow}>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className={classes.tableheader}>Id</TableCell>
-                <TableCell className={classes.tableheader}>Name</TableCell>
-                <TableCell className={classes.tableheader}>Category</TableCell>
-                <TableCell className={classes.tableheader}>Brand</TableCell>
-                <TableCell className={classes.tableheader}>
-                  Last updated at
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rowData.map((row) => (
-                <ExpandableRow key={row.name} row={row} />
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </TableContainer>
-      {/* <Grid container direction="column" className={classes.tablegrid}>
-        <Grid item xs></Grid>
-        <Grid item>
-        </Grid>
-      </Grid> */}
+      <Button
+        color="primary"
+        variant="outlined"
+        aria-label="add"
+        className={classes.button}
+        // onClick={handleNewCustomerClick}
+      >
+        Add Product
+      </Button>
+      <div className={classes.container}>
+        <Paper component="form" className={classes.searchbar}>
+          <InputBase
+            placeholder="Search Products"
+            className={classes.searchinput}
+          />
+          <IconButton type="submit" aria-label="search products">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+        <TableContainer>
+          {rowData && (
+            <Table aria-label="simple table" className={classes.table}>
+              <TableHead>
+                <TableRow className={classes.tablerow}>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className={classes.tableheader}>Id</TableCell>
+                  <TableCell className={classes.tableheader}>Name</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Category
+                  </TableCell>
+                  <TableCell className={classes.tableheader}>Brand</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Last updated at
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rowData.map((row) => (
+                  <ExpandableRow key={row.name} row={row} />
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </TableContainer>
+      </div>
     </div>
   );
 }

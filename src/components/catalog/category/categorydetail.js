@@ -8,21 +8,29 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import Fab from "@material-ui/core/Fab"
+import AttributeComp from "../../common/attribute"
 //styles - Material UI
-// import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../../constants";
 
-//define styles
-// const useStyles = makeStyles((theme) => ({
-//   addressitem: {
-//     height: "100%",
-//   },
-// }));
+// define styles
+const useStyles = makeStyles((theme) => ({
+  img: {
+    height: "200px",
+    width: "200px",
+  },
+  thumbnail: {
+    height: "50px",
+    width: "50px",
+  },
+}));
 
 export default function CategoryDetailComp(props) {
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
@@ -137,6 +145,45 @@ export default function CategoryDetailComp(props) {
         <form onSubmit={handleSubmit}>
           <DialogContent>
             <Grid container direction="column" spacing={1}>
+              {formControls.assets && (
+                <Grid item>
+                  <Grid container alignItems="center" spacing={1}>
+                    <Grid item>
+                      <img
+                        src={formControls.assets.img}
+                        className={classes.img}
+                        alt="category"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <img
+                        src={formControls.assets.thumbnail}
+                        className={classes.thumbnail}
+                        alt="category"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              )}
+              <Grid item>
+                <Fab variant="extended">
+                  <PhotoCamera />
+                  Upload Image
+                </Fab>
+              </Grid>
+              {formControls._id && (
+                <Grid item>
+                  <TextField
+                    value={formControls?._id}
+                    label="ID"
+                    disabled={true}
+                    name="_id"
+                    variant="standard"
+                    fullWidth
+                    // onChange={(event) => onchangeCategoryInput(event)}
+                  />
+                </Grid>
+              )}
               <Grid item>
                 <TextField
                   value={formControls?.name}
@@ -171,6 +218,10 @@ export default function CategoryDetailComp(props) {
                     />
                   )}
                 />
+              </Grid>
+              <Grid item>
+                {/* filterattributes */}
+                <AttributeComp data={formControls.filterattributes} label="FilterAttributes"/>
               </Grid>
             </Grid>
           </DialogContent>
