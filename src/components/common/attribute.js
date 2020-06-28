@@ -8,6 +8,8 @@ import InputLabel from "@material-ui/core/InputLabel"
 import TextField from "@material-ui/core/TextField"
 import Chip from "@material-ui/core/Chip";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +37,7 @@ export default function MultiAttributeComp(props) {
       <InputLabel>{props.label}</InputLabel>
       <Button
         variant="outlined"
+        size="small"
         onClick={props.onAttributeAdd}
         className={classes.attrbutton}
       >
@@ -51,7 +54,16 @@ export default function MultiAttributeComp(props) {
         <TableBody>
           {props.data?.map((attribute, index) => (
             <TableRow key={index}>
-              <TableCell></TableCell>
+              <TableCell>
+                <IconButton
+                  size="small"
+                  onClick={(event) => {
+                    props.onAttributeDelete(event, index);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </TableCell>
               <TableCell>
                 <TextField
                   value={attribute.name}

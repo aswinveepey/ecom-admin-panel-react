@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     height: "50px",
     width: "50px",
   },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 export default function CategoryDetailComp(props) {
@@ -113,6 +116,13 @@ export default function CategoryDetailComp(props) {
     controls.filterattributes.push({ name: "", values: [] });
     setFormControls(controls);
   }
+  //deletefilter attribute
+  const onAttributeDelete = (event, index)=>{
+    event.preventDefault();
+    const controls = { ...formControls };
+    controls.filterattributes.splice(index,1);
+    setFormControls(controls);
+  }
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -182,9 +192,8 @@ export default function CategoryDetailComp(props) {
                 </Grid>
               )}
               <Grid item>
-                <Fab variant="extended">
-                  <PhotoCamera />
-                  Upload Image
+                <Fab  size="small">
+                  <PhotoCamera/>
                 </Fab>
               </Grid>
               {formControls._id && (
@@ -242,6 +251,7 @@ export default function CategoryDetailComp(props) {
                   label="FilterAttributes"
                   onchangeAttributeName={onchangeFilterAttributeName}
                   onAttributeAdd={onAttributeAdd}
+                  onAttributeDelete={onAttributeDelete}
                 />
               </Grid>
             </Grid>
