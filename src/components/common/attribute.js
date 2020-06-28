@@ -6,8 +6,24 @@ import TableCell from "@material-ui/core/TableCell"
 import InputLabel from "@material-ui/core/InputLabel"
 import TextField from "@material-ui/core/TextField"
 import Chip from "@material-ui/core/Chip";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    "& > *": {
+      margin: theme.spacing(0.5),
+    },
+  },
+}));
 
 export default function AttributeComp(props) {
+  const classes = useStyles();
+  const handleAttrValueDelete = () => {
+    console.info("You clicked the delete icon.");
+  };
   return (
     <React.Fragment>
       <InputLabel>{props.label}</InputLabel>
@@ -25,17 +41,9 @@ export default function AttributeComp(props) {
                 />
               </TableCell>
               <TableCell>
-                {/* <TextField */}
-                  {/* // value={attribute.values} */}
-                  {/* // name="name" */}
-                  {/* // variant="standard" */}
-                  {/* fullWidth */}
-                  {/* // onChange={(event) => props.onchangeAttributeValues(event)} */}
-                {/* // > */}
-                  {attribute.values?.map(value=>(
-                    <Chip label={value} key={value}/>
-                  ))}
-                {/* </TextField> */}
+                {attribute.values?.map((value) => (
+                  <Chip label={value} key={value} onDelete={handleAttrValueDelete} />
+                ))}
               </TableCell>
             </TableRow>
           ))}

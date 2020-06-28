@@ -8,7 +8,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import Drawer from '@material-ui/core/Drawer'
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import Dashboard from "@material-ui/icons/Dashboard";
 import Contacts from "@material-ui/icons/Contacts";
@@ -107,7 +107,13 @@ function DrawerComp(props){
 
   return (
     <nav>
-      <Drawer variant="persistent" open={drawerOpen} anchor="left">
+      <SwipeableDrawer
+        variant="persistent"
+        open={drawerOpen}
+        anchor="left"
+        onClose={handleDrawerToggle}
+        onOpen={handleDrawerToggle}
+      >
         <div className={classes.drawerdiv}>
           <IconButton onClick={handleDrawerToggle}>
             <ChevronLeftIcon />
@@ -132,7 +138,7 @@ function DrawerComp(props){
             <Divider />
           </div>
         </div>
-      </Drawer>
+      </SwipeableDrawer>
     </nav>
   );
 }
