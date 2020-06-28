@@ -106,6 +106,13 @@ export default function CategoryDetailComp(props) {
     event.preventDefault();
     setParentSearchString(event.target.value);
   };
+  //add a new filter attribute
+  const onAttributeAdd = (event)=>{
+    event.preventDefault();
+    const controls = { ...formControls };
+    controls.filterattributes.push({ name: "", values: [] });
+    setFormControls(controls);
+  }
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -234,6 +241,7 @@ export default function CategoryDetailComp(props) {
                   data={formControls.filterattributes}
                   label="FilterAttributes"
                   onchangeAttributeName={onchangeFilterAttributeName}
+                  onAttributeAdd={onAttributeAdd}
                 />
               </Grid>
             </Grid>

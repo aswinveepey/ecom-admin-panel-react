@@ -7,9 +7,13 @@ import TableCell from "@material-ui/core/TableCell"
 import InputLabel from "@material-ui/core/InputLabel"
 import TextField from "@material-ui/core/TextField"
 import Chip from "@material-ui/core/Chip";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  attrbutton:{
+    marginTop:"2%"
+  },
   attrvalues: {
     display: "flex",
     justifyContent: "start",
@@ -22,12 +26,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MultiAttributeComp(props) {
   const classes = useStyles();
+
   const handleAttrValueDelete = () => {
     console.info("You clicked the delete icon.");
   };
   return (
     <React.Fragment>
       <InputLabel>{props.label}</InputLabel>
+      <Button
+        variant="outlined"
+        onClick={props.onAttributeAdd}
+        className={classes.attrbutton}
+      >
+        Add attribute
+      </Button>
       <Table>
         <TableHead>
           <TableRow>
