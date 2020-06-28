@@ -10,7 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Fab from "@material-ui/core/Fab"
-import AttributeComp from "../../common/attribute"
+import MultiAttributeComp from "../../common/attribute";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
@@ -230,7 +230,11 @@ export default function CategoryDetailComp(props) {
               </Grid>
               <Grid item>
                 {/* filterattributes */}
-                <AttributeComp data={formControls.filterattributes} label="FilterAttributes" onchangeAttributeName={onchangeFilterAttributeName} />
+                <MultiAttributeComp
+                  data={formControls.filterattributes}
+                  label="FilterAttributes"
+                  onchangeAttributeName={onchangeFilterAttributeName}
+                />
               </Grid>
             </Grid>
           </DialogContent>

@@ -1,5 +1,6 @@
 import React from "react"
 import Table from "@material-ui/core/Table"
+import TableHead from "@material-ui/core/TableHead"
 import TableBody from "@material-ui/core/TableBody"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AttributeComp(props) {
+export default function MultiAttributeComp(props) {
   const classes = useStyles();
   const handleAttrValueDelete = () => {
     console.info("You clicked the delete icon.");
@@ -28,9 +29,17 @@ export default function AttributeComp(props) {
     <React.Fragment>
       <InputLabel>{props.label}</InputLabel>
       <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell>Attribute</TableCell>
+            <TableCell>Values</TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>
           {props.data?.map((attribute, index) => (
             <TableRow key={index}>
+              <TableCell></TableCell>
               <TableCell>
                 <TextField
                   value={attribute.name}
