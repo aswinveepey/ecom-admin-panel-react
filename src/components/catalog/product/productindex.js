@@ -93,7 +93,7 @@ function ExpandableRow(props){
         <TableCell>
           <IconButton
             size="small"
-            aria-label="edit product"
+            aria-label="product detail"
             onClick={openProductDetail}
           >
             <EditIcon />
@@ -119,7 +119,7 @@ function ExpandableRow(props){
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={productExpand} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography variant="subtitle2" gutterBottom component="div">
                 SKUs
               </Typography>
               {row.skus && <SkuIndexComp data={row.skus} />}
@@ -181,7 +181,7 @@ export default function ProductIndexComp(props){
         variant="outlined"
         aria-label="add"
         className={classes.button}
-        // onClick={handleNewCustomerClick}
+        onClick={openProductDetail}
       >
         Add Product
       </Button>
@@ -197,7 +197,7 @@ export default function ProductIndexComp(props){
         </Paper>
         <TableContainer>
           {rowData && (
-            <Table aria-label="simple table" className={classes.table}>
+            <Table aria-label="product table" className={classes.table}>
               <TableHead>
                 <TableRow className={classes.tablerow}>
                   <TableCell></TableCell>
@@ -227,7 +227,7 @@ export default function ProductIndexComp(props){
           )}
         </TableContainer>
       </div>
-      {productDetailOpen&&(
+      {productDetailOpen && (
         <ProductDetailComp
           open={productDetailOpen}
           handleClose={closeProductDetail}

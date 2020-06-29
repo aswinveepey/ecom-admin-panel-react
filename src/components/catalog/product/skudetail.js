@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -23,14 +23,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ProductDetailComp(props){
+export default function SkuDetailComp(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   //get open state from props
-  React.useEffect(()=>{
-    setOpen(props.open)
-  },[props])
+  React.useEffect(() => {
+    setOpen(props.open);
+  }, [props]);
 
   //delegate close behaviour to parent
   const handleClose = () => {
@@ -56,7 +56,7 @@ export default function ProductDetailComp(props){
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Product
+              SKU
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               save
@@ -66,5 +66,4 @@ export default function ProductDetailComp(props){
       </Dialog>
     </React.Fragment>
   );
-
 }

@@ -6,9 +6,21 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import IconButton from "@material-ui/core/IconButton"
 import EditIcon from "@material-ui/icons/Edit";
+import SkuDetailComp from "./skudetail"
 
 
 export default function SKUIndeComp(props){
+  const [skuDetailOpen, setSkuDetailOpen] = React.useState(false);
+
+  //open Product Detail
+  const openSkuDetail = (event) => {
+    event.preventDefault();
+    setSkuDetailOpen(true);
+  };
+
+  const closeSkuDetail=()=>{
+    setSkuDetailOpen(false);
+  }
   return (
     <React.Fragment>
       <Table size="small" aria-label="skus">
@@ -26,8 +38,12 @@ export default function SKUIndeComp(props){
           {props.data?.map((sku) => (
             <TableRow key={sku.shortid}>
               <TableCell>
-                <IconButton size="small">
-                  <EditIcon/>
+                <IconButton
+                  size="small"
+                  onClick={openSkuDetail}
+                  aria-label="sku detail"
+                >
+                  <EditIcon />
                 </IconButton>
               </TableCell>
               <TableCell>{sku.shortid}</TableCell>
@@ -39,6 +55,9 @@ export default function SKUIndeComp(props){
           ))}
         </TableBody>
       </Table>
+      {skuDetailOpen && (
+        <SkuDetailComp open={skuDetailOpen} handleClose={closeSkuDetail} />
+      )}
     </React.Fragment>
   );
 }
