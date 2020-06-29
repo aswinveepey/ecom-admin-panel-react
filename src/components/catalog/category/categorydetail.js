@@ -11,6 +11,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Fab from "@material-ui/core/Fab"
 import MultiAttributeComp from "../../common/attribute";
+import ImageUploadComp from "../../common/imageupload"
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
@@ -39,11 +40,20 @@ export default function CategoryDetailComp(props) {
   const [formControls, setFormControls] = React.useState([]);
   const [parentSearchString, setParentSearchString] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
+  const [openImageUpload, setOpenImageUpload] = React.useState(false);
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose();
   };
-  // handle dialog form submit
+  //handle image upload close
+  const handleImageUploadClose =()=>{
+    setOpenImageUpload(false);
+  }
+  //new image upload
+  function handleImageUploadClick() {
+    setOpenImageUpload(true);
+  }
+  // handle category form submit
   const handleSubmit = (event) => {
     event.preventDefault();
     //clean up subscriptions using abortcontroller & signals
@@ -193,8 +203,8 @@ export default function CategoryDetailComp(props) {
                 </Grid>
               )}
               <Grid item>
-                <Fab  size="small">
-                  <PhotoCamera/>
+                <Fab size="small" onClick={handleImageUploadClick} >
+                  <PhotoCamera />
                 </Fab>
               </Grid>
               {formControls._id && (
@@ -268,6 +278,7 @@ export default function CategoryDetailComp(props) {
           </DialogActions>
         </form>
       </Dialog>
+      <ImageUploadComp open={openImageUpload} handleDialogClose={handleImageUploadClose} />
     </React.Fragment>
   );
 }
