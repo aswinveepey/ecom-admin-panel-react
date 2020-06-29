@@ -134,6 +134,12 @@ export default function CategoryDetailComp(props) {
     controls.filterattributes.splice(index,1);
     setFormControls(controls);
   }
+  //handle image change
+  const handleImageChange = (image)=>{
+    const controls = { ...formControls }
+    controls.assets["img"] = image;
+    setFormControls(controls);
+  }
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -203,7 +209,7 @@ export default function CategoryDetailComp(props) {
                 </Grid>
               )}
               <Grid item>
-                <Fab size="small" onClick={handleImageUploadClick} >
+                <Fab size="small" onClick={handleImageUploadClick}>
                   <PhotoCamera />
                 </Fab>
               </Grid>
@@ -278,7 +284,11 @@ export default function CategoryDetailComp(props) {
           </DialogActions>
         </form>
       </Dialog>
-      <ImageUploadComp open={openImageUpload} handleDialogClose={handleImageUploadClose} />
+      <ImageUploadComp
+        open={openImageUpload}
+        handleDialogClose={handleImageUploadClose}
+        handleImageChange={handleImageChange}
+      />
     </React.Fragment>
   );
 }
