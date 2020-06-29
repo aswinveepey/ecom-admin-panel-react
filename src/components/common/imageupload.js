@@ -41,7 +41,7 @@ export default function ImageUploadComp(props){
   };
 
   //get signed s3 url for file upload
-  React.useEffect(()=>{
+  React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -51,7 +51,10 @@ export default function ImageUploadComp(props){
         "Content-Type": "application/json",
         Authorization: token,
       },
-      body: JSON.stringify({ Key: "category/"+image?.name, ContentType: image?.type }),
+      body: JSON.stringify({
+        Key: props.keyPath + image?.name,
+        ContentType: image?.type,
+      }),
     };
     //generate put url from api
     image &&
@@ -67,7 +70,7 @@ export default function ImageUploadComp(props){
     return function cleanup() {
       abortController.abort();
     };
-  },[image, token])
+  }, [image, token, props.keyPath]);
 
   //upload Image to S3 Bucket using put url and set image url
   React.useEffect(() => {
@@ -77,7 +80,7 @@ export default function ImageUploadComp(props){
     const requestOptions = {
       method: "PUT",
       params: {
-        Key: "category/" + image?.name,
+        Key: props.keyPath + image?.name,
         ContentType: image?.type,
       },
       headers: {
@@ -93,10 +96,10 @@ export default function ImageUploadComp(props){
         })
         .then(() => setLoader(false))
         .catch((err) => console.log(err));
-      return function cleanup() {
-        abortController.abort();
-      };
-  }, [uploadUrl, image]);
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [uploadUrl, image, props.keyPath]);
 
   //handle submit pass url to parent
   const handleSubmit = (event) => {

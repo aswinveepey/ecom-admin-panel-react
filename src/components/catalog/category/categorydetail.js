@@ -288,6 +288,7 @@ export default function CategoryDetailComp(props) {
         open={openImageUpload}
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
+        keyPath="category/"
       />
     </React.Fragment>
   );

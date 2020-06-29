@@ -7,6 +7,9 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import Fab from "@material-ui/core/Fab";
+import ImageUploadComp from "../../common/imageupload";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
@@ -19,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     height: "200px",
     width: "200px",
   },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 export default function BrandDetailComp(props) {
@@ -26,9 +32,40 @@ export default function BrandDetailComp(props) {
 
   const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
+  const [openImageUpload, setOpenImageUpload] = React.useState(false);
+
+
+  //set form controls from props
+  React.useEffect(() => {
+    setFormControls(props.data);
+  }, [props]);
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose();
+  };
+  //handle image upload close
+  const handleImageUploadClose =()=>{
+    setOpenImageUpload(false);
+  }
+  //new image upload
+  function handleImageUploadClick() {
+    setOpenImageUpload(true);
+  }
+  //handle image change
+  const handleImageChange = (image)=>{
+    const controls = { ...formControls }
+    controls.assets= controls.assets || {}
+    controls.assets["logo"] = image;
+    setFormControls(controls);
+  }
+  //change customer input handle
+  const onchangeBrandInput = (event) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls[name] = value;
+    setFormControls(controls);
   };
   // handle dialog form submit
   const handleSubmit = (event) => {
@@ -65,19 +102,6 @@ export default function BrandDetailComp(props) {
       abortController.abort();
     };
   };
-  //change customer input handle
-  const onchangeBrandInput = (event) => {
-    event.preventDefault();
-    const name = event.target.name;
-    const value = event.target.value;
-    const controls = { ...formControls };
-    controls[name] = value;
-    setFormControls(controls);
-  };
-  //set form controls from props
-  React.useEffect(() => {
-    setFormControls(props.data);
-  }, [props]);
 
   return (
     <React.Fragment>
@@ -107,6 +131,11 @@ export default function BrandDetailComp(props) {
                   </Grid>
                 </Grid>
               )}
+              <Grid item>
+                <Fab size="small" onClick={handleImageUploadClick}>
+                  <PhotoCamera />
+                </Fab>
+              </Grid>
               {formControls._id && (
                 <Grid item>
                   <TextField
@@ -122,7 +151,7 @@ export default function BrandDetailComp(props) {
               )}
               <Grid item>
                 <TextField
-                  value={formControls?.name}
+                  value={formControls?.name || ""}
                   label="Brand Name"
                   name="name"
                   variant="standard"
@@ -133,9 +162,9 @@ export default function BrandDetailComp(props) {
               {/* Manufacturer */}
               <Grid item>
                 <TextField
-                  value={formControls?.manufacturer}
+                  value={formControls?.manufacturer || ""}
                   label="Manufacturer"
-                  name="name"
+                  name="manufacturer"
                   variant="standard"
                   fullWidth
                   onChange={(event) => onchangeBrandInput(event)}
@@ -153,6 +182,12 @@ export default function BrandDetailComp(props) {
           </DialogActions>
         </form>
       </Dialog>
+      <ImageUploadComp
+        open={openImageUpload}
+        handleDialogClose={handleImageUploadClose}
+        handleImageChange={handleImageChange}
+        keyPath="brand/"
+      />
     </React.Fragment>
   );
 }
