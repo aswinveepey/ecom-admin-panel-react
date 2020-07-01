@@ -6,6 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import IconButton from "@material-ui/core/IconButton"
+import Button from "@material-ui/core/Button"
 import EditIcon from "@material-ui/icons/Edit";
 import SkuDetailComp from "./skudetail"
 
@@ -25,6 +26,14 @@ export default function SKUIndeComp(props){
   return (
     <React.Fragment>
       <TableContainer>
+        <Button
+          color="primary"
+          variant="outlined"
+          aria-label="add"
+          onClick={openSkuDetail}
+        >
+          Add SKU
+        </Button>
         <Table size="small" aria-label="skus">
           <TableHead>
             <TableRow>

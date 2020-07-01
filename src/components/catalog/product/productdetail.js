@@ -375,10 +375,10 @@ export default function ProductDetailComp(props) {
               className={classes.title}
               gutterBottom
             >
-              Product Detail
+              {formControls?.name || "Add Product"}
             </Typography>
             <Button autoFocus color="inherit" onClick={handleSubmit}>
-              save
+              save changes
             </Button>
           </Toolbar>
         </AppBar>
@@ -387,9 +387,6 @@ export default function ProductDetailComp(props) {
         <Paper className={classes.gridpaper} variant="outlined">
           {/* Product Name */}
           <Grid container>
-            <Typography variant="h6" gutterBottom>
-              {formControls?.name}
-            </Typography>
             {/* Images card display with add image */}
             <Grid item xs={12}>
               {/* section paper wrap */}
