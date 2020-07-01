@@ -72,7 +72,7 @@ function ExpandableRow(props){
   //open Product Detail
   const openProductDetail = (event)=>{
     event.preventDefault()
-    props.openProductDetail();
+    props.openProductDetail(row);
   }
   return (
     <React.Fragment>
@@ -135,11 +135,13 @@ export default function ProductIndexComp(props){
   const classes = useStyles();
   const [rowData, setRowData] = React.useState([]);
   const [productDetailOpen, setProductDetailOpen] = React.useState(false);
+  const [productDetailData, setProductDetailData] = React.useState([])
   // const [loading, setLoading] = React.useState(true);
   const token = Cookies.get("token");
 
   //open Product Detail
-  const openProductDetail = () => {
+  const openProductDetail = (data) => {
+    setProductDetailData(data);
     setProductDetailOpen(true);
   };
   //close Product Detail
@@ -231,6 +233,7 @@ export default function ProductIndexComp(props){
         <ProductDetailComp
           open={productDetailOpen}
           handleClose={closeProductDetail}
+          data={productDetailData}
         />
       )}
     </React.Fragment>

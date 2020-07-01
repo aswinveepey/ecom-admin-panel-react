@@ -31,6 +31,7 @@ export default function SKUIndeComp(props){
             <TableCell>Name</TableCell>
             <TableCell>MRP</TableCell>
             <TableCell>Selling Price</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Created At</TableCell>
           </TableRow>
         </TableHead>
@@ -50,6 +51,7 @@ export default function SKUIndeComp(props){
               <TableCell>{sku.name}</TableCell>
               <TableCell>{sku.price?.mrp?.$numberDecimal}</TableCell>
               <TableCell>{sku.price?.sellingprice?.$numberDecimal}</TableCell>
+              <TableCell>{sku.status?"Active":"Inactive"}</TableCell>
               <TableCell>{sku.createdat}</TableCell>
             </TableRow>
           ))}

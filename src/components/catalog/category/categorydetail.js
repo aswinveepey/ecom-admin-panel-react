@@ -144,7 +144,7 @@ export default function CategoryDetailComp(props) {
   React.useEffect(() => {
     setFormControls(props.data);
   }, [props]);
-  //get account from search string
+  //get category from search string
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
