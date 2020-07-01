@@ -7,7 +7,7 @@ import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import AddIcon from "@material-ui/icons/Add";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -29,12 +29,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1,
   },
+  gridcontainer: {
+    flexGrow: 1,
+  },
+  griditem: {
+    flexGrow: 1,
+  },
   gridpaper: {
-    marginLeft: theme.spacing(2),
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2),
     padding: theme.spacing(2),
-    display:"block",
-    overflow:"scroll"
+    width: `calc(100% - ${theme.spacing(4)}px)`,
+    overflow: "scroll",
   },
   cardimage: {
     maxHeight: "100px",
@@ -44,8 +49,13 @@ const useStyles = makeStyles((theme) => ({
   },
   imagecard: {
     display: "block",
-    minHeight: "100px",
-    minWidth: "100px",
+    height: "100px",
+    // width: "100px",
+    flexGrow: 1,
+  },
+  colGrid: {
+    width: "100%",
+    overflow: "scroll",
   },
 }));
 
@@ -168,7 +178,7 @@ export default function ProductDetailComp(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar className={classes.appBar}>
+        <AppBar className={classes.appBar} position="fixed">
           <Toolbar>
             <IconButton
               edge="start"
@@ -186,27 +196,28 @@ export default function ProductDetailComp(props) {
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container>
-          <Grid item md={6}>
-            <Grid container spacing={2} direction="column">
+        <Grid container className={classes.gridcontainer}>
+          <Grid item md={6} xs={12} className={classes.griditem}>
+            <Grid container direction="column">
               <Paper className={classes.gridpaper} variant="outlined">
                 <Typography variant="h6" gutterBottom>
                   {formControls?.name}
                 </Typography>
-                <Grid item sm>
+                <Grid item>
                   <Grid container spacing={1}>
-                    <Grid item>
+                    <Grid item md={3} xs={6}>
                       <Card variant="outlined">
                         <ButtonBase>
                           <CardContent className={classes.imagecard}>
-                            <AddIcon />
+                            <PhotoCamera />
                             <Typography>Add Image</Typography>
                           </CardContent>
                         </ButtonBase>
+                        <CardActions></CardActions>
                       </Card>
                     </Grid>
                     {formControls?.assets?.imgs?.map((img, index) => (
-                      <Grid item md={3} key={index}>
+                      <Grid item md={3} xs={6} key={index}>
                         <Card variant="outlined">
                           <CardContent className={classes.imagecard}>
                             <img
@@ -302,8 +313,8 @@ export default function ProductDetailComp(props) {
               </Paper>
             </Grid>
           </Grid>
-          <Grid item md={6} style={{ width: "100%" }}>
-            <Grid container direction="column">
+          <Grid item md={6} xs={12} className={classes.griditem}>
+            <Grid container direction="column" className={classes.colGrid}>
               <Grid item>
                 <Paper className={classes.gridpaper} variant="outlined">
                   <Typography variant="subtitle1" gutterBottom component="div">
