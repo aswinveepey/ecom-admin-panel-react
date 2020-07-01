@@ -32,6 +32,12 @@ export default function MultiAttributeComp(props) {
   const handleAttrValueDelete = () => {
     console.info("You clicked the delete icon.");
   };
+  const onAttributeDelete = (event, index) => {
+    props.onAttributeDelete(event, index);
+  }
+  const onchangeAttributeName = (index, event) => {
+    props.onchangeAttributeName(event, index);
+  };
   return (
     <React.Fragment>
       <InputLabel>{props.label}</InputLabel>
@@ -59,9 +65,7 @@ export default function MultiAttributeComp(props) {
                 <IconButton
                   size="small"
                   color="secondary"
-                  onClick={(event) => {
-                    props.onAttributeDelete(event, index);
-                  }}
+                  onClick={onAttributeDelete}
                 >
                   <DeleteIcon fontSize="small" />
                 </IconButton>
@@ -73,9 +77,7 @@ export default function MultiAttributeComp(props) {
                   name="name"
                   variant="standard"
                   fullWidth
-                  onChange={(event) =>
-                    props.onchangeAttributeName(event, index)
-                  }
+                  onChange={onchangeAttributeName.bind(this, index)}
                 />
               </TableCell>
               <TableCell className={classes.attrvalues}>

@@ -115,20 +115,20 @@ export default function CategoryDetailComp(props) {
     setFormControls(controls);
   };
   //add a new filter attribute
-  const onAttributeAdd = (event)=>{
+  const onFilterAttributeAdd = (event) => {
     event.preventDefault();
     const controls = { ...formControls };
-    !controls.filterattributes && (controls.filterattributes=[])
+    !controls.filterattributes && (controls.filterattributes = []);
     controls.filterattributes.push({ name: "", values: [] });
     setFormControls(controls);
-  }
+  };
   //delete filter attribute
-  const onAttributeDelete = (event, index)=>{
+  const onFilterAttributeDelete = (event, index) => {
     event.preventDefault();
     const controls = { ...formControls };
-    controls.filterattributes.splice(index,1);
+    controls.filterattributes.splice(index, 1);
     setFormControls(controls);
-  }
+  };
   //Change search term - Account
   const onChangeParentSearch = (event) => {
     event.preventDefault();
@@ -268,8 +268,8 @@ export default function CategoryDetailComp(props) {
                   data={formControls.filterattributes}
                   label="FilterAttributes"
                   onchangeAttributeName={onchangeFilterAttributeName}
-                  onAttributeAdd={onAttributeAdd}
-                  onAttributeDelete={onAttributeDelete}
+                  onAttributeAdd={onFilterAttributeAdd}
+                  onAttributeDelete={onFilterAttributeDelete}
                 />
               </Grid>
             </Grid>

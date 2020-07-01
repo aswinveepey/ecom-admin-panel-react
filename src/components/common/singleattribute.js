@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SingleAttributeComp(props) {
   const classes = useStyles();
 
-  const handleAttrValueDelete = () => {
-    console.info("You clicked the delete icon.");
-  };
   return (
     <React.Fragment>
       <InputLabel>{props.label}</InputLabel>

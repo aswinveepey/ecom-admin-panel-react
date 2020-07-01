@@ -1,4 +1,6 @@
 import React from "react";
+import Cookies from "js-cookie";
+//Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -17,11 +19,13 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import Cookies from "js-cookie";
-import SkuIndexComp from "./skuindex";
+//Constants Import
 import { BASE_URL } from "../../../constants";
+//Component import
+import SkuIndexComp from "./skuindex";
 import SingleAttributeComp from "../../common/singleattribute";
 import MultiAttributeComp from "../../common/multiattribute";
+import ImageUploadComp from "../../common/imageupload";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -43,21 +47,35 @@ const useStyles = makeStyles((theme) => ({
     width: `calc(100% - ${theme.spacing(4)}px)`,
     overflow: "scroll",
   },
+  sectionpaper: {
+    padding: theme.spacing(2),
+    width:"100%",
+    // width: `calc(100% - ${theme.spacing(4)}px)`,
+    overflow: "scroll",
+  },
   cardimage: {
     maxHeight: "100px",
     maxWidth: "100px",
     height: "auto",
     width: "auto",
   },
-  imagecard: {
+  imagecardcontent: {
     display: "block",
-    height: "100px",
+    minHeight: "100px",
+    minWidth: "100px",
     // width: "100px",
-    flexGrow: 1,
+    // flexGrow: 1,
+  },
+  imagecard: {
+    // display:'flex',
+    // justifyContent:'center'
   },
   colGrid: {
     width: "100%",
     overflow: "scroll",
+  },
+  addimgbase: {
+    margin: "auto",
   },
 }));
 
@@ -75,6 +93,7 @@ export default function ProductDetailComp(props) {
   const [categories, setCategories] = React.useState([]);
   const [brandSearchString, setBrandSearchString] = React.useState([]);
   const [brands, setBrands] = React.useState([]);
+  const [openImageUpload, setOpenImageUpload] = React.useState(false);
 
   //Change category search term
   const onChangeCategorySearch = (event) => {
@@ -146,6 +165,28 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     const controls = { ...formControls };
     controls.filterattributes.splice(index,1);
+    setFormControls(controls);
+  }
+  //Image upload handlers
+  //handle image upload close
+  const handleImageUploadClose =()=>{
+    setOpenImageUpload(false);
+  }
+  //new image upload
+  function handleImageUploadClick() {
+    setOpenImageUpload(true);
+  }
+  //handle image change
+  const handleImageChange = (image)=>{
+    const controls = { ...formControls }
+    !controls.assets.imgs && (controls.assets.imgs = []);
+    controls.assets.imgs.push(image)
+    setFormControls(controls);
+  }
+  //handle image deletion
+  const deleteImage = (index)=>{
+    const controls = { ...formControls }
+    controls.assets.imgs.splice(index, 1)
     setFormControls(controls);
   }
   React.useEffect(()=>{
@@ -246,140 +287,164 @@ export default function ProductDetailComp(props) {
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container className={classes.gridcontainer}>
-          <Grid item md={6} xs={12} className={classes.griditem}>
+        {/* <Grid container className={classes.gridcontainer}> */}
+          {/* <Grid item className={classes.griditem}> */}
             <Grid container direction="column">
               <Paper className={classes.gridpaper} variant="outlined">
                 <Typography variant="h6" gutterBottom>
                   {formControls?.name}
                 </Typography>
-                <Grid item>
+                <Grid item xs={12}>
                   <Grid container spacing={1}>
-                    <Grid item md={3} xs={6}>
-                      <Card variant="outlined">
-                        <ButtonBase>
-                          <CardContent className={classes.imagecard}>
-                            <PhotoCamera />
-                            <Typography>Add Image</Typography>
-                          </CardContent>
-                        </ButtonBase>
-                        <CardActions></CardActions>
-                      </Card>
-                    </Grid>
-                    {formControls?.assets?.imgs?.map((img, index) => (
-                      <Grid item md={3} xs={6} key={index}>
-                        <Card variant="outlined">
-                          <CardContent className={classes.imagecard}>
-                            <img
-                              src={img}
-                              alt={"Product"}
-                              className={classes.cardimage}
-                            />
-                          </CardContent>
-                          <CardActions>
-                            <Button size="small" color="secondary">
-                              Delete
-                            </Button>
-                            <Button size="small" color="secondary">
-                              Edit
-                            </Button>
-                          </CardActions>
+                      <Grid item md={2} xs={6}>
+                        <Card variant="outlined" className={classes.imagecard}>
+                          <ButtonBase
+                            className={classes.addimgbase}
+                            onClick={handleImageUploadClick}
+                          >
+                            <CardContent className={classes.imagecardcontent}>
+                              <PhotoCamera />
+                              <Typography>Add Image</Typography>
+                            </CardContent>
+                          </ButtonBase>
+                          <CardActions></CardActions>
                         </Card>
                       </Grid>
-                    ))}
+                      {formControls?.assets?.imgs?.map((img, index) => (
+                        <Grid item md={2} xs={6} key={index}>
+                          <Card
+                            variant="outlined"
+                            className={classes.imagecard}
+                          >
+                            <CardContent className={classes.imagecardcontent}>
+                              <img
+                                src={img}
+                                alt={"Product"}
+                                className={classes.cardimage}
+                              />
+                            </CardContent>
+                            <CardActions>
+                              <Button
+                                size="small"
+                                color="secondary"
+                                onClick={deleteImage.bind(this, index)}
+                              >
+                                Delete
+                              </Button>
+                              <Button size="small" color="secondary">
+                                Edit
+                              </Button>
+                            </CardActions>
+                          </Card>
+                        </Grid>
+                      ))}
                   </Grid>
                 </Grid>
-                <Grid item sm>
-                  {formControls?.shortid && (
-                    <Typography gutterBottom>
-                      # {formControls?.shortid}
-                    </Typography>
-                  )}
-                  <TextField
-                    label="Product Name"
-                    variant="standard"
-                    fullWidth
-                    value={formControls?.name || ""}
-                  />
-                  <Autocomplete
-                    options={categories}
-                    freeSolo
-                    value={formControls.category || ""}
-                    getOptionLabel={(option) =>
-                      typeof option === "string" ? option : option.name
-                    }
-                    getOptionSelected={(option, value) =>
-                      option ? option.name === value.name : false
-                    }
-                    onChange={(event, value) =>
-                      onchangeCategoryInput(event, value)
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Category"
-                        name="category"
-                        variant="standard"
-                        onChange={(event) => onChangeCategorySearch(event)}
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    options={brands}
-                    freeSolo
-                    value={formControls.brand || ""}
-                    getOptionLabel={(option) =>
-                      typeof option === "string" ? option : option.name
-                    }
-                    getOptionSelected={(option, value) =>
-                      option ? option.name === value.name : false
-                    }
-                    onChange={(event, value) =>
-                      onchangeBrandInput(event, value)
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Brand"
-                        name="brand"
-                        variant="standard"
-                        onChange={(event) => onChangeBrandSearch(event)}
-                      />
-                    )}
-                  />
-                  {formControls?.description?.map((description, index) => (
-                    <TextField
-                      label="Description"
-                      multiline
-                      rows={4}
-                      fullWidth
-                      name="description"
-                      value={description.value || ""}
-                      variant="standard"
-                      key={index}
-                    />
-                  ))}
-                  <SingleAttributeComp
-                    data={formControls.attributes}
-                    label="Attributes"
-                    onchangeAttribute={onchangeAttribute}
-                    onAttributeAdd={onAttributeAdd}
-                    onAttributeDelete={onAttributeDelete}
-                  />
-                  <MultiAttributeComp
-                    data={formControls.filterattributes}
-                    label="FilterAttributes"
-                    onchangeAttributeName={onchangeFilterAttributeName}
-                    onAttributeAdd={onFilterAttributeAdd}
-                    onAttributeDelete={onFilterAttributeDelete}
-                  />
+                <Grid item xs={12}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <Paper className={classes.sectionpaper}>
+                        {formControls?.shortid && (
+                          <Typography gutterBottom>
+                            # {formControls?.shortid}
+                          </Typography>
+                        )}
+                        <TextField
+                          label="Product Name"
+                          variant="standard"
+                          fullWidth
+                          value={formControls?.name || ""}
+                        />
+                        <Autocomplete
+                          options={categories}
+                          freeSolo
+                          value={formControls.category || ""}
+                          getOptionLabel={(option) =>
+                            typeof option === "string" ? option : option.name
+                          }
+                          getOptionSelected={(option, value) =>
+                            option ? option.name === value.name : false
+                          }
+                          onChange={(event, value) =>
+                            onchangeCategoryInput(event, value)
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Category"
+                              name="category"
+                              variant="standard"
+                              onChange={(event) =>
+                                onChangeCategorySearch(event)
+                              }
+                            />
+                          )}
+                        />
+                        <Autocomplete
+                          options={brands}
+                          freeSolo
+                          value={formControls.brand || ""}
+                          getOptionLabel={(option) =>
+                            typeof option === "string" ? option : option.name
+                          }
+                          getOptionSelected={(option, value) =>
+                            option ? option.name === value.name : false
+                          }
+                          onChange={(event, value) =>
+                            onchangeBrandInput(event, value)
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Brand"
+                              name="brand"
+                              variant="standard"
+                              onChange={(event) => onChangeBrandSearch(event)}
+                            />
+                          )}
+                        />
+                        {formControls?.description?.map(
+                          (description, index) => (
+                            <TextField
+                              label="Description"
+                              multiline
+                              rows={4}
+                              fullWidth
+                              name="description"
+                              value={description.value || ""}
+                              variant="standard"
+                              key={index}
+                            />
+                          )
+                        )}
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Paper className={classes.sectionpaper}>
+                        <SingleAttributeComp
+                          data={formControls.attributes}
+                          label="Attributes"
+                          onchangeAttribute={onchangeAttribute}
+                          onAttributeAdd={onAttributeAdd}
+                          onAttributeDelete={onAttributeDelete}
+                        />
+                        <MultiAttributeComp
+                          data={formControls.filterattributes}
+                          label="FilterAttributes"
+                          onchangeAttributeName={onchangeFilterAttributeName}
+                          onAttributeAdd={onFilterAttributeAdd}
+                          onAttributeDelete={onFilterAttributeDelete}
+                        />
+                      </Paper>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Paper>
             </Grid>
-          </Grid>
-          <Grid item md={6} xs={12} className={classes.griditem}>
+          {/* </Grid> */}
+          {/* <Grid item className={classes.griditem} xs={12}> */}
             <Grid container direction="column" className={classes.colGrid}>
-              <Grid item>
+              <Grid item xs={12}>
                 <Paper className={classes.gridpaper} variant="outlined">
                   <Typography variant="subtitle1" gutterBottom component="div">
                     SKUs
@@ -390,9 +455,16 @@ export default function ProductDetailComp(props) {
                 </Paper>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+          {/* </Grid> */}
+        {/* </Grid> */}
       </Dialog>
+      {/* Image upload component on click */}
+      <ImageUploadComp
+        open={openImageUpload}
+        handleDialogClose={handleImageUploadClose}
+        handleImageChange={handleImageChange}
+        keyPath="product/"
+      />
     </React.Fragment>
   );
 }
