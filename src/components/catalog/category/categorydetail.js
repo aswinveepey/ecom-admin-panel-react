@@ -10,7 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Fab from "@material-ui/core/Fab"
-import MultiAttributeComp from "../../common/attribute";
+import MultiAttributeComp from "../../common/multiattribute";
 import ImageUploadComp from "../../common/imageupload"
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
@@ -105,7 +105,7 @@ export default function CategoryDetailComp(props) {
     controls.parent = value;
     setFormControls(controls);
   };
-  //change account input handle
+  //change filter attribute name handle
   const onchangeFilterAttributeName = (event, index) => {
     event.preventDefault();
     const name = event.target.name;
@@ -113,11 +113,6 @@ export default function CategoryDetailComp(props) {
     const controls = { ...formControls };
     controls.filterattributes[index][name] = value;
     setFormControls(controls);
-  };
-  //Change search term - Account
-  const onChangeParentSearch = (event) => {
-    event.preventDefault();
-    setParentSearchString(event.target.value);
   };
   //add a new filter attribute
   const onAttributeAdd = (event)=>{
@@ -127,13 +122,18 @@ export default function CategoryDetailComp(props) {
     controls.filterattributes.push({ name: "", values: [] });
     setFormControls(controls);
   }
-  //deletefilter attribute
+  //delete filter attribute
   const onAttributeDelete = (event, index)=>{
     event.preventDefault();
     const controls = { ...formControls };
     controls.filterattributes.splice(index,1);
     setFormControls(controls);
   }
+  //Change search term - Account
+  const onChangeParentSearch = (event) => {
+    event.preventDefault();
+    setParentSearchString(event.target.value);
+  };
   //handle image change
   const handleImageChange = (image)=>{
     const controls = { ...formControls }

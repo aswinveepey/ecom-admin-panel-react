@@ -20,6 +20,8 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import Cookies from "js-cookie";
 import SkuIndexComp from "./skuindex";
 import { BASE_URL } from "../../../constants";
+import SingleAttributeComp from "../../common/singleattribute";
+import MultiAttributeComp from "../../common/multiattribute";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -98,6 +100,54 @@ export default function ProductDetailComp(props) {
     controls.brand = value;
     setFormControls(controls);
   };
+  //change filter attribute name handle
+  const onchangeAttribute = (event, index) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.attributes[index][name] = value;
+    setFormControls(controls);
+  };
+  //add a new filter attribute
+  const onAttributeAdd = (event)=>{
+    event.preventDefault();
+    const controls = { ...formControls };
+    !controls.attributes && (controls.attributes=[])
+    controls.filterattributes.push({ name: "", values: "" });
+    setFormControls(controls);
+  }
+  //delete filter attribute
+  const onAttributeDelete = (event, index)=>{
+    event.preventDefault();
+    const controls = { ...formControls };
+    controls.filterattributes.splice(index,1);
+    setFormControls(controls);
+  }
+  //change filter attribute name handle
+  const onchangeFilterAttributeName = (event, index) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.filterattributes[index][name] = value;
+    setFormControls(controls);
+  };
+  //add a new filter attribute
+  const onFilterAttributeAdd = (event)=>{
+    event.preventDefault();
+    const controls = { ...formControls };
+    !controls.filterattributes && (controls.filterattributes=[])
+    controls.filterattributes.push({ name: "", values: [] });
+    setFormControls(controls);
+  }
+  //delete filter attribute
+  const onFilterAttributeDelete = (event, index)=>{
+    event.preventDefault();
+    const controls = { ...formControls };
+    controls.filterattributes.splice(index,1);
+    setFormControls(controls);
+  }
   React.useEffect(()=>{
     props.data && setFormControls(props.data)
   },[props])
@@ -309,6 +359,20 @@ export default function ProductDetailComp(props) {
                       key={index}
                     />
                   ))}
+                  <SingleAttributeComp
+                    data={formControls.attributes}
+                    label="Attributes"
+                    onchangeAttribute={onchangeAttribute}
+                    onAttributeAdd={onAttributeAdd}
+                    onAttributeDelete={onAttributeDelete}
+                  />
+                  <MultiAttributeComp
+                    data={formControls.filterattributes}
+                    label="FilterAttributes"
+                    onchangeAttributeName={onchangeFilterAttributeName}
+                    onAttributeAdd={onFilterAttributeAdd}
+                    onAttributeDelete={onFilterAttributeDelete}
+                  />
                 </Grid>
               </Paper>
             </Grid>
