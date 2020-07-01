@@ -45,7 +45,7 @@ export default function SingleAttributeComp(props) {
           <TableRow>
             <TableCell></TableCell>
             <TableCell>Attribute</TableCell>
-            <TableCell>Values</TableCell>
+            <TableCell>Value</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -76,9 +76,9 @@ export default function SingleAttributeComp(props) {
               </TableCell>
               <TableCell className={classes.attrvalues}>
                 <TextField
-                  value={attribute.name}
+                  value={attribute.value}
                   data-index={index}
-                  name="name"
+                  name="value"
                   variant="standard"
                   fullWidth
                   onChange={(event) =>

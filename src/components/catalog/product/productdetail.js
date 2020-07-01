@@ -43,15 +43,17 @@ const useStyles = makeStyles((theme) => ({
   },
   gridpaper: {
     margin: theme.spacing(2),
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     width: `calc(100% - ${theme.spacing(4)}px)`,
-    overflow: "scroll",
+    // overflow: "scroll",
   },
   sectionpaper: {
     padding: theme.spacing(2),
-    width:"100%",
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    // width:"100%",
     // width: `calc(100% - ${theme.spacing(4)}px)`,
-    overflow: "scroll",
+    // overflow: "scroll",
   },
   cardimage: {
     maxHeight: "100px",
@@ -72,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
   colGrid: {
     width: "100%",
-    overflow: "scroll",
+    // overflow: "scroll",
   },
   addimgbase: {
     margin: "auto",
@@ -95,6 +97,58 @@ export default function ProductDetailComp(props) {
   const [brands, setBrands] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
 
+  //Change product name handling
+  const onchangeProductName = (event) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls[name] = value;
+    setFormControls(controls);
+  };
+  //change product description
+  const onchangeProductDescription = (index, event) => {
+    event.preventDefault();
+    // const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.description = controls.description || [];
+    controls.description[index] = {
+      lang: "en",
+      value: value,
+    };
+    setFormControls(controls);
+  };
+  //Change product storage handling
+  const onchangeStorage = (event) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.storage = controls.storage || {}
+    controls.storage[name] = value;
+    setFormControls(controls);
+  };
+  //Change product logistics handling
+  const onchangeLogistics = (event) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.logistics = controls.logistics || {};
+    controls.logistics[name] = value;
+    setFormControls(controls);
+  };
+  //Change product GST handling
+  const onchangegst = (event) => {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.value;
+    const controls = { ...formControls };
+    controls.gst = controls.gst || {};
+    controls.gst[name] = value;
+    setFormControls(controls);
+  };
   //Change category search term
   const onChangeCategorySearch = (event) => {
     event.preventDefault();
@@ -179,7 +233,8 @@ export default function ProductDetailComp(props) {
   //handle image change
   const handleImageChange = (image)=>{
     const controls = { ...formControls }
-    !controls.assets.imgs && (controls.assets.imgs = []);
+    controls.assets = controls.assets || {}
+    !controls.assets.imgs && (controls.assets.imgs=[])
     controls.assets.imgs.push(image)
     setFormControls(controls);
   }
@@ -201,6 +256,40 @@ export default function ProductDetailComp(props) {
   //delegate close behaviour to parent
   const handleClose = () => {
     props.handleClose();
+  };
+  //handle submit
+  const handleSubmit = () => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(formControls),
+    };
+    //differentiate between update & create
+    const SUFFIX_URL = formControls._id
+      ? "product/id/" + formControls._id
+      : "product/";
+    //POST category data and handle
+    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
+      signal: signal,
+    })
+      .then(async (data) => {
+        // const response = await data.json();
+        const { status } = data;
+        if (status === 200) {
+          handleClose();
+        }
+      })
+      .catch((err) => console.log(err));
+    return function cleanup() {
+      abortController.abort();
+    };
   };
   
   //get category from search string
@@ -269,6 +358,8 @@ export default function ProductDetailComp(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
+        {/* App Bar
+            Contains close, submit, & title in between  */}
         <AppBar className={classes.appBar} position="fixed">
           <Toolbar>
             <IconButton
@@ -279,183 +370,293 @@ export default function ProductDetailComp(props) {
             >
               <CloseIcon />
             </IconButton>
-            <Typography variant="subtitle1" className={classes.title}>
+            <Typography
+              variant="subtitle1"
+              className={classes.title}
+              gutterBottom
+            >
               Product Detail
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={handleSubmit}>
               save
             </Button>
           </Toolbar>
         </AppBar>
-        {/* <Grid container className={classes.gridcontainer}> */}
-          {/* <Grid item className={classes.griditem}> */}
-            <Grid container direction="column">
-              <Paper className={classes.gridpaper} variant="outlined">
+        {/* End App Bar*/}
+        {/* Wrap in outlined paper */}
+        <Paper className={classes.gridpaper} variant="outlined">
+          {/* Product Name */}
+          <Grid container>
+            <Typography variant="h6" gutterBottom>
+              {formControls?.name}
+            </Typography>
+            {/* Images card display with add image */}
+            <Grid item xs={12}>
+              {/* section paper wrap */}
+              <Paper className={classes.sectionpaper}>
+                {/* section title */}
                 <Typography variant="h6" gutterBottom>
-                  {formControls?.name}
+                  Product Images
                 </Typography>
-                <Grid item xs={12}>
-                  <Grid container spacing={1}>
-                      <Grid item md={2} xs={6}>
-                        <Card variant="outlined" className={classes.imagecard}>
-                          <ButtonBase
-                            className={classes.addimgbase}
-                            onClick={handleImageUploadClick}
-                          >
-                            <CardContent className={classes.imagecardcontent}>
-                              <PhotoCamera />
-                              <Typography>Add Image</Typography>
-                            </CardContent>
-                          </ButtonBase>
-                          <CardActions></CardActions>
-                        </Card>
-                      </Grid>
-                      {formControls?.assets?.imgs?.map((img, index) => (
-                        <Grid item md={2} xs={6} key={index}>
-                          <Card
-                            variant="outlined"
-                            className={classes.imagecard}
-                          >
-                            <CardContent className={classes.imagecardcontent}>
-                              <img
-                                src={img}
-                                alt={"Product"}
-                                className={classes.cardimage}
-                              />
-                            </CardContent>
-                            <CardActions>
-                              <Button
-                                size="small"
-                                color="secondary"
-                                onClick={deleteImage.bind(this, index)}
-                              >
-                                Delete
-                              </Button>
-                              <Button size="small" color="secondary">
-                                Edit
-                              </Button>
-                            </CardActions>
-                          </Card>
-                        </Grid>
-                      ))}
+                <Grid container spacing={1}>
+                  {/* Add product grid */}
+                  <Grid item md={2} xs={6}>
+                    <Card variant="outlined" className={classes.imagecard}>
+                      {/* Button base covers card content to make whole card clickable */}
+                      <ButtonBase
+                        className={classes.addimgbase}
+                        onClick={handleImageUploadClick}
+                      >
+                        <CardContent className={classes.imagecardcontent}>
+                          <PhotoCamera />
+                          <Typography>Add Image</Typography>
+                        </CardContent>
+                      </ButtonBase>
+                      <CardActions></CardActions>
+                    </Card>
                   </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <Paper className={classes.sectionpaper}>
-                        {formControls?.shortid && (
-                          <Typography gutterBottom>
-                            # {formControls?.shortid}
-                          </Typography>
-                        )}
-                        <TextField
-                          label="Product Name"
-                          variant="standard"
-                          fullWidth
-                          value={formControls?.name || ""}
-                        />
-                        <Autocomplete
-                          options={categories}
-                          freeSolo
-                          value={formControls.category || ""}
-                          getOptionLabel={(option) =>
-                            typeof option === "string" ? option : option.name
-                          }
-                          getOptionSelected={(option, value) =>
-                            option ? option.name === value.name : false
-                          }
-                          onChange={(event, value) =>
-                            onchangeCategoryInput(event, value)
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Category"
-                              name="category"
-                              variant="standard"
-                              onChange={(event) =>
-                                onChangeCategorySearch(event)
-                              }
-                            />
-                          )}
-                        />
-                        <Autocomplete
-                          options={brands}
-                          freeSolo
-                          value={formControls.brand || ""}
-                          getOptionLabel={(option) =>
-                            typeof option === "string" ? option : option.name
-                          }
-                          getOptionSelected={(option, value) =>
-                            option ? option.name === value.name : false
-                          }
-                          onChange={(event, value) =>
-                            onchangeBrandInput(event, value)
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Brand"
-                              name="brand"
-                              variant="standard"
-                              onChange={(event) => onChangeBrandSearch(event)}
-                            />
-                          )}
-                        />
-                        {formControls?.description?.map(
-                          (description, index) => (
-                            <TextField
-                              label="Description"
-                              multiline
-                              rows={4}
-                              fullWidth
-                              name="description"
-                              value={description.value || ""}
-                              variant="standard"
-                              key={index}
-                            />
-                          )
-                        )}
-                      </Paper>
+                  {/* if images loop and display with edit & display */}
+                  {formControls?.assets?.imgs?.map((img, index) => (
+                    <Grid item md={2} xs={6} key={index}>
+                      <Card variant="outlined" className={classes.imagecard}>
+                        <CardContent className={classes.imagecardcontent}>
+                          <img
+                            src={img}
+                            alt={"Product"}
+                            className={classes.cardimage}
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={deleteImage.bind(this, index)}
+                          >
+                            Delete
+                          </Button>
+                          <Button size="small" color="secondary">
+                            Edit
+                          </Button>
+                        </CardActions>
+                      </Card>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Paper className={classes.sectionpaper}>
-                        <SingleAttributeComp
-                          data={formControls.attributes}
-                          label="Attributes"
-                          onchangeAttribute={onchangeAttribute}
-                          onAttributeAdd={onAttributeAdd}
-                          onAttributeDelete={onAttributeDelete}
-                        />
-                        <MultiAttributeComp
-                          data={formControls.filterattributes}
-                          label="FilterAttributes"
-                          onchangeAttributeName={onchangeFilterAttributeName}
-                          onAttributeAdd={onFilterAttributeAdd}
-                          onAttributeDelete={onFilterAttributeDelete}
-                        />
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                  ))}
                 </Grid>
               </Paper>
             </Grid>
-          {/* </Grid> */}
-          {/* <Grid item className={classes.griditem} xs={12}> */}
-            <Grid container direction="column" className={classes.colGrid}>
-              <Grid item xs={12}>
-                <Paper className={classes.gridpaper} variant="outlined">
-                  <Typography variant="subtitle1" gutterBottom component="div">
-                    SKUs
-                  </Typography>
-                  {formControls.skus && (
-                    <SkuIndexComp data={formControls.skus} />
-                  )}
-                </Paper>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                {/* Product basic data section - Name, description, card & brand */}
+                <Grid item xs={12} md={6}>
+                  <Paper className={classes.sectionpaper}>
+                    <Typography variant="h6" gutterBottom>
+                      Product Details
+                    </Typography>
+                    {formControls?.shortid && (
+                      <Typography gutterBottom>
+                        # {formControls?.shortid}
+                      </Typography>
+                    )}
+                    {/* Product Name text field */}
+                    <TextField
+                      label="Product Name"
+                      variant="standard"
+                      name="name"
+                      fullWidth
+                      onChange={onchangeProductName}
+                      value={formControls?.name || ""}
+                    />
+                    {/* select category from search results */}
+                    <Autocomplete
+                      options={categories}
+                      freeSolo
+                      value={formControls.category || ""}
+                      getOptionLabel={(option) =>
+                        typeof option === "string" ? option : option.name
+                      }
+                      getOptionSelected={(option, value) =>
+                        option ? option.name === value.name : false
+                      }
+                      onChange={(event, value) =>
+                        onchangeCategoryInput(event, value)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Category"
+                          name="category"
+                          variant="standard"
+                          onChange={(event) => onChangeCategorySearch(event)}
+                        />
+                      )}
+                    />
+                    {/* select brand from  search result */}
+                    <Autocomplete
+                      options={brands}
+                      freeSolo
+                      value={formControls.brand || ""}
+                      getOptionLabel={(option) =>
+                        typeof option === "string" ? option : option.name
+                      }
+                      getOptionSelected={(option, value) =>
+                        option ? option.name === value.name : false
+                      }
+                      onChange={(event, value) =>
+                        onchangeBrandInput(event, value)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Brand"
+                          name="brand"
+                          variant="standard"
+                          onChange={(event) => onChangeBrandSearch(event)}
+                        />
+                      )}
+                    />
+                    {/* Display descriptions - Supports multiple values */}
+                    {formControls?.description?.map((description, index) => (
+                      <TextField
+                        label="Description"
+                        multiline
+                        rows={4}
+                        fullWidth
+                        name="description"
+                        onChange={onchangeProductDescription.bind(this, index)}
+                        value={description.value || ""}
+                        variant="standard"
+                        key={index}
+                      />
+                    ))}
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Paper className={classes.sectionpaper}>
+                    <Typography variant="h6" gutterBottom>
+                      Product Attributes
+                    </Typography>
+                    <SingleAttributeComp
+                      data={formControls.attributes}
+                      label="Display Attributes"
+                      onchangeAttribute={onchangeAttribute}
+                      onAttributeAdd={onAttributeAdd}
+                      onAttributeDelete={onAttributeDelete}
+                    />
+                    <MultiAttributeComp
+                      data={formControls.filterattributes}
+                      label="FilterAttributes"
+                      onchangeAttributeName={onchangeFilterAttributeName}
+                      onAttributeAdd={onFilterAttributeAdd}
+                      onAttributeDelete={onFilterAttributeDelete}
+                    />
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Paper className={classes.sectionpaper}>
+                    <Typography variant="h6" gutterBottom>
+                      Storage & Logistics
+                    </Typography>
+                    {/* Product Name text field */}
+                    <TextField
+                      label="Storage Type"
+                      variant="standard"
+                      name="storagetype"
+                      fullWidth
+                      onChange={onchangeStorage}
+                      value={formControls?.storage?.storagetype || ""}
+                    />
+                    <TextField
+                      label="Shelf Life"
+                      variant="standard"
+                      name="shelflife"
+                      fullWidth
+                      onChange={onchangeStorage}
+                      value={formControls?.storage?.shelflife || ""}
+                    />
+                    <TextField
+                      label="Deadweight"
+                      variant="standard"
+                      name="deadweight"
+                      type="number"
+                      fullWidth
+                      onChange={onchangeLogistics}
+                      value={
+                        formControls?.logistics?.deadweight?.$numberDecimal || 0
+                      }
+                    />
+                    <TextField
+                      label="Volumetric Weight"
+                      variant="standard"
+                      name="volumetricweight"
+                      type="number"
+                      fullWidth
+                      onChange={onchangeLogistics}
+                      value={
+                        formControls?.logistics?.volumetricweight
+                          .$numberDecimal || 0
+                      }
+                    />
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Paper className={classes.sectionpaper}>
+                    <Typography variant="h6" gutterBottom>
+                      GST
+                    </Typography>
+                    <TextField
+                      label="HSN Code"
+                      variant="standard"
+                      name="hsncode"
+                      fullWidth
+                      onChange={onchangegst}
+                      value={formControls?.gst?.hsncode || ""}
+                    />
+                    <TextField
+                      label="CGST"
+                      variant="standard"
+                      name="cgst"
+                      type="number"
+                      fullWidth
+                      onChange={onchangegst}
+                      value={formControls?.gst?.cgst?.$numberDecimal || 0}
+                    />
+                    <TextField
+                      label="IGST"
+                      variant="standard"
+                      name="igst"
+                      type="number"
+                      fullWidth
+                      onChange={onchangegst}
+                      value={formControls?.gst?.igst?.$numberDecimal || 0}
+                    />
+                    <TextField
+                      label="SGST"
+                      variant="standard"
+                      name="sgst"
+                      type="number"
+                      fullWidth
+                      onChange={onchangegst}
+                      value={formControls?.gst?.sgst?.$numberDecimal || 0}
+                    />
+                  </Paper>
+                </Grid>
               </Grid>
             </Grid>
-          {/* </Grid> */}
+          </Grid>
+        </Paper>
+        {/* </Grid> */}
+        {/* <Grid item className={classes.griditem} xs={12}> */}
+        <Grid container direction="column" className={classes.colGrid}>
+          <Grid item xs={12}>
+            <Paper className={classes.gridpaper} variant="outlined">
+              <Typography variant="subtitle1" gutterBottom component="div">
+                SKUs
+              </Typography>
+              {formControls.skus && <SkuIndexComp data={formControls.skus} />}
+            </Paper>
+          </Grid>
+        </Grid>
+        {/* </Grid> */}
         {/* </Grid> */}
       </Dialog>
       {/* Image upload component on click */}
