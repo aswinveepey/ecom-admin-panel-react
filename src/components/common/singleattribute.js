@@ -64,26 +64,22 @@ export default function SingleAttributeComp(props) {
               </TableCell>
               <TableCell>
                 <TextField
-                  value={attribute.name}
+                  value={attribute.name || ""}
                   data-index={index}
                   name="name"
                   variant="standard"
                   fullWidth
-                  onChange={(event) =>
-                    props.onchangeAttribute(event, index)
-                  }
+                  onChange={(event) => props.onchangeAttribute(event, index)}
                 />
               </TableCell>
               <TableCell className={classes.attrvalues}>
                 <TextField
-                  value={attribute.value}
+                  value={attribute.value || ""}
                   data-index={index}
                   name="value"
                   variant="standard"
                   fullWidth
-                  onChange={(event) =>
-                    props.onchangeAttribute(event, index)
-                  }
+                  onChange={(event) => props.onchangeAttribute(event, index)}
                 />
               </TableCell>
             </TableRow>

@@ -25,7 +25,6 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { BASE_URL } from "../../../constants";
 //Component import
 import SingleAttributeComp from "../../common/singleattribute";
-import MultiAttributeComp from "../../common/multiattribute";
 import ImageUploadComp from "../../common/imageupload";
 
 const useStyles = makeStyles((theme) => ({
@@ -503,7 +502,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.mrp}
+                      value={formControls?.price?.mrp || 0}
                     />
                     <TextField
                       label="Discount"
@@ -512,7 +511,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.discount}
+                      value={formControls?.price?.discount || 0}
                     />
                     <TextField
                       label="Selling Price"
@@ -521,7 +520,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.sellingprice}
+                      value={formControls?.price?.sellingprice || 0}
                     />
                     <TextField
                       label="Shipping Charges"
@@ -530,7 +529,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.shippingcharges}
+                      value={formControls?.price?.shippingcharges || 0}
                     />
                     <TextField
                       label="Installation Charges"
@@ -539,7 +538,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.installationcharges}
+                      value={formControls?.price?.installationcharges || 0}
                     />
                     <TextField
                       label="Bulk discount threshold"
@@ -548,7 +547,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeBulkdiscount}
-                      value={formControls?.bulkdiscount?.threshold}
+                      value={formControls?.bulkdiscount?.threshold || 0}
                     />
                     <TextField
                       label="Bulk discount Amount"
@@ -557,7 +556,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeBulkdiscount}
-                      value={formControls?.bulkdiscount?.discount}
+                      value={formControls?.bulkdiscount?.discount || 0}
                     />
                     <TextField
                       label="Minimum Order Quantity"
@@ -566,7 +565,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeQuantityrules}
-                      value={formControls?.quantityrules?.minorderqty}
+                      value={formControls?.quantityrules?.minorderqty || 0}
                     />
                     <TextField
                       label="Maximum Order Quantity"
@@ -575,7 +574,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeQuantityrules}
-                      value={formControls?.quantityrules?.maxorderqty}
+                      value={formControls?.quantityrules?.maxorderqty || 0}
                     />
                     {/* Min Order Qty Multiple Flag comes here */}
                     <FormControlLabel
@@ -617,9 +616,9 @@ export default function SkuDetailComp(props) {
                       Display Attributes are used for display alone - Use for
                       additional info
                     </Typography>
-                    <MultiAttributeComp
+                    <SingleAttributeComp
                       data={formControls.dattributes}
-                      onchangeAttributeName={onchangeDattribute}
+                      onchangeAttribute={onchangeDattribute}
                       onAttributeAdd={onDattributeAdd}
                       onAttributeDelete={onDattributeDelete}
                     />
