@@ -13,10 +13,12 @@ import SkuDetailComp from "./skudetail"
 
 export default function SKUIndeComp(props){
   const [skuDetailOpen, setSkuDetailOpen] = React.useState(false);
+  const [skuDetailData, setSkuDetailData] = React.useState([]);
 
   //open Product Detail
-  const openSkuDetail = (event) => {
+  const openSkuDetail = (sku, event) => {
     event.preventDefault();
+    setSkuDetailData(sku);
     setSkuDetailOpen(true);
   };
 
@@ -52,7 +54,7 @@ export default function SKUIndeComp(props){
                 <TableCell>
                   <IconButton
                     size="small"
-                    onClick={openSkuDetail}
+                    onClick={openSkuDetail.bind(this, sku)}
                     aria-label="sku detail"
                   >
                     <EditIcon />
@@ -70,7 +72,7 @@ export default function SKUIndeComp(props){
         </Table>
       </TableContainer>
       {skuDetailOpen && (
-        <SkuDetailComp open={skuDetailOpen} handleClose={closeSkuDetail} />
+        <SkuDetailComp open={skuDetailOpen} handleClose={closeSkuDetail} data={skuDetailData}/>
       )}
     </React.Fragment>
   );
