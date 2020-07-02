@@ -150,11 +150,11 @@ export default function SkuDetailComp(props) {
     const name = event.target.name;
     const value = event.target.value;
     const controls = { ...formControls };
-    controls.quanityrules = controls.quanityrules || {};
-    if (name === "status") {
-      controls.quanityrules[name] = event.target.checked;
+    controls.quantityrules = controls.quantityrules || {};
+    if (name === "minorderqtystep") {
+      controls.quantityrules[name] = event.target.checked;
     } else {
-      controls.quanityrules[name] = value;
+      controls.quantityrules[name] = value;
     }
     setFormControls(controls);
   };
@@ -445,6 +445,10 @@ export default function SkuDetailComp(props) {
                     <Typography variant="h6" gutterBottom>
                       Manage Inventory
                     </Typography>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Inventory is mapped to territories - Use All for inventory
+                      without restriction
+                    </Typography>
                     {formControls?.inventory?.map((data, index) => (
                       <div key={index}>
                         <Autocomplete
@@ -535,9 +539,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={
-                        formControls?.price?.installationcharges
-                      }
+                      value={formControls?.price?.installationcharges}
                     />
                     <TextField
                       label="Bulk discount threshold"
@@ -546,9 +548,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeBulkdiscount}
-                      value={
-                        formControls?.bulkdiscount?.threshold
-                      }
+                      value={formControls?.bulkdiscount?.threshold}
                     />
                     <TextField
                       label="Bulk discount Amount"
@@ -557,9 +557,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeBulkdiscount}
-                      value={
-                        formControls?.bulkdiscount?.discount
-                      }
+                      value={formControls?.bulkdiscount?.discount}
                     />
                     <TextField
                       label="Minimum Order Quantity"
@@ -568,9 +566,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeQuantityrules}
-                      value={
-                        formControls?.quanityrules?.minorderqty
-                      }
+                      value={formControls?.quantityrules?.minorderqty}
                     />
                     <TextField
                       label="Maximum Order Quantity"
@@ -579,16 +575,19 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangeQuantityrules}
-                      value={
-                        formControls?.quanityrules?.maxorderqty
-                      }
+                      value={formControls?.quantityrules?.maxorderqty}
                     />
                     {/* Min Order Qty Multiple Flag comes here */}
                     <FormControlLabel
                       control={
                         <Switch
-                          name="status"
-                          checked={formControls?.quanityrules?.minorderqtystep}
+                          name="minorderqtystep"
+                          checked={
+                            formControls?.quantityrules?.minorderqtystep ===
+                            undefined
+                              ? true
+                              : formControls.quantityrules.minorderqtystep
+                          }
                           // disabled={!this.state.editTogggle}
                           onChange={onchangeQuantityrules}
                           color="primary"
@@ -605,16 +604,21 @@ export default function SkuDetailComp(props) {
                     <Typography variant="h6" gutterBottom>
                       SKU Attributes
                     </Typography>
+                    <Typography variant="subtitle2" gutterBottom>
+                      SKU attribute values are used for sku selection
+                    </Typography>
                     <SingleAttributeComp
                       data={formControls.attributes}
-                      label="Attributes"
                       onchangeAttribute={onchangeAttribute}
                       onAttributeAdd={onAttributeAdd}
                       onAttributeDelete={onAttributeDelete}
                     />
+                    <Typography variant="subtitle2" gutterBottom>
+                      Display Attributes are used for display alone - Use for
+                      additional info
+                    </Typography>
                     <MultiAttributeComp
                       data={formControls.dattributes}
-                      label=" Display Attributes"
                       onchangeAttributeName={onchangeDattribute}
                       onAttributeAdd={onDattributeAdd}
                       onAttributeDelete={onDattributeDelete}

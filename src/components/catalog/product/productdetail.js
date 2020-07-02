@@ -529,19 +529,24 @@ export default function ProductDetailComp(props) {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Paper className={classes.sectionpaper}>
-                    <Typography variant="h6" gutterBottom>
-                      Product Attributes
+                    <Typography variant="h6">Product Attributes</Typography>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Set values for category filter
                     </Typography>
                     <SingleAttributeComp
                       data={formControls.attributes}
-                      label="Display Attributes"
+                      // label="Attributes"
                       onchangeAttribute={onchangeAttribute}
                       onAttributeAdd={onAttributeAdd}
                       onAttributeDelete={onAttributeDelete}
                     />
+                    <Typography variant="h6">SKU Filter Attributes</Typography>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Set the attributes & values for sku selection
+                    </Typography>
                     <MultiAttributeComp
                       data={formControls.filterattributes}
-                      label="FilterAttributes"
+                      // label="FilterAttributes"
                       onchangeAttributeName={onchangeFilterAttributeName}
                       onAttributeAdd={onFilterAttributeAdd}
                       onAttributeDelete={onFilterAttributeDelete}
@@ -577,9 +582,7 @@ export default function ProductDetailComp(props) {
                       type="number"
                       fullWidth
                       onChange={onchangeLogistics}
-                      value={
-                        formControls?.logistics?.deadweight || 0
-                      }
+                      value={formControls?.logistics?.deadweight || 0}
                     />
                     <TextField
                       label="Volumetric Weight"
@@ -588,9 +591,7 @@ export default function ProductDetailComp(props) {
                       type="number"
                       fullWidth
                       onChange={onchangeLogistics}
-                      value={
-                        formControls?.logistics?.volumetricweight || 0
-                      }
+                      value={formControls?.logistics?.volumetricweight || 0}
                     />
                   </Paper>
                 </Grid>
