@@ -98,7 +98,7 @@ export default function ProductDetailComp(props) {
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
 
   //Change product name handling
-  const onchangeProductName = (event) => {
+  const onchangeProduct = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -460,7 +460,7 @@ export default function ProductDetailComp(props) {
                       variant="standard"
                       name="name"
                       fullWidth
-                      onChange={onchangeProductName}
+                      onChange={onchangeProduct}
                       value={formControls?.name || ""}
                     />
                     {/* select category from search results */}
@@ -578,7 +578,7 @@ export default function ProductDetailComp(props) {
                       fullWidth
                       onChange={onchangeLogistics}
                       value={
-                        formControls?.logistics?.deadweight?.$numberDecimal || 0
+                        formControls?.logistics?.deadweight || 0
                       }
                     />
                     <TextField
@@ -589,8 +589,7 @@ export default function ProductDetailComp(props) {
                       fullWidth
                       onChange={onchangeLogistics}
                       value={
-                        formControls?.logistics?.volumetricweight
-                          .$numberDecimal || 0
+                        formControls?.logistics?.volumetricweight || 0
                       }
                     />
                   </Paper>
@@ -615,7 +614,7 @@ export default function ProductDetailComp(props) {
                       type="number"
                       fullWidth
                       onChange={onchangegst}
-                      value={formControls?.gst?.cgst?.$numberDecimal || 0}
+                      value={formControls?.gst?.cgst || 0}
                     />
                     <TextField
                       label="IGST"
@@ -624,7 +623,7 @@ export default function ProductDetailComp(props) {
                       type="number"
                       fullWidth
                       onChange={onchangegst}
-                      value={formControls?.gst?.igst?.$numberDecimal || 0}
+                      value={formControls?.gst?.igst || 0}
                     />
                     <TextField
                       label="SGST"
@@ -633,7 +632,7 @@ export default function ProductDetailComp(props) {
                       type="number"
                       fullWidth
                       onChange={onchangegst}
-                      value={formControls?.gst?.sgst?.$numberDecimal || 0}
+                      value={formControls?.gst?.sgst || 0}
                     />
                   </Paper>
                 </Grid>

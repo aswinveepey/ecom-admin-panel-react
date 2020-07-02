@@ -424,7 +424,11 @@ export default function SkuDetailComp(props) {
                       control={
                         <Switch
                           name="status"
-                          checked={formControls?.status || true}
+                          checked={
+                            formControls.status === undefined
+                              ? true
+                              : formControls.status
+                          }
                           // disabled={!this.state.editTogggle}
                           onChange={onchangeSku}
                           color="primary"
@@ -475,7 +479,7 @@ export default function SkuDetailComp(props) {
                           fullWidth
                           type="number"
                           onChange={onchangeInventory}
-                          value={data?.quantity?.$numberDecimal || 0}
+                          value={data?.quantity || 0}
                         />
                       </div>
                     ))}
@@ -495,7 +499,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.mrp?.$numberDecimal || 0}
+                      value={formControls?.price?.mrp}
                     />
                     <TextField
                       label="Discount"
@@ -504,7 +508,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={formControls?.price?.discount?.$numberDecimal || 0}
+                      value={formControls?.price?.discount}
                     />
                     <TextField
                       label="Selling Price"
@@ -513,9 +517,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={
-                        formControls?.price?.sellingprice?.$numberDecimal || 0
-                      }
+                      value={formControls?.price?.sellingprice}
                     />
                     <TextField
                       label="Shipping Charges"
@@ -524,10 +526,7 @@ export default function SkuDetailComp(props) {
                       fullWidth
                       type="number"
                       onChange={onchangePrice}
-                      value={
-                        formControls?.price?.shippingcharges?.$numberDecimal ||
-                        0
-                      }
+                      value={formControls?.price?.shippingcharges}
                     />
                     <TextField
                       label="Installation Charges"
@@ -538,7 +537,6 @@ export default function SkuDetailComp(props) {
                       onChange={onchangePrice}
                       value={
                         formControls?.price?.installationcharges
-                          .$numberDecimal || 0
                       }
                     />
                     <TextField
@@ -549,8 +547,7 @@ export default function SkuDetailComp(props) {
                       type="number"
                       onChange={onchangeBulkdiscount}
                       value={
-                        formControls?.bulkdiscount?.threshold?.$numberDecimal ||
-                        0
+                        formControls?.bulkdiscount?.threshold
                       }
                     />
                     <TextField
@@ -561,8 +558,7 @@ export default function SkuDetailComp(props) {
                       type="number"
                       onChange={onchangeBulkdiscount}
                       value={
-                        formControls?.bulkdiscount?.discount?.$numberDecimal ||
-                        0
+                        formControls?.bulkdiscount?.discount
                       }
                     />
                     <TextField
@@ -574,7 +570,6 @@ export default function SkuDetailComp(props) {
                       onChange={onchangeQuantityrules}
                       value={
                         formControls?.quanityrules?.minorderqty
-                          ?.$numberDecimal || 0
                       }
                     />
                     <TextField
@@ -586,7 +581,6 @@ export default function SkuDetailComp(props) {
                       onChange={onchangeQuantityrules}
                       value={
                         formControls?.quanityrules?.maxorderqty
-                          ?.$numberDecimal || 0
                       }
                     />
                     {/* Min Order Qty Multiple Flag comes here */}
@@ -637,7 +631,7 @@ export default function SkuDetailComp(props) {
         open={openImageUpload}
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
-        keyPath="product/"
+        keyPath="sku/"
       />
     </React.Fragment>
   );

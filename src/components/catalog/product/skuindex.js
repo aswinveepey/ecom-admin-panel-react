@@ -32,7 +32,7 @@ export default function SKUIndeComp(props){
           color="primary"
           variant="outlined"
           aria-label="add"
-          onClick={openSkuDetail}
+          onClick={openSkuDetail.bind(this, [])}
         >
           Add SKU
         </Button>
@@ -62,8 +62,8 @@ export default function SKUIndeComp(props){
                 </TableCell>
                 <TableCell>{sku.shortid}</TableCell>
                 <TableCell>{sku.name}</TableCell>
-                <TableCell>{sku.price?.mrp?.$numberDecimal}</TableCell>
-                <TableCell>{sku.price?.sellingprice?.$numberDecimal}</TableCell>
+                <TableCell>{sku.price?.mrp}</TableCell>
+                <TableCell>{sku.price?.sellingprice}</TableCell>
                 <TableCell>{sku.status ? "Active" : "Inactive"}</TableCell>
                 <TableCell>{sku.createdat}</TableCell>
               </TableRow>
