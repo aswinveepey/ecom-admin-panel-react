@@ -173,7 +173,7 @@ export default function ProductDetailComp(props) {
     controls.brand = value;
     setFormControls(controls);
   };
-  //change filter attribute name handle
+  //change attribute name handle
   const onchangeAttribute = (event, index) => {
     event.preventDefault();
     const name = event.target.name;
@@ -187,38 +187,51 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     const controls = { ...formControls };
     !controls.attributes && (controls.attributes=[])
-    controls.filterattributes.push({ name: "", values: "" });
+    controls.attributes.push({ name: "", values: "" });
     setFormControls(controls);
   }
-  //delete filter attribute
+  //delete variant attribute
   const onAttributeDelete = (event, index)=>{
     event.preventDefault();
     const controls = { ...formControls };
-    controls.filterattributes.splice(index,1);
+    controls.attributes.splice(index,1);
     setFormControls(controls);
   }
-  //change filter attribute name handle
-  const onchangeFilterAttributeName = (event, index) => {
+  //change variant attribute name handle
+  const onchangeVariantAttribute = (event, index) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
     const controls = { ...formControls };
-    controls.filterattributes[index][name] = value;
+    controls.variantattributes[index][name] = value;
     setFormControls(controls);
   };
-  //add a new filter attribute
-  const onFilterAttributeAdd = (event)=>{
+  //add a new variant attribute
+  const onVariantAttributeAdd = (event)=>{
     event.preventDefault();
     const controls = { ...formControls };
-    !controls.filterattributes && (controls.filterattributes=[])
-    controls.filterattributes.push({ name: "", values: [] });
+    !controls.variantattributes && (controls.variantattributes=[])
+    controls.variantattributes.push({ name: "", values: [] });
     setFormControls(controls);
   }
-  //delete filter attribute
-  const onFilterAttributeDelete = (event, index)=>{
+  //delete variant attribute
+  const onVariantAttributeDelete = (event, index) => {
     event.preventDefault();
     const controls = { ...formControls };
-    controls.filterattributes.splice(index,1);
+    controls.variantattributes.splice(index, 1);
+    setFormControls(controls);
+  };
+  //handle attribute value add
+  const handleVariantAttrValueAdd = (index, chip)=>{
+    const controls = { ...formControls };
+    !controls.variantattributes[index].values &&
+      (controls.variantattributes[index].values = []);
+    controls.variantattributes[index].values.push(chip);
+    setFormControls(controls);
+  };
+  const handleVariantAttrValueDelete = (index, attrIndex)=>{
+    const controls = { ...formControls };
+    controls.variantattributes[index].values.splice(attrIndex, 1);
     setFormControls(controls);
   }
   //Image upload handlers
@@ -545,11 +558,13 @@ export default function ProductDetailComp(props) {
                       Set the attributes & values for sku selection
                     </Typography>
                     <MultiAttributeComp
-                      data={formControls.filterattributes}
+                      data={formControls.variantattributes}
                       // label="FilterAttributes"
-                      onchangeAttributeName={onchangeFilterAttributeName}
-                      onAttributeAdd={onFilterAttributeAdd}
-                      onAttributeDelete={onFilterAttributeDelete}
+                      onchangeAttributeName={onchangeVariantAttribute}
+                      onAttributeAdd={onVariantAttributeAdd}
+                      onAttributeDelete={onVariantAttributeDelete}
+                      handleAttrValueDelete={handleVariantAttrValueDelete}
+                      handleAttrValueAdd={handleVariantAttrValueAdd}
                     />
                   </Paper>
                 </Grid>
@@ -649,7 +664,12 @@ export default function ProductDetailComp(props) {
               <Typography variant="subtitle1" gutterBottom component="div">
                 SKUs
               </Typography>
-              {formControls.skus && <SkuIndexComp data={formControls.skus} product_id={formControls._id} />}
+              {formControls.skus && (
+                <SkuIndexComp
+                  data={formControls.skus}
+                  product_id={formControls._id}
+                />
+              )}
             </Paper>
           </Grid>
         </Grid>

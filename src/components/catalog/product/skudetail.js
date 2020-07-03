@@ -249,7 +249,13 @@ export default function SkuDetailComp(props) {
 
   React.useEffect(() => {
     setOpen(props.open);
-    props.data && setSkuId(props.data._id);
+    if(props.data._id){
+      // for edit option set sku id and retrieve data
+      setSkuId(props.data._id);
+    } else {
+      // for new creation set product & create 
+      setFormControls(props.data)
+    }
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -654,7 +660,7 @@ export default function SkuDetailComp(props) {
                       SKU Attributes
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                      SKU attribute values are used for sku selection
+                      SKU selection attributes - Use attributes defined as product variant attributes
                     </Typography>
                     <SingleAttributeComp
                       data={formControls?.attributes}
