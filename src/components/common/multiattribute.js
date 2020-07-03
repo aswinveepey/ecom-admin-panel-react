@@ -6,11 +6,11 @@ import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import InputLabel from "@material-ui/core/InputLabel"
 import TextField from "@material-ui/core/TextField"
-import Chip from "@material-ui/core/Chip";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles } from "@material-ui/core/styles";
+import ChipInput from "material-ui-chip-input";
 
 const useStyles = makeStyles((theme) => ({
   attrbutton:{
@@ -29,8 +29,11 @@ const useStyles = makeStyles((theme) => ({
 export default function MultiAttributeComp(props) {
   const classes = useStyles();
 
-  const handleAttrValueDelete = () => {
-    console.info("You clicked the delete icon.");
+  const handleAttrValueDelete = (index, chip, chipindex) => {
+    props.handleAttrValueDelete(index, chipindex);
+  };
+  const handleAttrValueAdd = (index, chip, chipindex) => {
+    props.handleAttrValueAdd(index, chip);
   };
   const onAttributeDelete = (event, index) => {
     props.onAttributeDelete(event, index);
@@ -81,13 +84,11 @@ export default function MultiAttributeComp(props) {
                 />
               </TableCell>
               <TableCell className={classes.attrvalues}>
-                {attribute.values?.map((value) => (
-                  <Chip
-                    label={value}
-                    key={value}
-                    onDelete={handleAttrValueDelete}
-                  />
-                ))}
+                <ChipInput
+                  value={attribute.values}
+                  onDelete={handleAttrValueDelete.bind(this, index)}
+                  onAdd={handleAttrValueAdd.bind(this, index)}
+                />
               </TableCell>
             </TableRow>
           ))}

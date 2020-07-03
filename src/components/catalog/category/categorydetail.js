@@ -129,6 +129,19 @@ export default function CategoryDetailComp(props) {
     controls.filterattributes.splice(index, 1);
     setFormControls(controls);
   };
+  //handle attribute value add
+  const handleAttrValueAdd = (index, chip)=>{
+    const controls = { ...formControls };
+    !controls.filterattributes[index].values &&
+      (controls.filterattributes[index].values = []);
+    controls.filterattributes[index].values.push(chip);
+    setFormControls(controls);
+  };
+  const handleAttrValueDelete = (index, attrIndex)=>{
+    const controls = { ...formControls };
+    controls.filterattributes[index].values.splice(attrIndex, 1);
+    setFormControls(controls);
+  }
   //Change search term - Account
   const onChangeParentSearch = (event) => {
     event.preventDefault();
@@ -270,6 +283,8 @@ export default function CategoryDetailComp(props) {
                   onchangeAttributeName={onchangeFilterAttributeName}
                   onAttributeAdd={onFilterAttributeAdd}
                   onAttributeDelete={onFilterAttributeDelete}
+                  handleAttrValueDelete={handleAttrValueDelete}
+                  handleAttrValueAdd={handleAttrValueAdd}
                 />
               </Grid>
             </Grid>
