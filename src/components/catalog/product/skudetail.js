@@ -21,6 +21,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
 //Constants Import
 import { BASE_URL } from "../../../constants";
 //Component import
@@ -90,6 +94,7 @@ export default function SkuDetailComp(props) {
   const token = Cookies.get("token");
   const [territorySearchString, setTerritorySearchString] = React.useState([]);
   const [territories, setTerritories] = React.useState([]);
+  const [skuId, setSkuId] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
@@ -113,18 +118,30 @@ export default function SkuDetailComp(props) {
     event.preventDefault();
     setTerritorySearchString(event.target.value);
   };
-  //Change sku inventory
-  const onchangeInventory = (event, index) => {
+  //Change SKU Inventory
+  const onChangeInventory = (index, event, territory) => {
     event.preventDefault();
-    const name = event.target.name;
+    // const name = event.target.name;
     const value = event.target.value;
     const controls = { ...formControls };
     controls.inventory = controls.inventory || [];
-    controls.inventory[index][name] = value;
+    if (territory){
+      controls.inventory[index]["territory"] = territory;
+    } else {
+      controls.inventory[index]["quantity"] = value;
+    }
+    setFormControls(controls);
+  };
+  //Add new SKU Inentory
+  const onAddInventory = (event) => {
+    event.preventDefault();
+    const controls = { ...formControls };
+    !controls.inventory && (controls.inventory = []);
+    controls.inventory.push({});
     setFormControls(controls);
   };
   //Change sku price
-  const onchangePrice = (event) => {
+  const onChangePrice = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -134,7 +151,7 @@ export default function SkuDetailComp(props) {
     setFormControls(controls);
   };
   //Change sku bulkdiscount
-  const onchangeBulkdiscount = (event) => {
+  const onChangeBulkdiscount = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -144,7 +161,7 @@ export default function SkuDetailComp(props) {
     setFormControls(controls);
   };
   //Change sku quantity rules
-  const onchangeQuantityrules = (event) => {
+  const onChangeQuantityrules = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -158,7 +175,7 @@ export default function SkuDetailComp(props) {
     setFormControls(controls);
   };
   //change  attribute name handle
-  const onchangeAttribute = (event, index) => {
+  const onChangeAttribute = (event, index) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -229,14 +246,32 @@ export default function SkuDetailComp(props) {
     controls.assets.imgs.splice(index, 1);
     setFormControls(controls);
   };
-  React.useEffect(() => {
-    props.data && setFormControls(props.data);
-  }, [props]);
 
-  //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
-  }, [props]);
+    props.data && setSkuId(props.data._id);
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    };
+    skuId && fetch(BASE_URL + "sku/id/" + skuId, requestOptions, { signal: signal })
+      .then(async (data) => {
+        const response = await data.json();
+        const { status } = data;
+        status === 200 && setFormControls(response.data);
+      })
+      .catch((err) => console.log(err));
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [props, token, skuId]);
 
   //handle territorys search for inventory
   React.useEffect(() => {
@@ -286,8 +321,8 @@ export default function SkuDetailComp(props) {
       body: JSON.stringify(formControls),
     };
     //differentiate between update & create
-    const SUFFIX_URL = formControls._id
-      ? "sku/id/" + formControls._id
+    const SUFFIX_URL = formControls?._id
+      ? "sku/id/" + formControls?._id
       : "sku/";
     //POST category data and handle
     fetch(BASE_URL + SUFFIX_URL, requestOptions, {
@@ -424,9 +459,9 @@ export default function SkuDetailComp(props) {
                         <Switch
                           name="status"
                           checked={
-                            formControls.status === undefined
+                            formControls?.status === undefined
                               ? true
-                              : formControls.status
+                              : formControls?.status
                           }
                           // disabled={!this.state.editTogggle}
                           onChange={onchangeSku}
@@ -448,44 +483,59 @@ export default function SkuDetailComp(props) {
                       Inventory is mapped to territories - Use All for inventory
                       without restriction
                     </Typography>
-                    {formControls?.inventory?.map((data, index) => (
-                      <div key={index}>
-                        <Autocomplete
-                          options={territories}
-                          freeSolo
-                          value={data.territory || ""}
-                          getOptionLabel={(option) =>
-                            typeof option === "string" ? option : option.name
-                          }
-                          getOptionSelected={(option, value) =>
-                            option ? option.name === value.name : false
-                          }
-                          onChange={(event, value) =>
-                            onchangeInventory(event, value)
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Territory"
-                              name="territory"
-                              variant="standard"
-                              onChange={(event) =>
-                                onChangeTerritorySearch(event)
-                              }
-                            />
-                          )}
-                        />
-                        <TextField
-                          label="Quantity"
-                          variant="standard"
-                          name="quantity"
-                          fullWidth
-                          type="number"
-                          onChange={onchangeInventory}
-                          value={data?.quantity || 0}
-                        />
-                      </div>
-                    ))}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      color="secondary"
+                      onClick={onAddInventory}
+                      // className={classes.attrbutton}
+                    >
+                      Add Inventory
+                    </Button>
+                    <Table>
+                      <TableBody>
+                        {formControls?.inventory?.map((data, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Autocomplete
+                                options={territories}
+                                freeSolo
+                                value={data.territory || ""}
+                                getOptionLabel={(option) =>
+                                  typeof option === "string"
+                                    ? option
+                                    : option.name
+                                }
+                                getOptionSelected={(option, value) =>
+                                  option ? option.name === value.name : false
+                                }
+                                onChange={onChangeInventory.bind(this, index)}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Territory"
+                                    name="territory"
+                                    variant="standard"
+                                    onChange={onChangeTerritorySearch}
+                                  />
+                                )}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                label="Quantity"
+                                variant="standard"
+                                name="quantity"
+                                fullWidth
+                                type="number"
+                                onChange={onChangeInventory.bind(this, index)}
+                                value={data?.quantity || 0}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </Paper>
                 </Grid>
                 {/* Business Info section */}
@@ -501,7 +551,7 @@ export default function SkuDetailComp(props) {
                       name="mrp"
                       fullWidth
                       type="number"
-                      onChange={onchangePrice}
+                      onChange={onChangePrice}
                       value={formControls?.price?.mrp || 0}
                     />
                     <TextField
@@ -510,7 +560,7 @@ export default function SkuDetailComp(props) {
                       name="discount"
                       fullWidth
                       type="number"
-                      onChange={onchangePrice}
+                      onChange={onChangePrice}
                       value={formControls?.price?.discount || 0}
                     />
                     <TextField
@@ -519,7 +569,7 @@ export default function SkuDetailComp(props) {
                       name="sellingprice"
                       fullWidth
                       type="number"
-                      onChange={onchangePrice}
+                      onChange={onChangePrice}
                       value={formControls?.price?.sellingprice || 0}
                     />
                     <TextField
@@ -528,7 +578,7 @@ export default function SkuDetailComp(props) {
                       name="shippingcharges"
                       fullWidth
                       type="number"
-                      onChange={onchangePrice}
+                      onChange={onChangePrice}
                       value={formControls?.price?.shippingcharges || 0}
                     />
                     <TextField
@@ -537,7 +587,7 @@ export default function SkuDetailComp(props) {
                       name="installationcharges"
                       fullWidth
                       type="number"
-                      onChange={onchangePrice}
+                      onChange={onChangePrice}
                       value={formControls?.price?.installationcharges || 0}
                     />
                     <TextField
@@ -546,7 +596,7 @@ export default function SkuDetailComp(props) {
                       name="threshold"
                       fullWidth
                       type="number"
-                      onChange={onchangeBulkdiscount}
+                      onChange={onChangeBulkdiscount}
                       value={formControls?.bulkdiscount?.threshold || 0}
                     />
                     <TextField
@@ -555,7 +605,7 @@ export default function SkuDetailComp(props) {
                       name="discount"
                       fullWidth
                       type="number"
-                      onChange={onchangeBulkdiscount}
+                      onChange={onChangeBulkdiscount}
                       value={formControls?.bulkdiscount?.discount || 0}
                     />
                     <TextField
@@ -564,7 +614,7 @@ export default function SkuDetailComp(props) {
                       name="minorderqty"
                       fullWidth
                       type="number"
-                      onChange={onchangeQuantityrules}
+                      onChange={onChangeQuantityrules}
                       value={formControls?.quantityrules?.minorderqty || 0}
                     />
                     <TextField
@@ -573,7 +623,7 @@ export default function SkuDetailComp(props) {
                       name="maxorderqty"
                       fullWidth
                       type="number"
-                      onChange={onchangeQuantityrules}
+                      onChange={onChangeQuantityrules}
                       value={formControls?.quantityrules?.maxorderqty || 0}
                     />
                     {/* Min Order Qty Multiple Flag comes here */}
@@ -585,10 +635,10 @@ export default function SkuDetailComp(props) {
                             formControls?.quantityrules?.minorderqtystep ===
                             undefined
                               ? true
-                              : formControls.quantityrules.minorderqtystep
+                              : formControls?.quantityrules.minorderqtystep
                           }
                           // disabled={!this.state.editTogggle}
-                          onChange={onchangeQuantityrules}
+                          onChange={onChangeQuantityrules}
                           color="primary"
                         />
                       }
@@ -607,8 +657,8 @@ export default function SkuDetailComp(props) {
                       SKU attribute values are used for sku selection
                     </Typography>
                     <SingleAttributeComp
-                      data={formControls.attributes}
-                      onchangeAttribute={onchangeAttribute}
+                      data={formControls?.attributes}
+                      onchangeAttribute={onChangeAttribute}
                       onAttributeAdd={onAttributeAdd}
                       onAttributeDelete={onAttributeDelete}
                     />
@@ -617,7 +667,7 @@ export default function SkuDetailComp(props) {
                       additional info
                     </Typography>
                     <SingleAttributeComp
-                      data={formControls.dattributes}
+                      data={formControls?.dattributes}
                       onchangeAttribute={onchangeDattribute}
                       onAttributeAdd={onDattributeAdd}
                       onAttributeDelete={onDattributeDelete}
