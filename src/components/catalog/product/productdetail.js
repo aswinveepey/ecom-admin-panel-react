@@ -649,7 +649,7 @@ export default function ProductDetailComp(props) {
               <Typography variant="subtitle1" gutterBottom component="div">
                 SKUs
               </Typography>
-              {formControls.skus && <SkuIndexComp data={formControls.skus} />}
+              {formControls.skus && <SkuIndexComp data={formControls.skus} product_id={formControls._id} />}
             </Paper>
           </Grid>
         </Grid>

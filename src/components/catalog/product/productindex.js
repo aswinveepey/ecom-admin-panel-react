@@ -122,7 +122,7 @@ function ExpandableRow(props){
               <Typography variant="subtitle2" gutterBottom component="div">
                 SKUs
               </Typography>
-              {row.skus && <SkuIndexComp data={row.skus} />}
+              {row.skus && <SkuIndexComp data={row.skus} product_id={row._id}/>}
               {/* SKU Component */}
             </Box>
           </Collapse>
