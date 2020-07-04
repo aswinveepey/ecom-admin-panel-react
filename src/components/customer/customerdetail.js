@@ -155,7 +155,7 @@ export default function CustomerDetailComp(props){
         .then(async (data) => {
           const response = await data.json();
           const { status } = data;
-          status === 200 && setAccounts(response);
+          status === 200 && setAccounts(response.data);
         })
         .catch((err) => console.log(err));
     }
@@ -174,7 +174,9 @@ export default function CustomerDetailComp(props){
         aria-labelledby="customer-dialog"
       >
         <DialogTitle id="customer-dialog-title">
-          {formControls?.firstname + " " + formControls?.lastname}
+          {formControls.firstname &&(
+            formControls?.firstname + " " + formControls?.lastname
+          )}
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <DialogContent>

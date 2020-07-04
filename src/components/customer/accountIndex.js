@@ -1,36 +1,12 @@
 import React from "react";
 //cookie library import
+import DataTableComp from "../common/datatable";
+import AccountDetailComp from "./accountdetail";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
-//core imports - Material UI
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
-//icon imports - Material UI
-import AddIcon from "@material-ui/icons/Add";
-import { makeStyles } from "@material-ui/core/styles";
-
-import AccountDetailComp from "./accountdetail";
-
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-material.css";
-
-
-const useStyles = makeStyles((theme) => ({
-  fab: {
-    float: "left",
-    position: "relative",
-    left: "-1rem",
-  },
-}));
-
 export default function AccountIndexComp(props) {
-
-  const classes = useStyles();
-
-  const [loading, setLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
@@ -52,13 +28,13 @@ export default function AccountIndexComp(props) {
         headerName: "Name",
         valueGetter: (params) => params.data?.name,
       },
-      { 
-        headerName: "Type", 
-        valueGetter: (params) => params.data?.type 
+      {
+        headerName: "Type",
+        valueGetter: (params) => params.data?.type,
       },
       {
         headerName: "GSTIN",
-        valueGetter: (params) => params.data?.primarycontact?.gstin,
+        valueGetter: (params) => params.data?.gstin,
       },
       {
         headerName: "Primary Contact",
@@ -76,6 +52,10 @@ export default function AccountIndexComp(props) {
         headerName: "Primary Mobile",
         valueGetter: (params) => params.data?.primarycontact?.mobile,
       },
+      {
+        headerName: "Last Updated At",
+        valueGetter: (params) => params.data?.updatedat,
+      },
     ],
   };
 
@@ -86,7 +66,7 @@ export default function AccountIndexComp(props) {
   }
 
   //new account
-  function handleNewAccountClick() {
+  function handleNewClick() {
     setDialogData([]);
     setOpenDialog(true);
   }
@@ -112,44 +92,30 @@ export default function AccountIndexComp(props) {
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
-        setLoading(false);
+        // setLoading(false);
         status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
-    setLoading(false);
+    // setLoading(false);
     return function cleanup() {
       abortController.abort();
     };
   }, [token, openDialog]);
   //return component
   return (
-    <div className="ag-theme-material">
-      <Tooltip title="Add Account">
-        <Fab
-          size="small"
-          color="secondary"
-          aria-label="add"
-          className={classes.fab}
-          onClick={handleNewAccountClick}
-        >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
-      {loading === true && (
-        <div>
-          <LinearProgress color="secondary" />
-        </div>
-      )}
-      <AgGridReact
-        gridOptions={gridData.gridOptions}
-        columnDefs={gridData.columnDefs}
+    <React.Fragment>
+      <DataTableComp
+        title="Accounts"
+        handleRowDoubleClick={handleRowDoubleClick}
+        handleNewClick={handleNewClick}
+        gridData={gridData}
         rowData={rowData}
-      ></AgGridReact>
+      />
       <AccountDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}
       />
-    </div>
+    </React.Fragment>
   );
 }

@@ -6,10 +6,9 @@ import Cookies from "js-cookie";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
+// import LinearProgress from "@material-ui/core/LinearProgress";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Divider from "@material-ui/core/Divider";
@@ -211,28 +210,13 @@ class UserDetailComp extends React.Component {
       <React.Fragment>
         {/* Initial conditions - ask user to select a user */}
         {this.state.fetchstatus === "init" && (
-          <Paper
-            className="paper-box"
-            variant="elevation"
-            elevation={this.state.paperelevation}
-          >
             <Typography variant="h6">
               Select a User to see the details
             </Typography>
-          </Paper>
         )}
-        {/* Show loading indication to user */}
-        {this.state.fetchstatus === "loading" && (
-          <Container>
-            {/* <Typography variant="h6">Loading</Typography> */}
-            <LinearProgress color="secondary" />
-          </Container>
-        )}
-        {/* Show user details */}
         {this.state.fetchstatus === "fetched" && (
           <Paper
-            className="paper-box"
-            variant="elevation"
+            style={{padding:"10px"}}
             elevation={this.state.paperelevation}
           >
             <form onSubmit={this.handlesubmit}>
@@ -274,15 +258,7 @@ class UserDetailComp extends React.Component {
                           >
                             <CloseIcon color="secondary" />
                           </IconButton>
-                          <IconButton
-                            type="submit"
-                            // onClick={() =>
-                            //   this.setState({
-                            //     editTogggle: false,
-                            //     paperelevation: 0,
-                            //   })
-                            // }
-                          >
+                          <IconButton type="submit">
                             <CheckIcon color="primary" />
                           </IconButton>
                         </div>

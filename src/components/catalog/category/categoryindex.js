@@ -1,19 +1,20 @@
 import React from "react";
-import CustomerDetailComp from "./customerdetail";
-import DataTableComp from '../common/datatable'
 //cookie library import
 import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+import { BASE_URL } from "../../../constants";
+import DataTableComp from "../../common/datatable";
+import CategoryDetailComp from "./categorydetail";
 
-
-export default function CustomerIndexComp(props){
+export default function CategoryIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
+
   const token = Cookies.get("token");
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
+      // rowHeight: 50,
       onRowDoubleClicked: handleRowDoubleClick,
       pagination: true,
       defaultColDef: {
@@ -24,40 +25,17 @@ export default function CustomerIndexComp(props){
     },
     columnDefs: [
       {
-        headerName: "Name",
-        valueGetter: (params) =>
-          params.data?.firstname + " " + params.data?.lastname,
-      },
-      {
-        headerName: "Gender",
-        valueGetter: (params) => params.data?.gender,
-      },
-      {
-        headerName: "Type",
-        valueGetter: (params) => params.data?.type,
-      },
-      {
-        headerName: "Account",
+        headerName: "",
+        autoHeight: true,
         cellRenderer: (params) =>
-          params.data.account &&
-          '<a href="#account" >' + params.data.account.name + "</a>",
+          params.data.assets &&
+          '<img width="50" height="50" alt="Category thumbnail" src="' +
+            params.data.assets.thumbnail +
+            '"/>',
       },
       {
-        headerName: "Username",
-        valueGetter: (params) => params.data?.auth?.username,
-      },
-      {
-        headerName: "Email",
-        valueGetter: (params) => params.data?.auth?.email,
-      },
-      {
-        headerName: "Mob Number",
-        valueGetter: (params) => params.data?.auth?.mobilenumber,
-      },
-      {
-        headerName: "Status",
-        valueGetter: (params) =>
-          params.data?.auth?.status === true ? "Active" : "Inactive",
+        headerName: "Name",
+        valueGetter: (params) => params.data?.name,
       },
       {
         headerName: "Last Updated At",
@@ -65,19 +43,7 @@ export default function CustomerIndexComp(props){
       },
     ],
   };
-  //handle double click
-  function handleRowDoubleClick(row) {
-    setDialogData(row.data);
-    setOpenDialog(true);
-  }
-  function handleNewClick() {
-    setDialogData([]);
-    setOpenDialog(true);
-  }
-  function handleDialogClose(){
-    setOpenDialog(false);
-  }
-  //fetch data
+   //fetch data
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -91,7 +57,7 @@ export default function CustomerIndexComp(props){
       },
     };
     //fetch data and set data
-    fetch(BASE_URL + "customer/", requestOptions, { signal: signal })
+    fetch(BASE_URL + "category/", requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -102,18 +68,31 @@ export default function CustomerIndexComp(props){
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, openDialog]);
+  }, [token]);
+    //handle double click
+  function handleRowDoubleClick(row) {
+    setDialogData(row.data);
+    setOpenDialog(true);
+  }
+  //new account
+  function handleNewClick() {
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+  function handleDialogClose() {
+    setOpenDialog(false);
+  }
   //return component
   return (
     <React.Fragment>
       <DataTableComp
-        title = "Customers"
+        title="Category"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
       />
-      <CustomerDetailComp
+      <CategoryDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}

@@ -1,9 +1,9 @@
 import React from 'react'
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Paper from '@material-ui/core/Paper'
 import CustomerIndexComp from './customerindex'
 import AccountIndexComp from './accountIndex'
+import PaperBox from '../common/paperbox'
 
 export default function CustomerTabbedComp(props){
   const [tabValue, setTabValue] = React.useState(0);
@@ -11,7 +11,7 @@ export default function CustomerTabbedComp(props){
     setTabValue(newTabValue);
   };
   return (
-    <Paper className="paper-box">
+    <PaperBox>
       <Tabs
         value={tabValue}
         onChange={handleChange}
@@ -24,8 +24,8 @@ export default function CustomerTabbedComp(props){
         <Tab label="Customer" />
         <Tab label="Account" />
       </Tabs>
-      {(tabValue===0)&&(<CustomerIndexComp />)}
-      {(tabValue===1)&&(<AccountIndexComp />)}
-    </Paper>
+      {tabValue === 0 && <CustomerIndexComp />}
+      {tabValue === 1 && <AccountIndexComp />}
+    </PaperBox>
   );
 }
