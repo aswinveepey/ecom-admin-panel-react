@@ -103,8 +103,12 @@ export default function ImageUploadComp(props){
   //handle submit pass url to parent
   const handleSubmit = (event) => {
     event.preventDefault();
-    imageUrl && props.handleImageChange(imageUrl)
-    props.handleDialogClose();
+    if (imageUrl){
+      props.handleImageChange(imageUrl);
+      props.handleDialogClose();
+    } else {
+      console.log("Error encoutered")
+    }
     //pass image url back to parent component
   }
 
@@ -118,21 +122,19 @@ export default function ImageUploadComp(props){
       aria-labelledby="image-upload-dialog"
     >
       <DialogTitle id="image-upload-dialog-title">Upload Image</DialogTitle>
-        <DialogContent>
-          <DropzoneArea
-            open={true}
-            onChange={handleImageUpload}
-            filesLimit={1}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Upload Image
-          </Button>
-        </DialogActions>
+      <DialogContent>
+        <DropzoneArea open={true} onChange={handleImageUpload} filesLimit={1} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        {imageUrl && (
+        <Button onClick={handleSubmit} color="primary">
+          Upload Image
+        </Button>
+        )}
+      </DialogActions>
     </Dialog>
   );
 }
