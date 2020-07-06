@@ -57,7 +57,7 @@ export default function CategoryIndexComp(params) {
       },
     };
     //fetch data and set data
-    !openDialog && fetch(BASE_URL + "category/", requestOptions, { signal: signal })
+    fetch(BASE_URL + "category/", requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -68,7 +68,7 @@ export default function CategoryIndexComp(params) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, openDialog]);
+  }, [token]);
     //handle double click
   function handleRowDoubleClick(row) {
     setDialogData(row.data);

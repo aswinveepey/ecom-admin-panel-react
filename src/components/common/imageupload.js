@@ -5,7 +5,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { DropzoneArea } from "material-ui-dropzone";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress"
 // import { makeStyles } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
@@ -23,7 +22,7 @@ import { BASE_URL } from "../../constants";
 
 export default function ImageUploadComp(props){
   // const classes = useStyles();
-  const[loader, setLoader] = React.useState()
+  // const[loader, setLoader] = React.useState()
   const [image, setImage] = React.useState();
   const [uploadUrl, setUploadUrl] = React.useState();
   const [imageUrl, setImageUrl] = React.useState();
@@ -94,7 +93,7 @@ export default function ImageUploadComp(props){
           const { status } = data;
           status === 200 && setImageUrl(data.url.split("?")[0]);
         })
-        .then(() => setLoader(false))
+        // .then(() => setLoader(false))
         .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
