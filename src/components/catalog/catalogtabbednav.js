@@ -22,13 +22,15 @@ export default function CatalogTabbedComp(props) {
         textColor="primary"
         aria-label="scrollable catalog tabs"
       >
+        <Tab label="Products" />
         <Tab label="Categories" />
         <Tab label="Brands" />
-        <Tab label="Products" />
+        <Tab label="Divisions" />
       </Tabs>
-      {tabValue === 0 && <CategoryIndexComp />}
-      {tabValue === 1 && <BrandIndexComp />}
-      {tabValue === 2 && <ProductIndexComp />}
+      {tabValue === 0 && <ProductIndexComp />}
+      {tabValue === 1 && <CategoryIndexComp />}
+      {tabValue === 2 && <BrandIndexComp />}
+      {tabValue === 3 && (<div>Divisions</div>)}
     </PaperBox>
   );
 }

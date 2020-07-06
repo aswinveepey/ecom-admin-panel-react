@@ -473,6 +473,7 @@ export default function ProductDetailComp(props) {
                       variant="standard"
                       name="name"
                       fullWidth
+                      required
                       onChange={onchangeProduct}
                       value={formControls?.name || ""}
                     />
@@ -493,6 +494,7 @@ export default function ProductDetailComp(props) {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          required
                           label="Category"
                           name="category"
                           variant="standard"
@@ -518,6 +520,7 @@ export default function ProductDetailComp(props) {
                         <TextField
                           {...params}
                           label="Brand"
+                          required
                           name="brand"
                           variant="standard"
                           onChange={(event) => onChangeBrandSearch(event)}
@@ -620,6 +623,7 @@ export default function ProductDetailComp(props) {
                       variant="standard"
                       name="hsncode"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.hsncode || ""}
                     />
@@ -629,6 +633,7 @@ export default function ProductDetailComp(props) {
                       name="cgst"
                       type="number"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.cgst || 0}
                     />
@@ -638,6 +643,7 @@ export default function ProductDetailComp(props) {
                       name="igst"
                       type="number"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.igst || 0}
                     />
@@ -647,6 +653,7 @@ export default function ProductDetailComp(props) {
                       name="sgst"
                       type="number"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.sgst || 0}
                     />
