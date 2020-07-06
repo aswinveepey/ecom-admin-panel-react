@@ -150,6 +150,7 @@ export default function CategoryDetailComp(props) {
   //handle image change
   const handleImageChange = (image)=>{
     const controls = { ...formControls }
+    controls.assets = controls.assets || {};
     controls.assets["img"] = image;
     setFormControls(controls);
   }
