@@ -47,43 +47,56 @@ export default function LoginFormComp(props){
   var handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitprogress(true);
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: username, password: password }),
     };
-    const authResponse = await fetch(
+    fetch(
       BASE_URL + "auth/authenticate",
-      requestOptions
-    );
-    const { status } = authResponse;
-    if (status === 200) {
-      const { token } = await authResponse.json();
-      try {
-        Cookies.set("token", token, { expires: 30 });
-      } catch (error) {
-        console.log('Unable to set cookie');
+      requestOptions,
+      {
+        signal: signal,
       }
-      history && history.push("/home");
-    } else {
-      authResponse.json().then((data) => {
-        const { message } = data;
-        if (message === "Username Error") {
-          setUsernameError(true);
-        } else if (message === "Password Error") {
-          setPasswordError(true);
-        } else {
-          console.log('Something went wrong')
+    ).then(async (authResponse)=>{
+      const { status } = authResponse;
+      if (status === 200) {
+        const { token } = await authResponse.json();
+        try {
+          Cookies.set("token", token, { expires: 30 });
+        } catch (error) {
+          console.log("Unable to set cookie");
         }
-      });
-    }
+        history && history.push("/home");
+      } else {
+        authResponse.json().then((data) => {
+          const { message } = data;
+          if (message === "Username Error") {
+            setUsernameError(true);
+          } else if (message === "Password Error") {
+            setPasswordError(true);
+          } else {
+            console.log("Something went wrong");
+          }
+        });
+      }
+    }).catch(error=>console.log(error));
     setSubmitprogress(false);
+    return function cleanup() {
+      abortController.abort();
+    };
   };
   return (
-    // <Grid container direction="column" alignContent="center" spacing={2}>
-    //   <Grid item>
-    <form onSubmit={handleSubmit}>
-      <Grid container direction="column" spacing={1} className={classes.loginContainer}>
+    <Grid
+      container
+      direction="column"
+      spacing={1}
+      className={classes.loginContainer}
+    >
+      <form onSubmit={handleSubmit}>
         <Grid item style={{ maxWidth: "30%" }}>
           <img src={hhysLogo} style={{ maxWidth: "100%" }} alt="logo" />
         </Grid>
@@ -99,6 +112,7 @@ export default function LoginFormComp(props){
             label="Username"
             name="username"
             variant="outlined"
+            autoComplete="username"
             value={username}
             onChange={(event) => handleUsernameChange(event)}
             required
@@ -113,6 +127,7 @@ export default function LoginFormComp(props){
             type="password"
             label="Password"
             name="password"
+            autoComplete="current-password"
             variant="outlined"
             value={password}
             onChange={(event) => handlePasswordChange(event)}
@@ -140,9 +155,7 @@ export default function LoginFormComp(props){
             Forgot Password?
           </Link>
         </Grid>
-      </Grid>
-    </form>
-    // </Grid>
-    // </Grid>
+      </form>
+    </Grid>
   );
 }

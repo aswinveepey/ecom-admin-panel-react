@@ -9,7 +9,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import Fab from "@material-ui/core/Fab"
+import ButtonBase from "@material-ui/core/ButtonBase";
+import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
 import MultiAttributeComp from "../../common/multiattribute";
 import ImageUploadComp from "../../common/imageupload"
 //styles - Material UI
@@ -31,6 +36,32 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  cardimage: {
+    maxHeight: "100px",
+    maxWidth: "100px",
+    height: "auto",
+    width: "auto",
+  },
+  imagecardcontent: {
+    display: "block",
+    minHeight: "100px",
+    minWidth: "100px",
+    // width: "100px",
+    // flexGrow: 1,
+  },
+  cardthumbnail: {
+    maxHeight: "50px",
+    maxWidth: "50px",
+    height: "auto",
+    width: "auto",
+  },
+  thumbnailcardcontent: {
+    display: "block",
+    minHeight: "50px",
+    minWidth: "50px",
+    // width: "100px",
+    // flexGrow: 1,
+  },
 }));
 
 export default function CategoryDetailComp(props) {
@@ -41,6 +72,7 @@ export default function CategoryDetailComp(props) {
   const [parentSearchString, setParentSearchString] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
+  const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose();
@@ -52,6 +84,14 @@ export default function CategoryDetailComp(props) {
   //new image upload
   function handleImageUploadClick() {
     setOpenImageUpload(true);
+  }
+  //handle image upload close
+  const handleThumbnailUploadClose =()=>{
+    setOpenThumbnailUpload(false);
+  }
+  //new image upload
+  function handleThumbnailUploadClick() {
+    setOpenThumbnailUpload(true);
   }
   // handle category form submit
   const handleSubmit = (event) => {
@@ -79,11 +119,13 @@ export default function CategoryDetailComp(props) {
       .then(async (data) => {
         // const response = await data.json();
         const { status } = data;
-        if (status === 200) {
+        if (status === 200 || status === 201) {
           handleClose();
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err)
+      });
     return function cleanup() {
       abortController.abort();
     };
@@ -150,9 +192,17 @@ export default function CategoryDetailComp(props) {
   //handle image change
   const handleImageChange = (image)=>{
     const controls = { ...formControls }
+    controls.assets = controls.assets || {};
     controls.assets["img"] = image;
     setFormControls(controls);
   }
+  //handle image change
+  const handleThumbnailChange = (thumbnail) => {
+    const controls = { ...formControls };
+    controls.assets = controls.assets || {};
+    controls.assets["thumbnail"] = thumbnail;
+    setFormControls(controls);
+  };
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -201,30 +251,83 @@ export default function CategoryDetailComp(props) {
         <form onSubmit={handleSubmit}>
           <DialogContent>
             <Grid container direction="column" spacing={1}>
-              {formControls.assets && (
-                <Grid item>
-                  <Grid container alignItems="center" spacing={1}>
-                    <Grid item>
-                      <img
-                        src={formControls.assets.img}
-                        className={classes.img}
-                        alt="category"
-                      />
-                    </Grid>
-                    <Grid item>
-                      <img
-                        src={formControls.assets.thumbnail}
-                        className={classes.thumbnail}
-                        alt="category"
-                      />
-                    </Grid>
+              <Grid item>
+                <Grid container alignItems="center" spacing={1}>
+                  <Grid item>
+                    {formControls?.assets?.img ? (
+                      <Card variant="outlined">
+                        <CardHeader title="Image" />
+                        <CardContent className={classes.imagecardcontent}>
+                          <img
+                            src={formControls.assets.img}
+                            className={classes.img}
+                            alt="category"
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={handleImageUploadClick}
+                          >
+                            Replace
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    ) : (
+                      <Card variant="outlined">
+                        {/* Button base covers card content to make whole card clickable */}
+                        <ButtonBase
+                          className={classes.addimgbase}
+                          onClick={handleImageUploadClick}
+                        >
+                          <CardContent className={classes.imagecardcontent}>
+                            <PhotoCamera />
+                            <Typography>Add Image</Typography>
+                          </CardContent>
+                        </ButtonBase>
+                        <CardActions></CardActions>
+                      </Card>
+                    )}
+                  </Grid>
+                  <Grid item>
+                    {formControls?.assets?.thumbnail ? (
+                      <Card variant="outlined">
+                        <CardHeader title="Thumbnail" />
+                        <CardContent className={classes.thumbnailcardcontent}>
+                          <img
+                            src={formControls.assets.thumbnail}
+                            className={classes.thumbnail}
+                            alt="category thumbnail"
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={handleThumbnailUploadClick}
+                          >
+                            Replace
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    ) : (
+                      <Card variant="outlined">
+                        {/* Button base covers card content to make whole card clickable */}
+                        <ButtonBase
+                          className={classes.addthumbnailbase}
+                          onClick={handleThumbnailUploadClick}
+                        >
+                          <CardContent className={classes.thumbnailcardcontent}>
+                            <PhotoCamera />
+                            <Typography>Add Thumbnail</Typography>
+                          </CardContent>
+                        </ButtonBase>
+                        <CardActions></CardActions>
+                      </Card>
+                    )}
                   </Grid>
                 </Grid>
-              )}
-              <Grid item>
-                <Fab size="small" onClick={handleImageUploadClick}>
-                  <PhotoCamera />
-                </Fab>
               </Grid>
               {formControls._id && (
                 <Grid item>
@@ -304,6 +407,12 @@ export default function CategoryDetailComp(props) {
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
         keyPath="category/"
+      />
+      <ImageUploadComp
+        open={openThumbnailUpload}
+        handleDialogClose={handleThumbnailUploadClose}
+        handleImageChange={handleThumbnailChange}
+        keyPath="category/thumbnail/"
       />
     </React.Fragment>
   );

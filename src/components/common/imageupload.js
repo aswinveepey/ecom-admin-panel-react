@@ -2,27 +2,27 @@ import React from "react"
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import { DropzoneArea } from "material-ui-dropzone";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress"
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
-const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   "& > *": {
-  //     margin: theme.spacing(1),
-  //   },
-  // },
-  input: {
-    display: "none",
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   // root: {
+//   //   "& > *": {
+//   //     margin: theme.spacing(1),
+//   //   },
+//   // },
+//   input: {
+//     display: "none",
+//   },
+// }));
 
 export default function ImageUploadComp(props){
-  const classes = useStyles();
-  const[loader, setLoader] = React.useState()
+  // const classes = useStyles();
+  // const[loader, setLoader] = React.useState()
   const [image, setImage] = React.useState();
   const [uploadUrl, setUploadUrl] = React.useState();
   const [imageUrl, setImageUrl] = React.useState();
@@ -34,10 +34,9 @@ export default function ImageUploadComp(props){
   };
 
   //upload image to api & get url
-  const handleImageUpload = (event) => {
-    setLoader(true);
-    const file = event.target.files[0]
-    file && setImage(file);
+  const handleImageUpload = (file) => {
+    // const file = event.target.files[0]
+    file[0] && setImage(file[0]);
   };
 
   //get signed s3 url for file upload
@@ -94,7 +93,7 @@ export default function ImageUploadComp(props){
           const { status } = data;
           status === 200 && setImageUrl(data.url.split("?")[0]);
         })
-        .then(() => setLoader(false))
+        // .then(() => setLoader(false))
         .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
@@ -104,8 +103,12 @@ export default function ImageUploadComp(props){
   //handle submit pass url to parent
   const handleSubmit = (event) => {
     event.preventDefault();
-    imageUrl && props.handleImageChange(imageUrl)
-    props.handleDialogClose();
+    if (imageUrl){
+      props.handleImageChange(imageUrl);
+      props.handleDialogClose();
+    } else {
+      console.log("Error encoutered")
+    }
     //pass image url back to parent component
   }
 
@@ -119,36 +122,19 @@ export default function ImageUploadComp(props){
       aria-labelledby="image-upload-dialog"
     >
       <DialogTitle id="image-upload-dialog-title">Upload Image</DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="contained-button-file"
-            name="image"
-            multiple
-            type="file"
-            onChange={handleImageUpload}
-          />
-          {loader ? (
-            <CircularProgress />
-          ) : (
-            <label htmlFor="contained-button-file">
-              <Button variant="contained" color="primary" component="span">
-                {image ? "Replace Image" : "Select Image"}
-              </Button>
-            </label>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button type="submit" color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </form>
+      <DialogContent>
+        <DropzoneArea open={true} onChange={handleImageUpload} filesLimit={1} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        {imageUrl && (
+        <Button onClick={handleSubmit} color="primary">
+          Upload Image
+        </Button>
+        )}
+      </DialogActions>
     </Dialog>
   );
 }
