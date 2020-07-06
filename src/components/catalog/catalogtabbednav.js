@@ -4,6 +4,7 @@ import Tab from "@material-ui/core/Tab";
 import CategoryIndexComp from "./category/categoryindex";
 import BrandIndexComp from "./brand/brandindex";
 import ProductIndexComp from "./product/productindex";
+import DivisionIndexComp from "./division/divisionindex";
 import PaperBox from "../common/paperbox"
 
 export default function CatalogTabbedComp(props) {
@@ -30,7 +31,7 @@ export default function CatalogTabbedComp(props) {
       {tabValue === 0 && <ProductIndexComp />}
       {tabValue === 1 && <CategoryIndexComp />}
       {tabValue === 2 && <BrandIndexComp />}
-      {tabValue === 3 && (<div>Divisions</div>)}
+      {tabValue === 3 && <DivisionIndexComp />}
     </PaperBox>
   );
 }
