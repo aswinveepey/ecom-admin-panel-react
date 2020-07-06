@@ -18,6 +18,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Switch from "@material-ui/core/Switch";
 import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
@@ -99,6 +100,7 @@ export default function SkuDetailComp(props) {
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
+  const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
 
   //Change sku name handling
   const onchangeSku = (event) => {
@@ -223,7 +225,22 @@ export default function SkuDetailComp(props) {
     setFormControls(controls);
   };
 
-  //Image upload handlers
+  //Thumbnail upload handlers
+  //handle thumnail upload close
+  const handleThumbnailUploadClose = () => {
+    setOpenThumbnailUpload(false);
+  };
+  //new image upload
+  function handleThumbnailUploadClick() {
+    setOpenThumbnailUpload(true);
+  }
+  //handle image change
+  const handleThumbnailChange = (thumbnail) => {
+    const controls = { ...formControls };
+    controls.assets = controls.assets || {};
+    controls.assets["thumbnail"] = thumbnail;
+    setFormControls(controls);
+  };
   //handle image upload close
   const handleImageUploadClose = () => {
     setOpenImageUpload(false);
@@ -434,6 +451,43 @@ export default function SkuDetailComp(props) {
                       </Card>
                     </Grid>
                   ))}
+                  <Grid item md={2} xs={6}>
+                    {formControls?.assets?.thumbnail ? (
+                      <Card variant="outlined">
+                        <CardHeader subheader="Thumbnail" />
+                        <CardContent className={classes.imagecardcontent}>
+                          <img
+                            src={formControls.assets.thumbnail}
+                            className={classes.cardimage}
+                            alt="sku thumbnail"
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={handleThumbnailUploadClick}
+                          >
+                            Replace
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    ) : (
+                      <Card variant="outlined">
+                        {/* Button base covers card content to make whole card clickable */}
+                        <ButtonBase
+                          className={classes.addthumbnailbase}
+                          onClick={handleThumbnailUploadClick}
+                        >
+                          <CardContent className={classes.thumbnailcardcontent}>
+                            <PhotoCamera />
+                            <Typography>Add Thumbnail</Typography>
+                          </CardContent>
+                        </ButtonBase>
+                        <CardActions></CardActions>
+                      </Card>
+                    )}
+                  </Grid>
                 </Grid>
               </Paper>
             </Grid>
@@ -660,7 +714,8 @@ export default function SkuDetailComp(props) {
                       SKU Attributes
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                      SKU selection attributes - Use attributes defined as product variant attributes
+                      SKU selection attributes - Use attributes defined as
+                      product variant attributes
                     </Typography>
                     <SingleAttributeComp
                       data={formControls?.attributes}
@@ -690,6 +745,12 @@ export default function SkuDetailComp(props) {
         open={openImageUpload}
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
+        keyPath="sku/"
+      />
+      <ImageUploadComp
+        open={openThumbnailUpload}
+        handleDialogClose={handleThumbnailUploadClose}
+        handleImageChange={handleThumbnailChange}
         keyPath="sku/"
       />
     </React.Fragment>

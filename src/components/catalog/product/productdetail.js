@@ -479,7 +479,7 @@ export default function ProductDetailComp(props) {
                           <img
                             src={formControls.assets.thumbnail}
                             className={classes.cardimage}
-                            alt="category thumbnail"
+                            alt="product thumbnail"
                           />
                         </CardContent>
                         <CardActions>
