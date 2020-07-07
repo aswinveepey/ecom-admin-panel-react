@@ -17,8 +17,18 @@ import hhysLogo from "../../assets/hhyslogo.png";
 
 
 const useStyles = makeStyles((theme) => ({
-  loginContainer:{
-    padding:'15%'
+  loginContainer: {
+    padding: "30px",
+    width:"20rem"
+  },
+  logo: {
+    maxWidth: "100px",
+    maxHeight: "100px",
+    width: "auto",
+    height: "auto",
+  },
+  griditem:{
+    margin:"10px"
   }
 }));
 
@@ -93,19 +103,19 @@ export default function LoginFormComp(props){
     <Grid
       container
       direction="column"
-      spacing={1}
+      spacing={2}
       className={classes.loginContainer}
     >
       <form onSubmit={handleSubmit}>
-        <Grid item style={{ maxWidth: "30%" }}>
-          <img src={hhysLogo} style={{ maxWidth: "100%" }} alt="logo" />
+        <Grid item className={classes.griditem}>
+          <img src={hhysLogo} alt="logo" className={classes.logo} />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <TextField
             fullWidth
             type="text"
@@ -121,7 +131,7 @@ export default function LoginFormComp(props){
             helperText={usernameError ? "Invalid Username" : ""}
           />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <TextField
             fullWidth
             type="password"
@@ -136,7 +146,7 @@ export default function LoginFormComp(props){
             helperText={passwordError ? "Invalid Password" : ""}
           />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           {submitprogress ? (
             <CircularProgress />
           ) : (
@@ -150,7 +160,7 @@ export default function LoginFormComp(props){
             </Button>
           )}
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <Link href="#" variant="body2">
             Forgot Password?
           </Link>
