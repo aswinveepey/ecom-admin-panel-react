@@ -136,6 +136,7 @@ export default function ProductIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
   const [productDetailOpen, setProductDetailOpen] = React.useState(false);
   const [productDetailData, setProductDetailData] = React.useState([])
+  const [productSearch, setProductSearch] = React.useState("");
   // const [loading, setLoading] = React.useState(true);
   const token = Cookies.get("token");
 
@@ -148,8 +149,12 @@ export default function ProductIndexComp(props){
   const closeProductDetail = () => {
     setProductDetailOpen(false);
   };
+  //handle Product Search
+  const handleProductSearch = (event) => {
+    setProductSearch(event.target.value);
+  };
 
-  //fetch data
+  //fetch product data inital
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -176,6 +181,36 @@ export default function ProductIndexComp(props){
     };
   }, [token]);
 
+  //product search
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ searchString: productSearch }),
+    };
+    //fetch data and set data
+    if(productSearch.length>2){
+      fetch(BASE_URL + "product/search", requestOptions, { signal: signal })
+        .then(async (data) => {
+          const response = await data.json();
+          const { status } = data;
+          // setLoading(false);
+          status === 200 && setRowData(response.data);
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [token, productSearch]);
+
   return (
     <React.Fragment>
       <Button
@@ -192,6 +227,7 @@ export default function ProductIndexComp(props){
           <InputBase
             placeholder="Search Products"
             className={classes.searchinput}
+            onChange={handleProductSearch}
           />
           <IconButton type="submit" aria-label="search products">
             <SearchIcon />
