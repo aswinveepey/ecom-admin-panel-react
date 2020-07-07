@@ -66,6 +66,7 @@ export default function DivisionIndexComp(params) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
+    let isMounted = true;
     //set request options
     const requestOptions = {
       method: "POST",
@@ -82,12 +83,13 @@ export default function DivisionIndexComp(params) {
           const response = await data.json();
           const { status } = data;
           // setLoading(false);
-          status === 200 && setRowData(response.data);
+          isMounted && status === 200 && setRowData(response.data);
         })
         .catch((err) => console.log(err));
     }
     return function cleanup() {
       abortController.abort();
+      isMounted = false;
     };
   }, [token, divisionSearch]);
   //fetch data
