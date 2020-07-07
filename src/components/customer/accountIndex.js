@@ -10,6 +10,8 @@ export default function AccountIndexComp(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
+  const [accountSearch, setAccountSearch] = React.useState("");
+
   const token = Cookies.get("token");
 
   const gridData = {
@@ -74,7 +76,40 @@ export default function AccountIndexComp(props) {
   function handleDialogClose() {
     setOpenDialog(false);
   }
-
+  //handle search input
+  function onchangeSearchInput(event){
+    setAccountSearch(event.target.value)
+  }
+  //account search
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ searchString: accountSearch }),
+    };
+    //fetch data and set data
+    if (accountSearch.length > 2) {
+      fetch(BASE_URL + "account/search", requestOptions, { signal: signal })
+        .then(async (data) => {
+          const response = await data.json();
+          const { status } = data;
+          // setLoading(false);
+          status === 200 && setRowData(response.data);
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [token, accountSearch]);
+  //Inital data
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -110,6 +145,7 @@ export default function AccountIndexComp(props) {
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
+        onchangeSearchInput={onchangeSearchInput}
       />
       <AccountDetailComp
         handleDialogClose={handleDialogClose}

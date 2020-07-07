@@ -9,6 +9,7 @@ export default function BrandIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
+  const [brandSearch, setBrandSearch] = React.useState("");
 
   const token = Cookies.get("token");
   const gridData = {
@@ -47,7 +48,53 @@ export default function BrandIndexComp(params) {
       },
     ],
   };
-  //fetch data
+    //handle double click
+  function handleRowDoubleClick(row) {
+    setDialogData(row.data);
+    setOpenDialog(true);
+  }
+  //new account
+  function handleNewClick() {
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+  function handleDialogClose() {
+    setOpenDialog(false);
+  }
+  //handle search input
+  function onchangeSearchInput(event){
+    setBrandSearch(event.target.value)
+  }
+  //brand search
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ searchString: brandSearch }),
+    };
+    //fetch data and set data
+    if (brandSearch.length > 2) {
+      fetch(BASE_URL + "brand/search", requestOptions, { signal: signal })
+        .then(async (data) => {
+          const response = await data.json();
+          const { status } = data;
+          // setLoading(false);
+          status === 200 && setRowData(response.data);
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [token, brandSearch]);
+  //fetch initial data
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -73,19 +120,6 @@ export default function BrandIndexComp(params) {
       abortController.abort();
     };
   }, [token]);
-    //handle double click
-  function handleRowDoubleClick(row) {
-    setDialogData(row.data);
-    setOpenDialog(true);
-  }
-  //new account
-  function handleNewClick() {
-    setDialogData([]);
-    setOpenDialog(true);
-  }
-  function handleDialogClose() {
-    setOpenDialog(false);
-  }
   //return component
   return (
     <React.Fragment>
@@ -95,6 +129,7 @@ export default function BrandIndexComp(params) {
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
+        onchangeSearchInput={onchangeSearchInput}
       />
       <BrandDetailComp
         handleDialogClose={handleDialogClose}

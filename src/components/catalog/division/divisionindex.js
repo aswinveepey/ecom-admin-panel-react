@@ -9,6 +9,7 @@ export default function DivisionIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
+  const [divisionSearch, setDivisionSearch] = React.useState("");
 
   const token = Cookies.get("token");
   const gridData = {
@@ -43,6 +44,52 @@ export default function DivisionIndexComp(params) {
       },
     ],
   };
+  //handle double click
+  function handleRowDoubleClick(row) {
+    setDialogData(row.data);
+    setOpenDialog(true);
+  }
+  //new account
+  function handleNewClick() {
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+  function handleDialogClose() {
+    setOpenDialog(false);
+  }
+  //handle search input
+  function onchangeSearchInput(event){
+    setDivisionSearch(event.target.value)
+  }
+  //division search
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ searchString: divisionSearch }),
+    };
+    //fetch data and set data
+    if (divisionSearch.length > 2) {
+      fetch(BASE_URL + "division/search", requestOptions, { signal: signal })
+        .then(async (data) => {
+          const response = await data.json();
+          const { status } = data;
+          // setLoading(false);
+          status === 200 && setRowData(response.data);
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [token, divisionSearch]);
   //fetch data
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
@@ -69,19 +116,6 @@ export default function DivisionIndexComp(params) {
       abortController.abort();
     };
   }, [token]);
-  //handle double click
-  function handleRowDoubleClick(row) {
-    setDialogData(row.data);
-    setOpenDialog(true);
-  }
-  //new account
-  function handleNewClick() {
-    setDialogData([]);
-    setOpenDialog(true);
-  }
-  function handleDialogClose() {
-    setOpenDialog(false);
-  }
   //return component
   return (
     <React.Fragment>
@@ -91,6 +125,7 @@ export default function DivisionIndexComp(params) {
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
+        onchangeSearchInput={onchangeSearchInput}
       />
       <DivisionDetailComp
         handleDialogClose={handleDialogClose}
