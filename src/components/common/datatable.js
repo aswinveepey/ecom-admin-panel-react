@@ -58,6 +58,7 @@ export default function DataTableComp(props){
           <InputBase
             placeholder={"Search " + props.title}
             className={classes.searchinput}
+            onChange = {props.onchangeSearchInput}
           />
           <IconButton type="submit" aria-label={"Search " + props.title}>
             <SearchIcon />

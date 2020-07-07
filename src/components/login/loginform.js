@@ -126,7 +126,6 @@ export default function LoginFormComp(props){
             value={username}
             onChange={(event) => handleUsernameChange(event)}
             required
-            autoFocus
             error={usernameError}
             helperText={usernameError ? "Invalid Username" : ""}
           />

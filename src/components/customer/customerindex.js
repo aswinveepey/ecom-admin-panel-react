@@ -10,7 +10,10 @@ export default function CustomerIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
+  const [customerSearch, setCustomerSearch] = React.useState("");
+
   const token = Cookies.get("token");
+
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
@@ -77,7 +80,40 @@ export default function CustomerIndexComp(props){
   function handleDialogClose(){
     setOpenDialog(false);
   }
-  //fetch data
+  //handle search input
+  function onchangeSearchInput(event){
+    setCustomerSearch(event.target.value)
+  }
+  //account search
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ searchString: customerSearch }),
+    };
+    //fetch data and set data
+    if (customerSearch.length > 2) {
+      fetch(BASE_URL + "customer/search", requestOptions, { signal: signal })
+        .then(async (data) => {
+          const response = await data.json();
+          const { status } = data;
+          // setLoading(false);
+          status === 200 && setRowData(response.data);
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [token, customerSearch]);
+  //initial fetch data
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -107,11 +143,12 @@ export default function CustomerIndexComp(props){
   return (
     <React.Fragment>
       <DataTableComp
-        title = "Customers"
+        title="Customers"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
+        onchangeSearchInput={onchangeSearchInput}
       />
       <CustomerDetailComp
         handleDialogClose={handleDialogClose}
