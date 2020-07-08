@@ -114,6 +114,7 @@ export default function AccountIndexComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
+    let isMounted = true;
     //set request options
     const requestOptions = {
       method: "GET",
@@ -128,12 +129,13 @@ export default function AccountIndexComp(props) {
         const response = await data.json();
         const { status } = data;
         // setLoading(false);
-        status === 200 && setRowData(response.data);
+        isMounted && status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
     // setLoading(false);
     return function cleanup() {
       abortController.abort();
+      isMounted = false; 
     };
   }, [token, openDialog]);
   //return component
