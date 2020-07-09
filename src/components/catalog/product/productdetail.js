@@ -274,13 +274,11 @@ export default function ProductDetailComp(props) {
     controls.assets.imgs.splice(index, 1)
     setFormControls(controls);
   }
-  React.useEffect(()=>{
-    props.data && setFormControls(props.data)
-  },[props])
 
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
+    props.data && setFormControls(props.data);
   }, [props]);
 
   //delegate close behaviour to parent
@@ -403,7 +401,6 @@ export default function ProductDetailComp(props) {
             <Typography
               variant="subtitle1"
               className={classes.title}
-              gutterBottom
             >
               {formControls?.name || "Add Product"}
             </Typography>

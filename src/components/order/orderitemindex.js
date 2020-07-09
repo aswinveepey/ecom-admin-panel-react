@@ -5,14 +5,12 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import OrderitemDetailComp from "./orderitemdetail";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   tablecell: {
-    minWidth:200,
-    // wrap: "true",
+    minWidth:250,
   },
 }));
 
@@ -27,10 +25,10 @@ export default function OrderitemIndeComp(props) {
             <TableRow>
               <TableCell className={classes.tablecell}>Name</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Booked Quantity</TableCell>
-              <TableCell>Confirmed Quantity</TableCell>
-              <TableCell>Delivered Quantity</TableCell>
-              <TableCell>Returned Quantity</TableCell>
+              <TableCell>Booked</TableCell>
+              <TableCell>Confirmed</TableCell>
+              <TableCell>Delivered</TableCell>
+              <TableCell>Returned</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Discount</TableCell>
               <TableCell>Total</TableCell>
@@ -39,7 +37,7 @@ export default function OrderitemIndeComp(props) {
           <TableBody>
             {props.data?.map((orderitem) => (
               <TableRow key={orderitem.shortid}>
-                <TableCell className={classes.tablecell}>
+                <TableCell className={classes.tablecell} component="th" scope="row">
                   {orderitem.sku?.product?.name + " " + orderitem.sku?.name}
                 </TableCell>
                 <TableCell>{orderitem.status}</TableCell>
