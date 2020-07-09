@@ -65,52 +65,36 @@ export default function BrandIndexComp(params) {
   function onchangeSearchInput(event){
     setBrandSearch(event.target.value)
   }
-  //brand search
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let isMounted = true;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: brandSearch }),
-    };
-    //fetch data and set data
-    if (brandSearch.length > 2) {
-      fetch(BASE_URL + "brand/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          // setLoading(false);
-          isMounted && status === 200 && setRowData(response.data);
-        })
-        .catch((err) => console.log(err));
+    let requestOptions = {}
+    let fetchurl = ""
+    if(brandSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: brandSearch }),
+      };
+      fetchurl = BASE_URL + "brand/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "brand";
     }
-    return function cleanup() {
-      abortController.abort();
-      isMounted = false;
-    };
-  }, [token, brandSearch]);
-  //fetch initial data
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "brand/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -121,7 +105,7 @@ export default function BrandIndexComp(params) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [token]);
+  }, [token, brandSearch]);
   //return component
   return (
     <React.Fragment>

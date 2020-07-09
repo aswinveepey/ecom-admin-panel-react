@@ -84,63 +84,47 @@ export default function CustomerIndexComp(props){
   function onchangeSearchInput(event){
     setCustomerSearch(event.target.value)
   }
-  //account search
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: customerSearch }),
-    };
-    //fetch data and set data
-    if (customerSearch.length > 2) {
-      fetch(BASE_URL + "customer/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          // setLoading(false);
-          status === 200 && setRowData(response.data);
-        })
-        .catch((err) => console.log(err));
+    let requestOptions = {}
+    let fetchurl = ""
+    if(customerSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: customerSearch }),
+      };
+      fetchurl = BASE_URL + "customer/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "customer";
     }
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [token, customerSearch]);
-  //initial fetch data
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    let isMounted = true;
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "customer/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
         // setLoading(false);
-        isMounted && status === 200 && setRowData(response.data);
+        status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
-      isMounted = false;
     };
-  }, [token, openDialog]);
+  }, [token, customerSearch]);
   //return component
   return (
     <React.Fragment>

@@ -6,7 +6,7 @@ import PaperBox from "../common/paperbox";
 export default function OrderComp(props) {
   return (
     <div>
-      <AppBarComp title="Catalog" />
+      <AppBarComp title="Order" />
       <PaperBox>
         <OrderIndexComp />
       </PaperBox>

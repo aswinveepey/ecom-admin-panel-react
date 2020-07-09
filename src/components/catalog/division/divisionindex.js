@@ -61,52 +61,36 @@ export default function DivisionIndexComp(params) {
   function onchangeSearchInput(event){
     setDivisionSearch(event.target.value)
   }
-  //division search
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let isMounted = true;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: divisionSearch }),
-    };
-    //fetch data and set data
-    if (divisionSearch.length > 2) {
-      fetch(BASE_URL + "division/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          // setLoading(false);
-          isMounted && status === 200 && setRowData(response.data);
-        })
-        .catch((err) => console.log(err));
+    let requestOptions = {}
+    let fetchurl = ""
+    if(divisionSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: divisionSearch }),
+      };
+      fetchurl = BASE_URL + "division/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "division";
     }
-    return function cleanup() {
-      abortController.abort();
-      isMounted = false;
-    };
-  }, [token, divisionSearch]);
-  //fetch data
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "division/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -117,7 +101,7 @@ export default function DivisionIndexComp(params) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [token]);
+  }, [token, divisionSearch]);
   //return component
   return (
     <React.Fragment>
