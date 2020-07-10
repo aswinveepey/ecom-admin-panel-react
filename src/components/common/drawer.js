@@ -25,7 +25,6 @@ import { makeStyles } from '@material-ui/core/styles';
 //realtive imports
 // import { BRAND_NAME } from "../../constants";
 import { BASE_URL } from "../../constants";
-import hhysLogo from "../../assets/hhyslogo.png";
 
 const useStyles = makeStyles((theme) => ({
   drawerdiv:{
@@ -40,6 +39,9 @@ function DrawerComp(props){
   // const drawerInitState = props.open;
   const classes = useStyles();
   const token = Cookies.get("token");
+  const tenantLogoFile = "logo-hhys.png";
+  const tenantLogo = "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +tenantLogoFile;
+
   const [drawerOpen, setDrawerOpen] = React.useState(props.open);
   const [navData, setNavData] = React.useState([]);
   
@@ -124,7 +126,7 @@ function DrawerComp(props){
           <div>
             <List>
               <ListItem>
-                <img src={hhysLogo} alt="logo" className={classes.logoImg} />
+                <img src={tenantLogo} alt="brand logo" className={classes.logoImg} />
               </ListItem>
             </List>
             <Divider />

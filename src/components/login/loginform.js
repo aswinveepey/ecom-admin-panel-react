@@ -13,7 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 //Constants Import
 import { BASE_URL } from "../../constants";
-import hhysLogo from "../../assets/hhyslogo.png";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginFormComp(props){
   const classes = useStyles();
   const history = useHistory();
+  const tenantLogoFile = "logo-hhys.png";
+  const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [usernameError, setUsernameError] = React.useState(false);
@@ -108,7 +109,7 @@ export default function LoginFormComp(props){
     >
       <form onSubmit={handleSubmit}>
         <Grid item className={classes.griditem}>
-          <img src={hhysLogo} alt="logo" className={classes.logo} />
+          <img src={tenantLogo} alt="brand logo" className={classes.logo} />
         </Grid>
         <Grid item className={classes.griditem}>
           <Typography component="h1" variant="h5">
