@@ -1,12 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import AppBarComp from "../common/appbar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import CategoryIndexComp from "./category/categoryindex";
-import BrandIndexComp from "./brand/brandindex";
-import ProductIndexComp from "./product/productindex";
-import DivisionIndexComp from "./division/divisionindex";
 import PaperBox from "../common/paperbox";
+
+const CategoryIndexComp = React.lazy(()=>import("./category/categoryindex"))
+const BrandIndexComp = React.lazy(()=>import("./brand/brandindex"))
+const ProductIndexComp = React.lazy(()=>import("./product/productindex"))
+const DivisionIndexComp = React.lazy(()=>import("./division/divisionindex"))
 
 
 
@@ -33,10 +34,12 @@ export default function CatalogComp(props) {
           <Tab label="Brands" />
           <Tab label="Divisions" />
         </Tabs>
-        {tabValue === 0 && <ProductIndexComp />}
-        {tabValue === 1 && <CategoryIndexComp />}
-        {tabValue === 2 && <BrandIndexComp />}
-        {tabValue === 3 && <DivisionIndexComp />}
+        <Suspense fallback={<div>Loading...</div>}>
+          {tabValue === 0 && <ProductIndexComp />}
+          {tabValue === 1 && <CategoryIndexComp />}
+          {tabValue === 2 && <BrandIndexComp />}
+          {tabValue === 3 && <DivisionIndexComp />}
+        </Suspense>
       </PaperBox>
     </div>
   );

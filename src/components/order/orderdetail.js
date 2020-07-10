@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Cookies from "js-cookie";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,8 +23,9 @@ import TableCell from "@material-ui/core/TableCell"
 //Constants Import
 import { BASE_URL } from "../../constants";
 //Component import
-import OrderitemDetailComp from "./orderitemdetail";
+// import OrderitemDetailComp from "./orderitemdetail";
 
+const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -88,7 +89,7 @@ function CustomerDisplayComp(props){
         <Card variant="outlined">
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
-              Billing Address
+              Delivery Address
             </Typography>
             <Typography variant="body2" component="p">
               {props.data?.deliveryaddress?.address1}
@@ -206,10 +207,12 @@ export default function OrderDetailcomp(props){
         </AppBar>
         <Paper className={classes.gridpaper} variant="outlined">
           <CustomerDisplayComp data={formControls.customer} />
-          <OrderitemDetailComp
-            data={formControls.orderitems}
-            onchangeItemQuantity={onchangeItemQuantity}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <OrderitemDetailComp
+              data={formControls.orderitems}
+              onchangeItemQuantity={onchangeItemQuantity}
+            />
+          </Suspense>
         </Paper>
       </Dialog>
     </React.Fragment>
