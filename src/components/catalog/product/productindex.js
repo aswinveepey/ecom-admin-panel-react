@@ -154,60 +154,43 @@ export default function ProductIndexComp(props){
     setProductSearch(event.target.value);
   };
 
-  //fetch product data inital
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let isMounted = true;
+    let requestOptions = {}
+    let fetchurl = ""
+    if(productSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: productSearch }),
+      };
+      fetchurl = BASE_URL + "product/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "product";
+    }
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "product/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
         // setLoading(false);
-        isMounted && status === 200 && setRowData(response.data);
+        status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
-    return function cleanup() {
-      abortController.abort();
-      isMounted=false;
-    };
-  }, [token]);
-
-  //product search
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: productSearch }),
-    };
-    //fetch data and set data
-    if(productSearch.length>2){
-      fetch(BASE_URL + "product/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          // setLoading(false);
-          status === 200 && setRowData(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
     return function cleanup() {
       abortController.abort();
     };

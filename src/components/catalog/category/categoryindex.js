@@ -62,59 +62,43 @@ export default function CategoryIndexComp(params) {
   function onchangeSearchInput(event){
     setCategorySearch(event.target.value)
   }
-  //fetch inital data
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let isMounted = true;
+    let requestOptions = {}
+    let fetchurl = ""
+    if(categorySearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: categorySearch }),
+      };
+      fetchurl = BASE_URL + "category/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "category";
+    }
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "category/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
         // setLoading(false);
-        isMounted && status === 200 && setRowData(response.data);
+        status === 200 && setRowData(response.data);
       })
       .catch((err) => console.log(err));
-    return function cleanup() {
-      abortController.abort();
-      isMounted = false;
-    };
-  }, [token]);
-  //category search
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: categorySearch }),
-    };
-    //fetch data and set data
-    if (categorySearch.length > 2) {
-      fetch(BASE_URL + "category/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          // setLoading(false);
-          status === 200 && setRowData(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
     return function cleanup() {
       abortController.abort();
     };

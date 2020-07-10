@@ -388,7 +388,6 @@ export default function SkuDetailComp(props) {
               <Typography
                 variant="subtitle1"
                 className={classes.title}
-                gutterBottom
               >
                 {formControls?.name || "Add SKU"}
               </Typography>
