@@ -49,10 +49,6 @@ export default function CustomerDetailComp(props){
     { value: "Female", label: "Female" },
     { value: "Other", label: "Other" },
   ]);
-  const [addressTypes, setAddressTypes] = React.useState([
-    { value: "Delivery", label: "Delivery" },
-    { value: "Billing", label: "Billing" },
-  ]);
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose()
@@ -339,7 +335,7 @@ export default function CustomerDetailComp(props){
                       <Card variant="outlined">
                         <CardContent>
                           <Typography color="secondary" gutterBottom>
-                            {item?.type}
+                            {item?.name}
                           </Typography>
                           <Typography>{item?.address1}</Typography>
                           <Typography>{item?.address2}</Typography>

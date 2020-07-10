@@ -136,6 +136,7 @@ export default function ProductIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
   const [productDetailOpen, setProductDetailOpen] = React.useState(false);
   const [productDetailData, setProductDetailData] = React.useState([])
+  const [productSearch, setProductSearch] = React.useState("");
   // const [loading, setLoading] = React.useState(true);
   const token = Cookies.get("token");
 
@@ -148,22 +149,41 @@ export default function ProductIndexComp(props){
   const closeProductDetail = () => {
     setProductDetailOpen(false);
   };
+  //handle Product Search
+  const handleProductSearch = (event) => {
+    setProductSearch(event.target.value);
+  };
 
-  //fetch data
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
+    let requestOptions = {}
+    let fetchurl = ""
+    if(productSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: productSearch }),
+      };
+      fetchurl = BASE_URL + "product/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "product";
+    }
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "product/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -174,7 +194,7 @@ export default function ProductIndexComp(props){
     return function cleanup() {
       abortController.abort();
     };
-  }, [token]);
+  }, [token, productSearch]);
 
   return (
     <React.Fragment>
@@ -192,6 +212,7 @@ export default function ProductIndexComp(props){
           <InputBase
             placeholder="Search Products"
             className={classes.searchinput}
+            onChange={handleProductSearch}
           />
           <IconButton type="submit" aria-label="search products">
             <SearchIcon />

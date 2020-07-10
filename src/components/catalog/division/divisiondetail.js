@@ -15,8 +15,7 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import MultiAttributeComp from "../../common/multiattribute";
-import ImageUploadComp from "../../common/imageupload"
+import ImageUploadComp from "../../common/imageupload";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //cookie library import
@@ -64,36 +63,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CategoryDetailComp(props) {
+export default function DivisionDetailComp(props) {
   const classes = useStyles();
 
   const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
-  const [parentSearchString, setParentSearchString] = React.useState([]);
+  const [categorySearchString, setCategorySearchString] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
-  //handle dialog close - call parent function
+  //handle dialog close - call div index comp
   const handleClose = () => {
     props.handleDialogClose();
   };
   //handle image upload close
-  const handleImageUploadClose =()=>{
+  const handleImageUploadClose = () => {
     setOpenImageUpload(false);
-  }
+  };
   //new image upload
   function handleImageUploadClick() {
     setOpenImageUpload(true);
   }
   //handle image upload close
-  const handleThumbnailUploadClose =()=>{
+  const handleThumbnailUploadClose = () => {
     setOpenThumbnailUpload(false);
-  }
+  };
   //new image upload
   function handleThumbnailUploadClick() {
     setOpenThumbnailUpload(true);
   }
-  // handle category form submit
+  // handle division form submit
   const handleSubmit = (event) => {
     event.preventDefault();
     //clean up subscriptions using abortcontroller & signals
@@ -110,9 +109,9 @@ export default function CategoryDetailComp(props) {
     };
     //differentiate between update & create
     const SUFFIX_URL = formControls._id
-      ? "category/id/" + formControls._id
-      : "category/";
-    //POST category data and handle
+      ? "division/id/" + formControls._id
+      : "division/";
+    //POST division data and handle
     fetch(BASE_URL + SUFFIX_URL, requestOptions, {
       signal: signal,
     })
@@ -124,14 +123,14 @@ export default function CategoryDetailComp(props) {
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       });
     return function cleanup() {
       abortController.abort();
     };
   };
-  //change category input handle
-  const onchangeCategoryInput = (event) => {
+  //change division input handle
+  const onchangeDivisionInput = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
@@ -141,61 +140,24 @@ export default function CategoryDetailComp(props) {
   };
 
   //change account input handle
-  const onchangeParentInput = (event, value) => {
+  const onchangeCategoryInput = (event, value) => {
     event.preventDefault();
     const controls = { ...formControls };
-    controls.parent = value;
+    controls.categories = value;
     setFormControls(controls);
   };
-  //change filter attribute name handle
-  const onchangeFilterAttributeName = (event, index) => {
-    event.preventDefault();
-    const name = event.target.name;
-    const value = event.target.value;
-    const controls = { ...formControls };
-    controls.filterattributes[index][name] = value;
-    setFormControls(controls);
-  };
-  //add a new filter attribute
-  const onFilterAttributeAdd = (event) => {
-    event.preventDefault();
-    const controls = { ...formControls };
-    !controls.filterattributes && (controls.filterattributes = []);
-    controls.filterattributes.push({ name: "", values: [] });
-    setFormControls(controls);
-  };
-  //delete filter attribute
-  const onFilterAttributeDelete = (event, index) => {
-    event.preventDefault();
-    const controls = { ...formControls };
-    controls.filterattributes.splice(index, 1);
-    setFormControls(controls);
-  };
-  //handle attribute value add
-  const handleAttrValueAdd = (index, chip)=>{
-    const controls = { ...formControls };
-    !controls.filterattributes[index].values &&
-      (controls.filterattributes[index].values = []);
-    controls.filterattributes[index].values.push(chip);
-    setFormControls(controls);
-  };
-  const handleAttrValueDelete = (index, attrIndex)=>{
-    const controls = { ...formControls };
-    controls.filterattributes[index].values.splice(attrIndex, 1);
-    setFormControls(controls);
-  }
   //Change search term - Account
-  const onChangeParentSearch = (event) => {
+  const onChangeCategorySearch = (event) => {
     event.preventDefault();
-    setParentSearchString(event.target.value);
+    setCategorySearchString(event.target.value);
   };
   //handle image change
-  const handleImageChange = (image)=>{
-    const controls = { ...formControls }
+  const handleImageChange = (image) => {
+    const controls = { ...formControls };
     controls.assets = controls.assets || {};
     controls.assets["img"] = image;
     setFormControls(controls);
-  }
+  };
   //handle image change
   const handleThumbnailChange = (thumbnail) => {
     const controls = { ...formControls };
@@ -219,11 +181,11 @@ export default function CategoryDetailComp(props) {
         "Content-Type": "application/json",
         Authorization: token,
       },
-      body: JSON.stringify({ searchString: parentSearchString }),
+      body: JSON.stringify({ searchString: categorySearchString }),
     };
     //fetch data and set data
-    if (parentSearchString.length > 2) {
-      fetch(BASE_URL + "category/search", requestOptions, { signal: signal })
+    if (categorySearchString.length > 2) {
+      fetch(BASE_URL + "division/search", requestOptions, { signal: signal })
         .then(async (data) => {
           const response = await data.json();
           const { status } = data;
@@ -234,7 +196,7 @@ export default function CategoryDetailComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [parentSearchString, token]);
+  }, [categorySearchString, token]);
 
   return (
     <React.Fragment>
@@ -243,9 +205,9 @@ export default function CategoryDetailComp(props) {
         onClose={handleClose}
         fullWidth={true}
         maxWidth={"sm"}
-        aria-labelledby="category-dialog"
+        aria-labelledby="division-dialog"
       >
-        <DialogTitle id="category-dialog-title">
+        <DialogTitle id="division-dialog-title">
           {formControls.name || ""}
         </DialogTitle>
         <form onSubmit={handleSubmit}>
@@ -261,7 +223,7 @@ export default function CategoryDetailComp(props) {
                           <img
                             src={formControls.assets.img}
                             className={classes.img}
-                            alt="category"
+                            alt="division"
                           />
                         </CardContent>
                         <CardActions>
@@ -298,7 +260,7 @@ export default function CategoryDetailComp(props) {
                           <img
                             src={formControls.assets.thumbnail}
                             className={classes.thumbnail}
-                            alt="category thumbnail"
+                            alt="division thumbnail"
                           />
                         </CardContent>
                         <CardActions>
@@ -345,50 +307,38 @@ export default function CategoryDetailComp(props) {
               <Grid item>
                 <TextField
                   value={formControls?.name}
-                  label="Category Name"
+                  label="Division Name"
                   name="name"
                   variant="standard"
                   required
                   fullWidth
-                  onChange={(event) => onchangeCategoryInput(event)}
+                  onChange={(event) => onchangeDivisionInput(event)}
                 />
               </Grid>
-              {/* Parent select */}
+              {/* Category select */}
               <Grid item>
-                <Autocomplete
-                  options={categories}
-                  freeSolo
-                  value={formControls.parent || ""}
+                {/* <Autocomplete
+                  multiple
+                  options={categories || []}
+                  value={formControls.categories.map((data) => data)}
                   getOptionLabel={(option) =>
                     typeof option === "string" ? option : option.name
                   }
                   getOptionSelected={(option, value) =>
                     option ? option.name === value.name : false
                   }
-                  onChange={(event, value) => onchangeParentInput(event, value)}
+                  name="categories"
+                  onChange={onchangeCategoryInput}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Parent Category"
-                      name="parent"
+                      label="Categories"
                       variant="standard"
                       fullWidth
-                      onChange={(event) => onChangeParentSearch(event)}
+                      onChange={onChangeCategorySearch}
                     />
                   )}
-                />
-              </Grid>
-              <Grid item>
-                {/* filterattributes */}
-                <MultiAttributeComp
-                  data={formControls.filterattributes}
-                  label="FilterAttributes"
-                  onchangeAttributeName={onchangeFilterAttributeName}
-                  onAttributeAdd={onFilterAttributeAdd}
-                  onAttributeDelete={onFilterAttributeDelete}
-                  handleAttrValueDelete={handleAttrValueDelete}
-                  handleAttrValueAdd={handleAttrValueAdd}
-                />
+                /> */}
               </Grid>
             </Grid>
           </DialogContent>
@@ -406,13 +356,13 @@ export default function CategoryDetailComp(props) {
         open={openImageUpload}
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
-        keyPath="category/"
+        keyPath="division/"
       />
       <ImageUploadComp
         open={openThumbnailUpload}
         handleDialogClose={handleThumbnailUploadClose}
         handleImageChange={handleThumbnailChange}
-        keyPath="category/thumbnail/"
+        keyPath="division/thumbnail/"
       />
     </React.Fragment>
   );

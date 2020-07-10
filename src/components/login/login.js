@@ -1,7 +1,5 @@
 import React from "react";
-
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import Hidden from "@material-ui/core/Hidden";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,10 +9,9 @@ import LoginFormComp from './loginform'
 
 
 const useStyles = makeStyles((theme) => ({
-  loginPaper: {
+  hero: {
     width: "100%",
-    // height: "100%",
-    height: "100vh",
+    // height: "100vh",
   },
   loginForm: {
     width: "100%",
@@ -28,13 +25,11 @@ function Login(props){
     <Grid container>
       <Hidden mdDown>
         <Grid item lg={8} md={12} sm={12} xs={12}>
-          <Paper className={classes.loginPaper}>
             <img
               src={hhysImage}
-              style={{ width: "100%", height: "100%" }}
+              className={classes.hero}
               alt="Not Found"
             />
-          </Paper>
         </Grid>
       </Hidden>
       <Grid item lg={4} md={12} sm={12} xs={12} >

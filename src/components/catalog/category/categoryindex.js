@@ -9,6 +9,7 @@ export default function CategoryIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
+  const [categorySearch, setCategorySearch] = React.useState("");
 
   const token = Cookies.get("token");
   const gridData = {
@@ -43,21 +44,54 @@ export default function CategoryIndexComp(params) {
       },
     ],
   };
-   //fetch data
+  //handle double click
+  function handleRowDoubleClick(row) {
+    setDialogData(row.data);
+    setOpenDialog(true);
+  }
+  //new category creation dialog
+  function handleNewClick() {
+    setDialogData([]);
+    setOpenDialog(true);
+  }
+  //handle dialog close
+  function handleDialogClose() {
+    setOpenDialog(false);
+  }
+  //handle search input
+  function onchangeSearchInput(event){
+    setCategorySearch(event.target.value)
+  }
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
+    let requestOptions = {}
+    let fetchurl = ""
+    if(categorySearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: categorySearch }),
+      };
+      fetchurl = BASE_URL + "category/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "category";
+    }
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "category/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -68,20 +102,7 @@ export default function CategoryIndexComp(params) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [token]);
-    //handle double click
-  function handleRowDoubleClick(row) {
-    setDialogData(row.data);
-    setOpenDialog(true);
-  }
-  //new account
-  function handleNewClick() {
-    setDialogData([]);
-    setOpenDialog(true);
-  }
-  function handleDialogClose() {
-    setOpenDialog(false);
-  }
+  }, [token, categorySearch]);
   //return component
   return (
     <React.Fragment>
@@ -91,6 +112,7 @@ export default function CategoryIndexComp(params) {
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
+        onchangeSearchInput={onchangeSearchInput}
       />
       <CategoryDetailComp
         handleDialogClose={handleDialogClose}

@@ -10,7 +10,10 @@ export default function CustomerIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
+  const [customerSearch, setCustomerSearch] = React.useState("");
+
   const token = Cookies.get("token");
+
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
@@ -77,21 +80,40 @@ export default function CustomerIndexComp(props){
   function handleDialogClose(){
     setOpenDialog(false);
   }
-  //fetch data
+  //handle search input
+  function onchangeSearchInput(event){
+    setCustomerSearch(event.target.value)
+  }
+  //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
+    let requestOptions = {}
+    let fetchurl = ""
+    if(customerSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: customerSearch }),
+      };
+      fetchurl = BASE_URL + "customer/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "customer";
+    }
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     //fetch data and set data
-    fetch(BASE_URL + "customer/", requestOptions, { signal: signal })
+    fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;
@@ -102,16 +124,17 @@ export default function CustomerIndexComp(props){
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, openDialog]);
+  }, [token, customerSearch]);
   //return component
   return (
     <React.Fragment>
       <DataTableComp
-        title = "Customers"
+        title="Customers"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
+        onchangeSearchInput={onchangeSearchInput}
       />
       <CustomerDetailComp
         handleDialogClose={handleDialogClose}

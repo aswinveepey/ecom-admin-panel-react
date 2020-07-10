@@ -3,19 +3,19 @@ import React from "react";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../../constants";
 import DataTableComp from "../../common/datatable";
-import BrandDetailComp from "./branddetail";
+import DivisionDetailComp from "./divisiondetail";
 
-export default function BrandIndexComp(params) {
+export default function DivisionIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
-  const [brandSearch, setBrandSearch] = React.useState("");
+  const [divisionSearch, setDivisionSearch] = React.useState("");
 
   const token = Cookies.get("token");
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
-      // rowHeight:50,
+      // rowHeight: 50,
       onRowDoubleClicked: handleRowDoubleClick,
       pagination: true,
       defaultColDef: {
@@ -30,8 +30,8 @@ export default function BrandIndexComp(params) {
         autoHeight: true,
         cellRenderer: (params) =>
           params.data.assets &&
-          '<img width="50" height="50" alt="Brand Logo" src="' +
-            params.data.assets.logo +
+          '<img width="50" height="50" alt="Division thumbnail" src="' +
+            params.data.assets.thumbnail +
             '"/>',
       },
       {
@@ -39,16 +39,12 @@ export default function BrandIndexComp(params) {
         valueGetter: (params) => params.data?.name,
       },
       {
-        headerName: "Manufacturer",
-        valueGetter: (params) => params.data?.manufacturer,
-      },
-      {
         headerName: "Last Updated At",
         valueGetter: (params) => params.data?.updatedat,
       },
     ],
   };
-    //handle double click
+  //handle double click
   function handleRowDoubleClick(row) {
     setDialogData(row.data);
     setOpenDialog(true);
@@ -63,7 +59,7 @@ export default function BrandIndexComp(params) {
   }
   //handle search input
   function onchangeSearchInput(event){
-    setBrandSearch(event.target.value)
+    setDivisionSearch(event.target.value)
   }
   //datafetch
   React.useEffect(() => {
@@ -72,16 +68,16 @@ export default function BrandIndexComp(params) {
     const signal = abortController.signal;
     let requestOptions = {}
     let fetchurl = ""
-    if(brandSearch){
+    if(divisionSearch){
       requestOptions = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ searchString: brandSearch }),
+        body: JSON.stringify({ searchString: divisionSearch }),
       };
-      fetchurl = BASE_URL + "brand/search"
+      fetchurl = BASE_URL + "division/search"
     } else {
       requestOptions = {
         method: "GET",
@@ -90,7 +86,7 @@ export default function BrandIndexComp(params) {
           Authorization: token,
         },
       };
-      fetchurl = BASE_URL + "brand";
+      fetchurl = BASE_URL + "division";
     }
     //set request options
     //fetch data and set data
@@ -105,19 +101,19 @@ export default function BrandIndexComp(params) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, brandSearch]);
+  }, [token, divisionSearch]);
   //return component
   return (
     <React.Fragment>
       <DataTableComp
-        title="Brand"
+        title="Division"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
         onchangeSearchInput={onchangeSearchInput}
       />
-      <BrandDetailComp
+      <DivisionDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}

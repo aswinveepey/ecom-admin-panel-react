@@ -17,8 +17,18 @@ import hhysLogo from "../../assets/hhyslogo.png";
 
 
 const useStyles = makeStyles((theme) => ({
-  loginContainer:{
-    padding:'15%'
+  loginContainer: {
+    padding: "30px",
+    width:"20rem"
+  },
+  logo: {
+    maxWidth: "100px",
+    maxHeight: "100px",
+    width: "auto",
+    height: "auto",
+  },
+  griditem:{
+    margin:"10px"
   }
 }));
 
@@ -47,72 +57,86 @@ export default function LoginFormComp(props){
   var handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitprogress(true);
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: username, password: password }),
     };
-    const authResponse = await fetch(
+    fetch(
       BASE_URL + "auth/authenticate",
-      requestOptions
-    );
-    const { status } = authResponse;
-    if (status === 200) {
-      const { token } = await authResponse.json();
-      try {
-        Cookies.set("token", token, { expires: 30 });
-      } catch (error) {
-        console.log('Unable to set cookie');
+      requestOptions,
+      {
+        signal: signal,
       }
-      history && history.push("/home");
-    } else {
-      authResponse.json().then((data) => {
-        const { message } = data;
-        if (message === "Username Error") {
-          setUsernameError(true);
-        } else if (message === "Password Error") {
-          setPasswordError(true);
-        } else {
-          console.log('Something went wrong')
+    ).then(async (authResponse)=>{
+      const { status } = authResponse;
+      if (status === 200) {
+        const { token } = await authResponse.json();
+        try {
+          Cookies.set("token", token, { expires: 30 });
+        } catch (error) {
+          console.log("Unable to set cookie");
         }
-      });
-    }
+        history && history.push("/home");
+      } else {
+        authResponse.json().then((data) => {
+          const { message } = data;
+          if (message === "Username Error") {
+            setUsernameError(true);
+          } else if (message === "Password Error") {
+            setPasswordError(true);
+          } else {
+            console.log("Something went wrong");
+          }
+        });
+      }
+    }).catch(error=>console.log(error));
     setSubmitprogress(false);
+    return function cleanup() {
+      abortController.abort();
+    };
   };
   return (
-    // <Grid container direction="column" alignContent="center" spacing={2}>
-    //   <Grid item>
-    <form onSubmit={handleSubmit}>
-      <Grid container direction="column" spacing={1} className={classes.loginContainer}>
-        <Grid item style={{ maxWidth: "30%" }}>
-          <img src={hhysLogo} style={{ maxWidth: "100%" }} alt="logo" />
+    <Grid
+      container
+      direction="column"
+      spacing={2}
+      className={classes.loginContainer}
+    >
+      <form onSubmit={handleSubmit}>
+        <Grid item className={classes.griditem}>
+          <img src={hhysLogo} alt="logo" className={classes.logo} />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <TextField
             fullWidth
             type="text"
             label="Username"
             name="username"
             variant="outlined"
+            autoComplete="username"
             value={username}
             onChange={(event) => handleUsernameChange(event)}
             required
-            autoFocus
             error={usernameError}
             helperText={usernameError ? "Invalid Username" : ""}
           />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <TextField
             fullWidth
             type="password"
             label="Password"
             name="password"
+            autoComplete="current-password"
             variant="outlined"
             value={password}
             onChange={(event) => handlePasswordChange(event)}
@@ -121,7 +145,7 @@ export default function LoginFormComp(props){
             helperText={passwordError ? "Invalid Password" : ""}
           />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           {submitprogress ? (
             <CircularProgress />
           ) : (
@@ -135,14 +159,12 @@ export default function LoginFormComp(props){
             </Button>
           )}
         </Grid>
-        <Grid item>
+        <Grid item className={classes.griditem}>
           <Link href="#" variant="body2">
             Forgot Password?
           </Link>
         </Grid>
-      </Grid>
-    </form>
-    // </Grid>
-    // </Grid>
+      </form>
+    </Grid>
   );
 }

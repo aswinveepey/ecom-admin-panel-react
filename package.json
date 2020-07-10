@@ -17,6 +17,7 @@
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
     "material-ui-chip-input": "^2.0.0-beta.2",
+    "material-ui-dropzone": "^3.3.0",
     "popper.js": "^1.16.1",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
@@ -28,7 +29,7 @@
   },
   "scripts": {
     "start": " env-cmd -f .env react-scripts start",
-    "build": "react-scripts build && echo '/* /index.html  200' | cat >build/_redirects ",
+    "build": "react-scripts build",
     "build-ci": "react-scripts build",
     "build-dev": "env-cmd -f .env.development react-scripts build",
     "build-prod": "env-cmd -f .env.production react-scripts build",

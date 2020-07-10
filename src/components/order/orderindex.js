@@ -1,194 +1,251 @@
-import React from 'react'
-import AppBarComp from "../common/appbar";
-import PaperBox from "../common/paperbox"
+import React from "react";
+//cookie library import
+import Cookies from "js-cookie";
+import { BASE_URL } from "../../constants";
+import OrderitemIndexComp from "./orderitemindex";
+import OrderDetailComp from "./orderdetail";
+//<aterial UI
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
+// import LinearProgress from "@material-ui/core/LinearProgress";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import EditIcon from "@material-ui/icons/Edit";
 
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-material.css";
+//icon imports - Material UI
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import SearchIcon from "@material-ui/icons/Search";
+//Styles
+import { makeStyles } from "@material-ui/core/styles";
 
-const gridData = {
-  gridOptions: {
-    rowSelection: "multiple",
-    pagination: true,
-    defaultColDef: {
-      resizable: true,
-      filter: true,
-      sortable: true,
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: "1%",
+  },
+  table: {
+    minWidth: 700,
+  },
+  tablegrid: {
+    overflow: "auto",
+  },
+  tablerow: {
+    height: "50",
+    "& > *": {
+      borderBottom: "unset",
     },
   },
-  columnDefs: [
-    { field: "id", headerName: "Order ID", checkboxSelection: true },
-    { field: "title", headerName: "Product Name" },
-    { field: "customer", headerName: "Customer" },
-    { field: "mobnumber", headerName: "Mobile Number" },
-    { field: "quantity", headerName: "Quantity" },
-    { field: "amount", headerName: "Amount" },
-    { field: "discount", headerName: "Discount" },
-    { field: "totalamount", headerName: "Total Amount" },
-    { field: "status", headerName: "Status" },
-    { field: "created_time", headerName: "Order Time" },
-    { field: "executive", headerName: "Delivery Executive" },
-  ],
-  rowData: [
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-    {
-      id: 0,
-      title: "Aspic - Light",
-      customer: "Customer 1",
-      mobnumber: "9895222313",
-      quantity: "23",
-      amount: "1234.56",
-      discount: "34.56",
-      totalamount: "1200.00",
-      status: "Fulfilled",
-      created_time: Date.now(),
-      executive: "Remesh",
-    },
-  ],
-};
+  tableheader: {
+    fontWeight: "600",
+    fontSize: "12px",
+    color: "rgba(0, 0, 0, 0.54)",
+  },
+  searchbar: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    // marginLeft: "1%",
+    marginBottom: "1%",
+  },
+  searchinput: {
+    width: "100%",
+  },
+  container: {
+    height: "inherit",
+    marginLeft: "1%",
+  },
+}));
+function ExpandableRow(props) {
+  const classes = useStyles();
+  const { row } = props;
+  const [orderExpand, setOrderExpand] = React.useState(false);
 
-export default function OrderIndex(props){
+  //open Order Detail
+  const openOrderDetail = (event) => {
+    event.preventDefault();
+    props.openOrderDetail(row);
+  };
   return (
-    <div>
-      <AppBarComp title="Orders" />
-      <PaperBox>
-        <div className="ag-theme-material" style={{ height: "800px" }}>
-          <AgGridReact
-            gridOptions={gridData.gridOptions}
-            columnDefs={gridData.columnDefs}
-            rowData={gridData.rowData}
-          ></AgGridReact>
-        </div>
-      </PaperBox>
-    </div>
+    <React.Fragment>
+      <TableRow key={row.shortid} className={classes.tablerow}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOrderExpand(!orderExpand)}
+          >
+            {orderExpand ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          <IconButton
+            size="small"
+            aria-label="order detail"
+            onClick={openOrderDetail}
+          >
+            <EditIcon />
+          </IconButton>
+        </TableCell>
+        <TableCell>{row._id}</TableCell>
+        <TableCell>{row.customer.customer._id}</TableCell>
+        <TableCell>{parseFloat(row.amount.amount).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.discount).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.totalamount).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.installation).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.shipping).toFixed(2)}</TableCell>
+        <TableCell>{row.createdat}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={orderExpand} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <Typography variant="subtitle2" gutterBottom component="div">
+                Order items
+              </Typography>
+              {row.orderitems && (
+                <OrderitemIndexComp data={row.orderitems} order_id={row._id} />
+              )}
+              {/* Order item Component */}
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
   );
-};
+}
+export default function OrderIndexComp(props) {
+  const classes = useStyles();
+  const [rowData, setRowData] = React.useState([]);
+  const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
+  const [orderDetailData, setOrderDetailData] = React.useState([]);
+  const [orderSearch, setOrderSearch] = React.useState("");
+  // const [loading, setLoading] = React.useState(true);
+  const token = Cookies.get("token");
+
+  //open Order Detail
+  const openOrderDetail = (data) => {
+    setOrderDetailData(data);
+    setOrderDetailOpen(true);
+  };
+  //close Order Detail
+  const closeOrderDetail = () => {
+    setOrderDetailOpen(false);
+  };
+  //handle Order Search
+  const handleOrderSearch = (event) => {
+    setOrderSearch(event.target.value);
+  };
+
+  //datafetch
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    let requestOptions = {}
+    let fetchurl = ""
+    if(orderSearch){
+      requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ searchString: orderSearch }),
+      };
+      fetchurl = BASE_URL + "order/search"
+    } else {
+      requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      fetchurl = BASE_URL + "order";
+    }
+    //set request options
+    //fetch data and set data
+    fetch(fetchurl, requestOptions, { signal: signal })
+      .then(async (data) => {
+        const response = await data.json();
+        const { status } = data;
+        // setLoading(false);
+        status === 200 && setRowData(response.data);
+      })
+      .catch((err) => console.log(err));
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [token, orderSearch]);
+
+  return (
+    <React.Fragment>
+      <Button
+        color="primary"
+        variant="outlined"
+        aria-label="add"
+        className={classes.button}
+        onClick={openOrderDetail}
+      >
+        Add Order
+      </Button>
+      <div className={classes.container}>
+        <Paper component="form" className={classes.searchbar}>
+          <InputBase
+            placeholder="Search Orders"
+            className={classes.searchinput}
+            onChange={handleOrderSearch}
+          />
+          <IconButton type="submit" aria-label="search orders">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+        <TableContainer>
+          {rowData && (
+            <Table aria-label="order table" className={classes.table}>
+              <TableHead>
+                <TableRow className={classes.tablerow}>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className={classes.tableheader}>Id</TableCell>
+                  <TableCell className={classes.tableheader}>Customer ID</TableCell>
+                  <TableCell className={classes.tableheader}>Amount</TableCell>
+                  <TableCell className={classes.tableheader}>Discount</TableCell>
+                  <TableCell className={classes.tableheader}>Total</TableCell>
+                  <TableCell className={classes.tableheader}>Installation</TableCell>
+                  <TableCell className={classes.tableheader}>Shipping</TableCell>
+                  <TableCell className={classes.tableheader}>Created At</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rowData.map((row) => (
+                  <ExpandableRow
+                    key={row._id}
+                    row={row}
+                    openOrderDetail={openOrderDetail}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </TableContainer>
+      </div>
+      {orderDetailOpen && (
+        <OrderDetailComp
+          open={orderDetailOpen}
+          handleClose={closeOrderDetail}
+          data={orderDetailData}
+        />
+      )}
+    </React.Fragment>
+  );
+}

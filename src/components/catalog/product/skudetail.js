@@ -18,6 +18,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Switch from "@material-ui/core/Switch";
 import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
@@ -99,6 +100,7 @@ export default function SkuDetailComp(props) {
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
+  const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
 
   //Change sku name handling
   const onchangeSku = (event) => {
@@ -223,7 +225,22 @@ export default function SkuDetailComp(props) {
     setFormControls(controls);
   };
 
-  //Image upload handlers
+  //Thumbnail upload handlers
+  //handle thumnail upload close
+  const handleThumbnailUploadClose = () => {
+    setOpenThumbnailUpload(false);
+  };
+  //new image upload
+  function handleThumbnailUploadClick() {
+    setOpenThumbnailUpload(true);
+  }
+  //handle image change
+  const handleThumbnailChange = (thumbnail) => {
+    const controls = { ...formControls };
+    controls.assets = controls.assets || {};
+    controls.assets["thumbnail"] = thumbnail;
+    setFormControls(controls);
+  };
   //handle image upload close
   const handleImageUploadClose = () => {
     setOpenImageUpload(false);
@@ -355,341 +372,400 @@ export default function SkuDetailComp(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        {/* App Bar
+        <form onSubmit={handleSubmit}>
+          {/* App Bar
             Contains close, submit, & title in between  */}
-        <AppBar className={classes.appBar} position="fixed">
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography
-              variant="subtitle1"
-              className={classes.title}
-              gutterBottom
-            >
-              {formControls?.name || "Add SKU"}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleSubmit}>
-              save changes
-            </Button>
-          </Toolbar>
-        </AppBar>
-        {/* End App Bar*/}
-        {/* Wrap in outlined paper */}
-        <Paper className={classes.gridpaper} variant="outlined">
-          <Grid container>
-            {/* Images card display with add image */}
-            <Grid item xs={12}>
-              {/* section paper wrap */}
-              <Paper className={classes.sectionpaper}>
-                {/* section title */}
-                <Typography variant="h6" gutterBottom>
-                  SKU Images
-                </Typography>
-                <Grid container spacing={1}>
-                  {/* Add sku image grid */}
-                  <Grid item md={2} xs={6}>
-                    <Card variant="outlined" className={classes.imagecard}>
-                      {/* Button base covers card content to make whole card clickable */}
-                      <ButtonBase
-                        className={classes.addimgbase}
-                        onClick={handleImageUploadClick}
-                      >
-                        <CardContent className={classes.imagecardcontent}>
-                          <PhotoCamera />
-                          <Typography>Add Image</Typography>
-                        </CardContent>
-                      </ButtonBase>
-                      <CardActions></CardActions>
-                    </Card>
-                  </Grid>
-                  {/* if images loop and display with edit & display */}
-                  {formControls?.assets?.imgs?.map((img, index) => (
-                    <Grid item md={2} xs={6} key={index}>
+          <AppBar className={classes.appBar} position="fixed">
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography
+                variant="subtitle1"
+                className={classes.title}
+              >
+                {formControls?.name || "Add SKU"}
+              </Typography>
+              <Button autoFocus color="inherit" type="submit">
+                save changes
+              </Button>
+            </Toolbar>
+          </AppBar>
+          {/* End App Bar*/}
+          {/* Wrap in outlined paper */}
+          <Paper className={classes.gridpaper} variant="outlined">
+            <Grid container>
+              {/* Images card display with add image */}
+              <Grid item xs={12}>
+                {/* section paper wrap */}
+                <Paper className={classes.sectionpaper}>
+                  {/* section title */}
+                  <Typography variant="h6" gutterBottom>
+                    SKU Images
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {/* Add sku image grid */}
+                    <Grid item md={2} xs={6}>
                       <Card variant="outlined" className={classes.imagecard}>
-                        <CardContent className={classes.imagecardcontent}>
-                          <img
-                            src={img}
-                            alt={"SKU"}
-                            className={classes.cardimage}
-                          />
-                        </CardContent>
-                        <CardActions>
-                          <Button
-                            size="small"
-                            color="secondary"
-                            onClick={deleteImage.bind(this, index)}
-                          >
-                            Delete
-                          </Button>
-                          <Button size="small" color="secondary">
-                            Edit
-                          </Button>
-                        </CardActions>
+                        {/* Button base covers card content to make whole card clickable */}
+                        <ButtonBase
+                          className={classes.addimgbase}
+                          onClick={handleImageUploadClick}
+                        >
+                          <CardContent className={classes.imagecardcontent}>
+                            <PhotoCamera />
+                            <Typography>Add Image</Typography>
+                          </CardContent>
+                        </ButtonBase>
+                        <CardActions></CardActions>
                       </Card>
                     </Grid>
-                  ))}
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                {/* SKU basic data section - Name, description, card & brand */}
-                <Grid item xs={12} md={6}>
-                  <Paper className={classes.sectionpaper}>
-                    <Typography variant="h6" gutterBottom>
-                      SKU Details
-                    </Typography>
-                    {formControls?.shortid && (
-                      <Typography gutterBottom>
-                        # {formControls?.shortid}
+                    {/* if images loop and display with edit & display */}
+                    {formControls?.assets?.imgs?.map((img, index) => (
+                      <Grid item md={2} xs={6} key={index}>
+                        <Card variant="outlined" className={classes.imagecard}>
+                          <CardContent className={classes.imagecardcontent}>
+                            <img
+                              src={img}
+                              alt={"SKU"}
+                              className={classes.cardimage}
+                            />
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                              size="small"
+                              color="secondary"
+                              onClick={deleteImage.bind(this, index)}
+                            >
+                              Delete
+                            </Button>
+                            <Button size="small" color="secondary">
+                              Edit
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ))}
+                    <Grid item md={2} xs={6}>
+                      {formControls?.assets?.thumbnail ? (
+                        <Card variant="outlined">
+                          <CardHeader subheader="Thumbnail" />
+                          <CardContent className={classes.imagecardcontent}>
+                            <img
+                              src={formControls.assets.thumbnail}
+                              className={classes.cardimage}
+                              alt="sku thumbnail"
+                            />
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                              size="small"
+                              color="secondary"
+                              onClick={handleThumbnailUploadClick}
+                            >
+                              Replace
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      ) : (
+                        <Card variant="outlined">
+                          {/* Button base covers card content to make whole card clickable */}
+                          <ButtonBase
+                            className={classes.addthumbnailbase}
+                            onClick={handleThumbnailUploadClick}
+                          >
+                            <CardContent
+                              className={classes.thumbnailcardcontent}
+                            >
+                              <PhotoCamera />
+                              <Typography>Add Thumbnail</Typography>
+                            </CardContent>
+                          </ButtonBase>
+                          <CardActions></CardActions>
+                        </Card>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  {/* SKU basic data section - Name, description, card & brand */}
+                  <Grid item xs={12} md={6}>
+                    <Paper className={classes.sectionpaper}>
+                      <Typography variant="h6" gutterBottom>
+                        SKU Details
                       </Typography>
-                    )}
-                    {/* Product Name text field */}
-                    <TextField
-                      label="SKU Name"
-                      variant="standard"
-                      name="name"
-                      fullWidth
-                      onChange={onchangeSku}
-                      value={formControls?.name || ""}
-                    />
-                    {/* SKU Status */}
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          name="status"
-                          checked={
-                            formControls?.status === undefined
-                              ? true
-                              : formControls?.status
-                          }
-                          // disabled={!this.state.editTogggle}
-                          onChange={onchangeSku}
-                          color="primary"
-                        />
-                      }
-                      label="SKU status"
-                      labelPlacement="end"
-                    />
-                  </Paper>
-                </Grid>
-                {/* Inventory Section */}
-                <Grid item xs={12} md={6}>
-                  <Paper className={classes.sectionpaper}>
-                    <Typography variant="h6" gutterBottom>
-                      Manage Inventory
-                    </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Inventory is mapped to territories - Use All for inventory
-                      without restriction
-                    </Typography>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      color="secondary"
-                      onClick={onAddInventory}
-                      // className={classes.attrbutton}
-                    >
-                      Add Inventory
-                    </Button>
-                    <Table>
-                      <TableBody>
-                        {formControls?.inventory?.map((data, index) => (
-                          <TableRow key={index}>
-                            <TableCell>
-                              <Autocomplete
-                                options={territories}
-                                freeSolo
-                                value={data.territory || ""}
-                                getOptionLabel={(option) =>
-                                  typeof option === "string"
-                                    ? option
-                                    : option.name
-                                }
-                                getOptionSelected={(option, value) =>
-                                  option ? option.name === value.name : false
-                                }
-                                onChange={onChangeInventory.bind(this, index)}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    label="Territory"
-                                    name="territory"
-                                    variant="standard"
-                                    onChange={onChangeTerritorySearch}
-                                  />
-                                )}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                label="Quantity"
-                                variant="standard"
-                                name="quantity"
-                                fullWidth
-                                type="number"
-                                onChange={onChangeInventory.bind(this, index)}
-                                value={data?.quantity || 0}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Paper>
-                </Grid>
-                {/* Business Info section */}
-                <Grid item xs={12} md={6}>
-                  <Paper className={classes.sectionpaper}>
-                    <Typography variant="h6" gutterBottom>
-                      Pricing & Business Rules
-                    </Typography>
-                    {/* SKU MRP */}
-                    <TextField
-                      label="MRP"
-                      variant="standard"
-                      name="mrp"
-                      fullWidth
-                      type="number"
-                      onChange={onChangePrice}
-                      value={formControls?.price?.mrp || 0}
-                    />
-                    <TextField
-                      label="Discount"
-                      variant="standard"
-                      name="discount"
-                      fullWidth
-                      type="number"
-                      onChange={onChangePrice}
-                      value={formControls?.price?.discount || 0}
-                    />
-                    <TextField
-                      label="Selling Price"
-                      variant="standard"
-                      name="sellingprice"
-                      fullWidth
-                      type="number"
-                      onChange={onChangePrice}
-                      value={formControls?.price?.sellingprice || 0}
-                    />
-                    <TextField
-                      label="Shipping Charges"
-                      variant="standard"
-                      name="shippingcharges"
-                      fullWidth
-                      type="number"
-                      onChange={onChangePrice}
-                      value={formControls?.price?.shippingcharges || 0}
-                    />
-                    <TextField
-                      label="Installation Charges"
-                      variant="standard"
-                      name="installationcharges"
-                      fullWidth
-                      type="number"
-                      onChange={onChangePrice}
-                      value={formControls?.price?.installationcharges || 0}
-                    />
-                    <TextField
-                      label="Bulk discount threshold"
-                      variant="standard"
-                      name="threshold"
-                      fullWidth
-                      type="number"
-                      onChange={onChangeBulkdiscount}
-                      value={formControls?.bulkdiscount?.threshold || 0}
-                    />
-                    <TextField
-                      label="Bulk discount Amount"
-                      variant="standard"
-                      name="discount"
-                      fullWidth
-                      type="number"
-                      onChange={onChangeBulkdiscount}
-                      value={formControls?.bulkdiscount?.discount || 0}
-                    />
-                    <TextField
-                      label="Minimum Order Quantity"
-                      variant="standard"
-                      name="minorderqty"
-                      fullWidth
-                      type="number"
-                      onChange={onChangeQuantityrules}
-                      value={formControls?.quantityrules?.minorderqty || 0}
-                    />
-                    <TextField
-                      label="Maximum Order Quantity"
-                      variant="standard"
-                      name="maxorderqty"
-                      fullWidth
-                      type="number"
-                      onChange={onChangeQuantityrules}
-                      value={formControls?.quantityrules?.maxorderqty || 0}
-                    />
-                    {/* Min Order Qty Multiple Flag comes here */}
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          name="minorderqtystep"
-                          checked={
-                            formControls?.quantityrules?.minorderqtystep ===
-                            undefined
-                              ? true
-                              : formControls?.quantityrules.minorderqtystep
-                          }
-                          // disabled={!this.state.editTogggle}
-                          onChange={onChangeQuantityrules}
-                          color="primary"
-                        />
-                      }
-                      label="Min Order Qty Multiple"
-                      labelPlacement="end"
-                    />
-                  </Paper>
-                </Grid>
-                {/* Attribute Section */}
-                <Grid item xs={12} md={6}>
-                  <Paper className={classes.sectionpaper}>
-                    <Typography variant="h6" gutterBottom>
-                      SKU Attributes
-                    </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
-                      SKU selection attributes - Use attributes defined as product variant attributes
-                    </Typography>
-                    <SingleAttributeComp
-                      data={formControls?.attributes}
-                      onchangeAttribute={onChangeAttribute}
-                      onAttributeAdd={onAttributeAdd}
-                      onAttributeDelete={onAttributeDelete}
-                    />
-                    <Typography variant="subtitle2" gutterBottom>
-                      Display Attributes are used for display alone - Use for
-                      additional info
-                    </Typography>
-                    <SingleAttributeComp
-                      data={formControls?.dattributes}
-                      onchangeAttribute={onchangeDattribute}
-                      onAttributeAdd={onDattributeAdd}
-                      onAttributeDelete={onDattributeDelete}
-                    />
-                  </Paper>
+                      {formControls?.shortid && (
+                        <Typography gutterBottom>
+                          # {formControls?.shortid}
+                        </Typography>
+                      )}
+                      {/* Product Name text field */}
+                      <TextField
+                        label="SKU Name"
+                        variant="standard"
+                        name="name"
+                        fullWidth
+                        required
+                        onChange={onchangeSku}
+                        value={formControls?.name || ""}
+                      />
+                      {/* SKU Status */}
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            name="status"
+                            checked={
+                              formControls?.status === undefined
+                                ? true
+                                : formControls?.status
+                            }
+                            // disabled={!this.state.editTogggle}
+                            onChange={onchangeSku}
+                            color="primary"
+                          />
+                        }
+                        label="SKU status"
+                        labelPlacement="end"
+                      />
+                    </Paper>
+                  </Grid>
+                  {/* Inventory Section */}
+                  <Grid item xs={12} md={6}>
+                    <Paper className={classes.sectionpaper}>
+                      <Typography variant="h6" gutterBottom>
+                        Manage Inventory
+                      </Typography>
+                      <Typography variant="subtitle2" gutterBottom>
+                        Inventory is mapped to territories - Use All for
+                        inventory without restriction
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        color="secondary"
+                        onClick={onAddInventory}
+                        // className={classes.attrbutton}
+                      >
+                        Add Inventory
+                      </Button>
+                      <Table>
+                        <TableBody>
+                          {formControls?.inventory?.map((data, index) => (
+                            <TableRow key={index}>
+                              <TableCell>
+                                <Autocomplete
+                                  options={territories}
+                                  freeSolo
+                                  value={data.territory || ""}
+                                  getOptionLabel={(option) =>
+                                    typeof option === "string"
+                                      ? option
+                                      : option.name
+                                  }
+                                  getOptionSelected={(option, value) =>
+                                    option ? option.name === value.name : false
+                                  }
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      label="Territory"
+                                      name="territory"
+                                      variant="standard"
+                                      required
+                                      onChange={onChangeTerritorySearch}
+                                    />
+                                  )}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="Quantity"
+                                  variant="standard"
+                                  name="quantity"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.quantity || ""}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </Paper>
+                  </Grid>
+                  {/* Business Info section */}
+                  <Grid item xs={12} md={6}>
+                    <Paper className={classes.sectionpaper}>
+                      <Typography variant="h6" gutterBottom>
+                        Pricing & Business Rules
+                      </Typography>
+                      {/* SKU MRP */}
+                      <TextField
+                        label="MRP"
+                        variant="standard"
+                        name="mrp"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.mrp || ""}
+                      />
+                      <TextField
+                        label="Discount"
+                        variant="standard"
+                        name="discount"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.discount || ""}
+                      />
+                      <TextField
+                        label="Selling Price"
+                        variant="standard"
+                        name="sellingprice"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.sellingprice || ""}
+                      />
+                      <TextField
+                        label="Shipping Charges"
+                        variant="standard"
+                        name="shippingcharges"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.shippingcharges || ""}
+                      />
+                      <TextField
+                        label="Installation Charges"
+                        variant="standard"
+                        name="installationcharges"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.installationcharges || ""}
+                      />
+                      <TextField
+                        label="Bulk discount threshold"
+                        variant="standard"
+                        name="threshold"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangeBulkdiscount}
+                        value={formControls?.bulkdiscount?.threshold || ""}
+                      />
+                      <TextField
+                        label="Bulk discount Amount"
+                        variant="standard"
+                        name="discount"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangeBulkdiscount}
+                        value={formControls?.bulkdiscount?.discount || ""}
+                      />
+                      <TextField
+                        label="Minimum Order Quantity"
+                        variant="standard"
+                        name="minorderqty"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangeQuantityrules}
+                        value={formControls?.quantityrules?.minorderqty || ""}
+                      />
+                      <TextField
+                        label="Maximum Order Quantity"
+                        variant="standard"
+                        name="maxorderqty"
+                        required
+                        fullWidth
+                        type="number"
+                        onChange={onChangeQuantityrules}
+                        value={formControls?.quantityrules?.maxorderqty || ""}
+                      />
+                      {/* Min Order Qty Multiple Flag comes here */}
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            name="minorderqtystep"
+                            checked={
+                              formControls?.quantityrules?.minorderqtystep ===
+                              undefined
+                                ? true
+                                : formControls?.quantityrules.minorderqtystep
+                            }
+                            // disabled={!this.state.editTogggle}
+                            onChange={onChangeQuantityrules}
+                            color="primary"
+                          />
+                        }
+                        label="Min Order Qty Multiple"
+                        labelPlacement="end"
+                      />
+                    </Paper>
+                  </Grid>
+                  {/* Attribute Section */}
+                  <Grid item xs={12} md={6}>
+                    <Paper className={classes.sectionpaper}>
+                      <Typography variant="h6" gutterBottom>
+                        SKU Attributes
+                      </Typography>
+                      <Typography variant="subtitle2" gutterBottom>
+                        SKU selection attributes - Use attributes defined as
+                        product variant attributes
+                      </Typography>
+                      <SingleAttributeComp
+                        data={formControls?.attributes}
+                        onchangeAttribute={onChangeAttribute}
+                        onAttributeAdd={onAttributeAdd}
+                        onAttributeDelete={onAttributeDelete}
+                      />
+                      <Typography variant="subtitle2" gutterBottom>
+                        Display Attributes are used for display alone - Use for
+                        additional info
+                      </Typography>
+                      <SingleAttributeComp
+                        data={formControls?.dattributes}
+                        onchangeAttribute={onchangeDattribute}
+                        onAttributeAdd={onDattributeAdd}
+                        onAttributeDelete={onDattributeDelete}
+                      />
+                    </Paper>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </form>
       </Dialog>
       {/* Image upload component on click */}
       <ImageUploadComp
         open={openImageUpload}
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
+        keyPath="sku/"
+      />
+      <ImageUploadComp
+        open={openThumbnailUpload}
+        handleDialogClose={handleThumbnailUploadClose}
+        handleImageChange={handleThumbnailChange}
         keyPath="sku/"
       />
     </React.Fragment>

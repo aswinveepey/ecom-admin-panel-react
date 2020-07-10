@@ -14,9 +14,6 @@ import AppSearchComp from './appsearch'
 
 // export default withStyles(styles)(AppBarComp);
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -49,7 +46,7 @@ export default function AppBarComp(props){
     }
   },[props])
   return (
-    <div className={classes.root}>
+    <React.Fragment>
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.apptoolbar}>
           <IconButton
@@ -68,7 +65,7 @@ export default function AppBarComp(props){
         </Toolbar>
       </AppBar>
       <DrawerComp open={open} handler={handleDrawerToggle} />
-    </div>
+    </React.Fragment>
   );
 
 }

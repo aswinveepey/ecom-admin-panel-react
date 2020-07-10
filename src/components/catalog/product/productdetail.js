@@ -17,6 +17,7 @@ import Paper from "@material-ui/core/Paper";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
 //Constants Import
@@ -96,6 +97,7 @@ export default function ProductDetailComp(props) {
   const [brandSearchString, setBrandSearchString] = React.useState([]);
   const [brands, setBrands] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
+  const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
 
   //Change product name handling
   const onchangeProduct = (event) => {
@@ -243,6 +245,14 @@ export default function ProductDetailComp(props) {
   function handleImageUploadClick() {
     setOpenImageUpload(true);
   }
+  //handle image upload close
+  const handleThumbnailUploadClose = () => {
+    setOpenThumbnailUpload(false);
+  };
+  //new image upload
+  function handleThumbnailUploadClick() {
+    setOpenThumbnailUpload(true);
+  }
   //handle image change
   const handleImageChange = (image)=>{
     const controls = { ...formControls }
@@ -251,19 +261,24 @@ export default function ProductDetailComp(props) {
     controls.assets.imgs.push(image)
     setFormControls(controls);
   }
+  //handle image change
+  const handleThumbnailChange = (thumbnail) => {
+    const controls = { ...formControls };
+    controls.assets = controls.assets || {};
+    controls.assets["thumbnail"] = thumbnail;
+    setFormControls(controls);
+  };
   //handle image deletion
   const deleteImage = (index)=>{
     const controls = { ...formControls }
     controls.assets.imgs.splice(index, 1)
     setFormControls(controls);
   }
-  React.useEffect(()=>{
-    props.data && setFormControls(props.data)
-  },[props])
 
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
+    props.data && setFormControls(props.data);
   }, [props]);
 
   //delegate close behaviour to parent
@@ -386,7 +401,6 @@ export default function ProductDetailComp(props) {
             <Typography
               variant="subtitle1"
               className={classes.title}
-              gutterBottom
             >
               {formControls?.name || "Add Product"}
             </Typography>
@@ -429,6 +443,9 @@ export default function ProductDetailComp(props) {
                   {formControls?.assets?.imgs?.map((img, index) => (
                     <Grid item md={2} xs={6} key={index}>
                       <Card variant="outlined" className={classes.imagecard}>
+                        <CardHeader
+                          subheader={"Product Image " + (index + 1)}
+                        />
                         <CardContent className={classes.imagecardcontent}>
                           <img
                             src={img}
@@ -451,6 +468,43 @@ export default function ProductDetailComp(props) {
                       </Card>
                     </Grid>
                   ))}
+                  <Grid item md={2} xs={6}>
+                    {formControls?.assets?.thumbnail ? (
+                      <Card variant="outlined">
+                        <CardHeader subheader="Thumbnail" />
+                        <CardContent className={classes.imagecardcontent}>
+                          <img
+                            src={formControls.assets.thumbnail}
+                            className={classes.cardimage}
+                            alt="product thumbnail"
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={handleThumbnailUploadClick}
+                          >
+                            Replace
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    ) : (
+                      <Card variant="outlined">
+                        {/* Button base covers card content to make whole card clickable */}
+                        <ButtonBase
+                          className={classes.addthumbnailbase}
+                          onClick={handleThumbnailUploadClick}
+                        >
+                          <CardContent className={classes.thumbnailcardcontent}>
+                            <PhotoCamera />
+                            <Typography>Add Thumbnail</Typography>
+                          </CardContent>
+                        </ButtonBase>
+                        <CardActions></CardActions>
+                      </Card>
+                    )}
+                  </Grid>
                 </Grid>
               </Paper>
             </Grid>
@@ -473,6 +527,7 @@ export default function ProductDetailComp(props) {
                       variant="standard"
                       name="name"
                       fullWidth
+                      required
                       onChange={onchangeProduct}
                       value={formControls?.name || ""}
                     />
@@ -493,6 +548,7 @@ export default function ProductDetailComp(props) {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          required
                           label="Category"
                           name="category"
                           variant="standard"
@@ -518,6 +574,7 @@ export default function ProductDetailComp(props) {
                         <TextField
                           {...params}
                           label="Brand"
+                          required
                           name="brand"
                           variant="standard"
                           onChange={(event) => onChangeBrandSearch(event)}
@@ -620,6 +677,7 @@ export default function ProductDetailComp(props) {
                       variant="standard"
                       name="hsncode"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.hsncode || ""}
                     />
@@ -629,6 +687,7 @@ export default function ProductDetailComp(props) {
                       name="cgst"
                       type="number"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.cgst || 0}
                     />
@@ -638,6 +697,7 @@ export default function ProductDetailComp(props) {
                       name="igst"
                       type="number"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.igst || 0}
                     />
@@ -647,6 +707,7 @@ export default function ProductDetailComp(props) {
                       name="sgst"
                       type="number"
                       fullWidth
+                      required
                       onChange={onchangegst}
                       value={formControls?.gst?.sgst || 0}
                     />
@@ -682,6 +743,12 @@ export default function ProductDetailComp(props) {
         handleDialogClose={handleImageUploadClose}
         handleImageChange={handleImageChange}
         keyPath="product/"
+      />
+      <ImageUploadComp
+        open={openThumbnailUpload}
+        handleDialogClose={handleThumbnailUploadClose}
+        handleImageChange={handleThumbnailChange}
+        keyPath="product/thumbnail/"
       />
     </React.Fragment>
   );
