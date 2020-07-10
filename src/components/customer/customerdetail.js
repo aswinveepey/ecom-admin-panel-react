@@ -161,7 +161,7 @@ export default function CustomerDetailComp(props){
   },[accountSearchString, token])
 
   return (
-    <div>
+    <React.Fragment>
       <Dialog
         open={props.open}
         onClose={handleClose}
@@ -373,6 +373,6 @@ export default function CustomerDetailComp(props){
           </DialogActions>
         </form>
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 }

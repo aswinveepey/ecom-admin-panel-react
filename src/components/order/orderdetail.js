@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import Cookies from "js-cookie";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,22 +9,17 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
-//Constants Import
-import { BASE_URL } from "../../constants";
 //Component import
-// import OrderitemDetailComp from "./orderitemdetail";
-
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
+const CustomerDisplayComp = React.lazy(() => import("./ordercustomercomp"));
+
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -40,122 +34,93 @@ const useStyles = makeStyles((theme) => ({
     width: `calc(100% - ${theme.spacing(4)}px)`,
     // overflow: "scroll",
   },
+  totaltable:{
+    float:"right"
+  }
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CustomerDisplayComp(props){
+function OrdertotalComp(props){
+  const classes = useStyles();
   return (
-    <Grid container spacing={1}>
-      <Grid item md={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Customer Details
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {props.data?.customer?.firstname +
-                " " +
-                props.data.customer?.lastname}
-            </Typography>
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>{props.data?.customer?._id}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Contact No</TableCell>
-                  <TableCell>{props.data?.customer?.contactnumber}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Account</TableCell>
-                  <TableCell>{props.data?.customer?.account?.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Primary No</TableCell>
-                  <TableCell>
-                    {props.data?.customer?.auth?.mobilenumber}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item md={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Delivery Address
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.address1}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.address2}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.area}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.landmark}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.district},
-              {props.data?.deliveryaddress?.pincode}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.state},
-              {props.data?.deliveryaddress?.country}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Change</Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item md={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Billing Address
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.address1}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.address2}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.area}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.landmark}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.district},
-              {props.data?.billingaddress?.pincode}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.state},
-              {props.data?.billingaddress?.country}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Change</Button>
-          </CardActions>
-        </Card>
-      </Grid>
-    </Grid>
+    <Table size="small">
+      <TableBody className={classes.totaltable}>
+        <TableRow>
+          <TableCell>
+            <strong>Amount</strong>
+          </TableCell>
+          <TableCell>{parseFloat(props.data.amount).toFixed(2)}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <strong>Discount</strong>
+          </TableCell>
+          <TableCell>
+            <TextField
+              variant="outlined"
+              name="discount"
+              fullWidth
+              onChange={props.onchangeAmount}
+              value={parseFloat(props.data.discount).toFixed(2)}
+            />
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <strong>Total</strong>
+          </TableCell>
+          <TableCell>{parseFloat(props.data.totalamount).toFixed(2)}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <strong>Installation</strong>
+          </TableCell>
+          <TableCell>
+            <TextField
+              variant="outlined"
+              name="installation"
+              fullWidth
+              onChange={props.onchangeAmount}
+              value={parseFloat(props.data.installation).toFixed(2)}
+            />
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <strong>Shipping</strong>
+          </TableCell>
+          <TableCell>
+            <TextField
+              variant="outlined"
+              name="shipping"
+              fullWidth
+              onChange={props.onchangeAmount}
+              value={parseFloat(props.data.shipping).toFixed(2)}
+            />
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <strong>Payable</strong>
+          </TableCell>
+          <TableCell>
+            {parseFloat(
+              props.data.amount + props.data.installation + props.data.shipping
+            ).toFixed(2)}
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
   );
 }
 
+
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-  const token = Cookies.get("token");
+  // const token = Cookies.get("token");
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
@@ -179,6 +144,21 @@ export default function OrderDetailcomp(props){
     controls.orderitems[index][name] = value;
     setFormControls(controls);
   };
+  //handle item amount changes
+  const onchangeAmount = (event)=>{
+    const name = event.target.name
+    const value = event.target.value
+    console.log(name)
+    const controls = { ...formControls };
+    controls.amount[name] = value;
+    setFormControls(controls);
+  }
+  //on address change set corresponding address to the selected customer address using index
+  const changeAddress = (index, addressType)=>{
+    const controls = { ...formControls };
+    controls.customer[addressType] = controls.customer?.customer?.address[index];
+    setFormControls(controls);
+  }
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
@@ -212,7 +192,12 @@ export default function OrderDetailcomp(props){
           </Toolbar>
         </AppBar>
         <Paper className={classes.gridpaper} variant="outlined">
-          <CustomerDisplayComp data={formControls.customer} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <CustomerDisplayComp
+              data={formControls.customer}
+              changeAddress={changeAddress}
+            />
+          </Suspense>
           <Suspense fallback={<div>Loading...</div>}>
             <OrderitemDetailComp
               data={formControls.orderitems}
@@ -220,6 +205,10 @@ export default function OrderDetailcomp(props){
               onchangeItem={onchangeItem}
             />
           </Suspense>
+          <OrdertotalComp
+            data={formControls.amount}
+            onchangeAmount={onchangeAmount}
+          />
         </Paper>
       </Dialog>
     </React.Fragment>
