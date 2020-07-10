@@ -173,6 +173,12 @@ export default function OrderDetailcomp(props){
     controls.orderitems[index].quantity[name] = value;
     setFormControls(controls);
   }
+  //handle item quantity changes
+  const onchangeItem = (index, name, value) => {
+    const controls = { ...formControls };
+    controls.orderitems[index][name] = value;
+    setFormControls(controls);
+  };
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
@@ -211,6 +217,7 @@ export default function OrderDetailcomp(props){
             <OrderitemDetailComp
               data={formControls.orderitems}
               onchangeItemQuantity={onchangeItemQuantity}
+              onchangeItem={onchangeItem}
             />
           </Suspense>
         </Paper>
