@@ -13,10 +13,8 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
@@ -25,7 +23,7 @@ import TableCell from "@material-ui/core/TableCell"
 //Constants Import
 import { BASE_URL } from "../../constants";
 //Component import
-import OrderitemIndeComp from "./orderitemindex";
+import OrderitemDetailComp from "./orderitemdetail";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -168,6 +166,12 @@ export default function OrderDetailcomp(props){
   const handleSubmit = () => {
     console.log(formControls)
   }
+  //handle item quantity changes
+  const onchangeItemQuantity = (index, name, value) => {
+    const controls = { ...formControls };
+    controls.orderitems[index].quantity[name] = value;
+    setFormControls(controls);
+  }
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
@@ -201,7 +205,11 @@ export default function OrderDetailcomp(props){
           </Toolbar>
         </AppBar>
         <Paper className={classes.gridpaper} variant="outlined">
-          <CustomerDisplayComp data={formControls.customer}/>
+          <CustomerDisplayComp data={formControls.customer} />
+          <OrderitemDetailComp
+            data={formControls.orderitems}
+            onchangeItemQuantity={onchangeItemQuantity}
+          />
         </Paper>
       </Dialog>
     </React.Fragment>

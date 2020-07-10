@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OrderitemIndeComp(props) {
+export default function OrderitemIndexComp(props) {
   const classes = useStyles();
 
   return (
@@ -27,6 +27,7 @@ export default function OrderitemIndeComp(props) {
               <TableCell>Status</TableCell>
               <TableCell>Booked</TableCell>
               <TableCell>Confirmed</TableCell>
+              <TableCell>Shipped</TableCell>
               <TableCell>Delivered</TableCell>
               <TableCell>Returned</TableCell>
               <TableCell>Amount</TableCell>
@@ -43,6 +44,7 @@ export default function OrderitemIndeComp(props) {
                 <TableCell>{orderitem.status}</TableCell>
                 <TableCell>{orderitem.quantity?.booked}</TableCell>
                 <TableCell>{orderitem.quantity?.confirmed}</TableCell>
+                <TableCell>{orderitem.quantity?.shipped}</TableCell>
                 <TableCell>{orderitem.quantity?.delivered}</TableCell>
                 <TableCell>{orderitem.quantity?.returned}</TableCell>
                 <TableCell>
