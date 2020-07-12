@@ -42,9 +42,9 @@ export default function AddressSelectComp(props){
         Authorization: token,
       },
     };
-    const fetchurl = BASE_URL + "customer/id/" + props.data._id;
+    const fetchurl = BASE_URL + "customer/id/" + props.data?._id;
     //fetch data and set data
-    props.data._id && fetch(fetchurl, requestOptions, { signal: signal })
+    props.data?._id && fetch(fetchurl, requestOptions, { signal: signal })
       .then(async (data) => {
         const response = await data.json();
         const { status } = data;

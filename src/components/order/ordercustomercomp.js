@@ -38,28 +38,33 @@ export default function CustomerDisplayComp(props) {
                 Customer Details
               </Typography>
               <Typography variant="h5" component="h2">
-                {props.data?.customer?.firstname +
-                  " " +
-                  props.data.customer?.lastname}
+                {props.data?._id &&
+                  props.data?.customer?.firstname +
+                    " " +
+                    props.data?.customer?.lastname}
               </Typography>
               <Table size="small">
                 <TableBody>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>{props.data?.customer?._id}</TableCell>
+                    <TableCell>{props.data?.customer?._id || ""}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Contact No</TableCell>
-                    <TableCell>{props.data?.customer?.contactnumber}</TableCell>
+                    <TableCell>
+                      {props.data?.customer?.contactnumber || ""}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Account</TableCell>
-                    <TableCell>{props.data?.customer?.account?.name}</TableCell>
+                    <TableCell>
+                      {props.data?.customer?.account?.name || ""}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Primary No</TableCell>
                     <TableCell>
-                      {props.data?.customer?.auth?.mobilenumber}
+                      {props.data?.customer?.auth?.mobilenumber || ""}
                     </TableCell>
                   </TableRow>
                 </TableBody>

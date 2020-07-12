@@ -54,7 +54,7 @@ function OrdertotalComp(props){
           <TableCell>
             <strong>Amount</strong>
           </TableCell>
-          <TableCell>{parseFloat(props.data.amount).toFixed(2)}</TableCell>
+          <TableCell>{props.data?.amount.toFixed(2) || 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -66,7 +66,7 @@ function OrdertotalComp(props){
               name="discount"
               fullWidth
               onChange={props.onchangeAmount}
-              value={parseFloat(props.data.discount).toFixed(2)}
+              value={props.data?.discount?.toFixed(2)|| 0}
             />
           </TableCell>
         </TableRow>
@@ -74,7 +74,7 @@ function OrdertotalComp(props){
           <TableCell>
             <strong>Total</strong>
           </TableCell>
-          <TableCell>{parseFloat(props.data.totalamount).toFixed(2)}</TableCell>
+          <TableCell>{props.data?.totalamount?.toFixed(2) || 0}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -86,7 +86,7 @@ function OrdertotalComp(props){
               name="installation"
               fullWidth
               onChange={props.onchangeAmount}
-              value={parseFloat(props.data.installation).toFixed(2)}
+              value={props.data?.installation?.toFixed(2) || 0}
             />
           </TableCell>
         </TableRow>
@@ -100,7 +100,7 @@ function OrdertotalComp(props){
               name="shipping"
               fullWidth
               onChange={props.onchangeAmount}
-              value={parseFloat(props.data.shipping).toFixed(2)}
+              value={props.data?.shipping?.toFixed(2) || 0}
             />
           </TableCell>
         </TableRow>
@@ -110,10 +110,10 @@ function OrdertotalComp(props){
           </TableCell>
           <TableCell>
             {(
-              parseFloat(props.data.shipping) +
-              parseFloat(props.data.totalamount) +
-              parseFloat(props.data.installation)
-            ).toFixed(2)}
+              props.data?.shipping +
+              props.data?.totalamount +
+              props.data?.installation
+            )?.toFixed(2) || 0}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -185,12 +185,10 @@ export default function OrderDetailcomp(props){
     const value = event.target.value
     const controls = { ...formControls };
     controls.amount[name] = value;
-    controls.amount.totalamount =
-      controls.amount.amount - controls.amount.discount;
-    controls.amount.payable =
-      controls.amount.totalamount +
-      controls.amount.installation +
-      controls.amount.shipping;
+    controls.amount.totalamount = controls.amount.amount - controls.amount.discount;
+    controls.amount.payable = controls.amount.totalamount +
+                              controls.amount.installation +
+                              controls.amount.shipping;
     setFormControls(controls);
   }
   //on address change set corresponding address to the selected customer address using index
