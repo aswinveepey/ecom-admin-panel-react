@@ -157,6 +157,7 @@ export default function OrderDetailcomp(props){
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState({});
+  const [calculateTotals, setCalculateTotals] = React.useState(false);
 
   //get open state from props
   React.useEffect(() => {
@@ -168,18 +169,79 @@ export default function OrderDetailcomp(props){
   const handleClose = () => {
     props.handleClose();
   };
+  //Calculate totals based on changes use effect will trigger on form control update
+  React.useEffect(()=>{
+    const controls = { ...formControls };
+    let orderAmount = 0;
+    let orderShipping = 0;
+    let orderInstallation = 0;
+    if(controls.orderitems){
+      controls.orderitems.map((item) => {
+        item.amount = item.amount || {};
+        const currentQty =
+          item.quantity.delivered ||
+          item.quantity.shipped ||
+          item.quantity.confirmed ||
+          item.quantity.booked ||
+          0;
+        item.amount.amount = (item.sku?.price?.sellingprice || 0) * currentQty;
+        item.amount.discount = (item.sku?.price?.discount || 0) * currentQty;
+        item.amount.totalamount = item.amount.amount - item.amount.discount;
+        item.amount.shipping =
+          (item.sku?.price?.shippingcharges || 0) * currentQty;
+        item.amount.installation =
+          (item.sku?.price?.installationcharges || 0) * currentQty;
+        orderAmount += item.amount.totalamount;
+        orderShipping += item.amount.shipping;
+        orderInstallation += item.amount.installation;
+      });
+      controls.amount = controls.amount || {};
+      controls.amount.amount = orderAmount;
+      controls.amount.shippping = controls.amount.shipping || orderShipping;
+      controls.amount.installation =
+        controls.amount.installation || orderInstallation;
+      setFormControls(controls);
+    }
+  },[calculateTotals])
+
   //handle item quantity changes
   const onchangeItemQuantity = (index, name, value) => {
     const controls = { ...formControls };
+    controls.orderitems[index].quantity = controls.orderitems[index].quantity || {};
     controls.orderitems[index].quantity[name] = value;
     setFormControls(controls);
+    // calculateTotals();
+    setCalculateTotals(!calculateTotals);
   }
-  //handle item quantity changes
+  //handle item status changes
   const onchangeItem = (index, name, value) => {
     const controls = { ...formControls };
     controls.orderitems[index][name] = value;
     setFormControls(controls);
   };
+  //handle SKU addition
+  const handleAddSku = (sku)=>{
+    const controls = { ...formControls };
+    controls.orderitems = controls.orderitems || []
+    const newItem = {
+      sku: sku,
+      quantity: {
+        booked: sku.quantityrules.minorderqty,
+      },
+      status: "Booked",
+    };
+    controls.orderitems.push(newItem)
+    setFormControls(controls)
+    setCalculateTotals(!calculateTotals);
+    // calculateTotals()
+  }
+  //handle SKU deletion
+  const removeOrderItem = (index)=>{
+    const controls = { ...formControls };
+    controls.orderitems.splice(index,1)
+    setFormControls(controls);
+    calculateTotals();
+  }
   //handle item amount changes
   const onchangeAmount = (event)=>{
     const name = event.target.name
@@ -282,6 +344,8 @@ export default function OrderDetailcomp(props){
               data={formControls}
               onchangeItemQuantity={onchangeItemQuantity}
               onchangeItem={onchangeItem}
+              onAddSku={handleAddSku}
+              removeOrderItem={removeOrderItem}
             />
           </Suspense>
           <OrdertotalComp

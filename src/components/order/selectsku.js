@@ -1,10 +1,10 @@
-import React from "react"
-import Dialog from "@material-ui/core/Dialog"
-import DialogContent from "@material-ui/core/DialogContent"
-import Card from "@material-ui/core/Card"
+import React from "react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper"
+import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
 import { BASE_URL } from "../../constants";
@@ -28,24 +28,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SelectCustomer(props){
+export default function SelectSKU(props) {
   const classes = useStyles();
-  const [customerSearch, setCustomerSearch] = React.useState("")
-  const [customers, setCustomers] = React.useState([])
+  const [skuSearch, setSkuSearch] = React.useState("");
+  const [skus, setSkus] = React.useState([]);
   const token = Cookies.get("token");
 
   //handle close propogation
   const handleClose = () => {
     props.handleClose();
   };
-  //on select customer pass data back to parent
-  const selectCustomer = (customer) => {
-    props.selectCustomer(customer);
+  //on select sku pass data back to parent
+  const selectSku = (sku) => {
+    props.selectSku(sku);
     props.handleClose();
   };
-  const onCustomerSearch = (event)=>{
-    setCustomerSearch(event.target.value)
-  }
+  const onSkuSearch = (event) => {
+    setSkuSearch(event.target.value);
+  };
   //search hook
   //datafetch
   React.useEffect(() => {
@@ -58,9 +58,9 @@ export default function SelectCustomer(props){
         "Content-Type": "application/json",
         Authorization: token,
       },
-      body: JSON.stringify({ searchString: customerSearch }),
+      body: JSON.stringify({ searchString: skuSearch }),
     };
-    const fetchurl = BASE_URL + "customer/search";
+    const fetchurl = BASE_URL + "sku/search";
     //set request options
     //fetch data and set data
     fetch(fetchurl, requestOptions, { signal: signal })
@@ -68,13 +68,13 @@ export default function SelectCustomer(props){
         const response = await data.json();
         const { status } = data;
         // setLoading(false);
-        status === 200 && setCustomers(response.data);
+        status === 200 && setSkus(response.data);
       })
       .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, customerSearch]);
+  }, [token, skuSearch]);
   return (
     <React.Fragment>
       <Dialog
@@ -82,25 +82,25 @@ export default function SelectCustomer(props){
         onClose={handleClose}
         fullWidth={true}
         maxWidth={"sm"}
-        aria-labelledby="customer-select-dialog"
+        aria-labelledby="sku-select-dialog"
       >
         <DialogContent>
           <Paper component="form" className={classes.searchbar}>
             <InputBase
-              placeholder={"Search Customers"}
+              placeholder={"Search Skus"}
               className={classes.searchinput}
-              onChange={onCustomerSearch}
+              onChange={onSkuSearch}
             />
           </Paper>
-          {customers.map((customer) => (
-            <Card variant="outlined" key={customer._id}>
+          {skus.map((sku) => (
+            <Card variant="outlined" key={sku._id}>
               <Button
-                onClick={selectCustomer.bind(this, customer)}
+                onClick={selectSku.bind(this, sku)}
                 className={classes.selectButton}
               >
                 <CardContent>
                   <Typography variant="body2">
-                    {customer.firstname}&nbsp;{customer.lastname}
+                    {sku.product?.name}&nbsp;{sku.name}
                   </Typography>
                 </CardContent>
               </Button>
