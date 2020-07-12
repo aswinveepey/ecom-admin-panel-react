@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import Cookies from "js-cookie";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -15,6 +16,7 @@ import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
+import { BASE_URL } from "../../constants";
 //Component import
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
 const CustomerDisplayComp = React.lazy(() => import("./ordercustomercomp"));
@@ -122,6 +124,7 @@ function OrdertotalComp(props){
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
+  const token = Cookies.get("token");
   // const token = Cookies.get("token");
 
   const [open, setOpen] = React.useState(false);
@@ -132,7 +135,37 @@ export default function OrderDetailcomp(props){
   };
   //handle submit
   const handleSubmit = () => {
-    console.log(formControls)
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    //set request options
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(formControls),
+    };
+    //differentiate between update & create
+    const SUFFIX_URL = formControls?._id
+      ? "order/id/" + formControls?._id
+      : "order/";
+    //POST category data and handle
+    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
+      signal: signal,
+    })
+      .then(async (data) => {
+        // const response = await data.json();
+        const { status } = data;
+        if (status === 200) {
+          handleClose();
+        }
+      })
+      .catch((err) => console.log(err));
+    return function cleanup() {
+      abortController.abort();
+    };
   }
   //handle item quantity changes
   const onchangeItemQuantity = (index, name, value) => {
