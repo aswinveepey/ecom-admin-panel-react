@@ -11,11 +11,13 @@ import TableCell from "@material-ui/core/TableCell";
 import Button from "@material-ui/core/Button";
 
 const AddressSelectComp = React.lazy(() => import("./addressselect"));
+const SelectCustomer = React.lazy(() => import("./selectcustomer"));
 
 
 export default function CustomerDisplayComp(props) {
   const [openAddressSelector, setOpenAddressSelector] = React.useState(false);
   const [changeAddresstype, setChangeAddresstype] = React.useState("");
+  const [selectCustomer, setSelectCustomer] = React.useState(false);
 
   const addressSelectorClick = (name) => {
     setChangeAddresstype(name);
@@ -27,8 +29,16 @@ export default function CustomerDisplayComp(props) {
   const handleChangeAddress = (address) => {
     props.changeAddress(address, changeAddresstype);
   };
-  const selectCustomer = ()=>{
-    console.log("Open Dialog for customer selection")
+  const selectCustomerClick = ()=>{
+    setSelectCustomer(true);
+  }
+  //open select customer menu
+  const closeSelectCustomer = () => {
+    setSelectCustomer(false);
+  };
+  const onSelectCustomer = (customer)=>{
+    props.onSelectCustomer(customer)
+    closeSelectCustomer();
   }
 
   return (
@@ -42,9 +52,9 @@ export default function CustomerDisplayComp(props) {
               </Typography>
               <Typography variant="h5" component="h2">
                 {props.data?.customer &&
-                  (props.data?.customer?.firstname +
+                  props.data?.customer?.firstname +
                     " " +
-                    props.data?.customer?.lastname)}
+                    props.data?.customer?.lastname}
               </Typography>
               <Table size="small">
                 <TableBody>
@@ -75,10 +85,7 @@ export default function CustomerDisplayComp(props) {
             </CardContent>
             {!props.data?.customer?._id && (
               <CardActions>
-                <Button
-                  size="small"
-                  onClick={selectCustomer}
-                >
+                <Button size="small" onClick={selectCustomerClick}>
                   Select Customer
                 </Button>
               </CardActions>
@@ -166,6 +173,13 @@ export default function CustomerDisplayComp(props) {
           open={openAddressSelector}
           handleClose={handleCloseAddressSelector}
           changeAddress={handleChangeAddress}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SelectCustomer
+          open={selectCustomer}
+          handleClose={closeSelectCustomer}
+          selectCustomer={onSelectCustomer}
         />
       </Suspense>
     </React.Fragment>

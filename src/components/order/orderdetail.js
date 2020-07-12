@@ -47,8 +47,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function OrdertotalComp(props){
   const classes = useStyles();
-  const onchangeAmount = async (event) => {
-    props.onchangeAmount(event);
+  const onchangeAmount = async (event)=>{
+    props.onchangeAmount(event)
   }
   return (
     <Table size="small">
@@ -63,7 +63,7 @@ function OrdertotalComp(props){
               name="amount"
               disabled
               fullWidth
-              // onChange={props.onchangeAmount}
+              // onChange={onchangeAmount}
               value={parseFloat(props.data?.amount || 0).toFixed(2)}
             />
           </TableCell>
@@ -92,7 +92,7 @@ function OrdertotalComp(props){
               name="totalamount"
               fullWidth
               disabled
-              // onChange={props.onchangeAmount}
+              // onChange={onchangeAmount}
               value={parseFloat(props.data?.totalamount || 0).toFixed(2)}
             />
           </TableCell>
@@ -106,7 +106,7 @@ function OrdertotalComp(props){
               variant="outlined"
               name="installation"
               fullWidth
-              onChange={props.onchangeAmount}
+              onChange={onchangeAmount}
               value={parseFloat(props.data?.installation || 0).toFixed(2)}
             />
           </TableCell>
@@ -120,7 +120,7 @@ function OrdertotalComp(props){
               variant="outlined"
               name="shipping"
               fullWidth
-              onChange={props.onchangeAmount}
+              onChange={onchangeAmount}
               value={parseFloat(props.data?.shipping || 0).toFixed(2)}
             />
           </TableCell>
@@ -135,7 +135,7 @@ function OrdertotalComp(props){
               name="payable"
               fullWidth
               disabled
-              // onChange={props.onchangeAmount}
+              // onChange={onchangeAmount}
               value={(
                 parseFloat(props.data?.shipping || 0) +
                 parseFloat(props.data?.totalamount || 0) +
@@ -156,10 +156,57 @@ export default function OrderDetailcomp(props){
   // const token = Cookies.get("token");
 
   const [open, setOpen] = React.useState(false);
-  const [formControls, setFormControls] = React.useState([]);
+  const [formControls, setFormControls] = React.useState({});
+
+  //get open state from props
+  React.useEffect(() => {
+    setOpen(props.open);
+    props.data && setFormControls(props.data);
+  }, [props]);
+
   //delegate close behaviour to parent
   const handleClose = () => {
     props.handleClose();
+  };
+  //handle item quantity changes
+  const onchangeItemQuantity = (index, name, value) => {
+    const controls = { ...formControls };
+    controls.orderitems[index].quantity[name] = value;
+    setFormControls(controls);
+  }
+  //handle item quantity changes
+  const onchangeItem = (index, name, value) => {
+    const controls = { ...formControls };
+    controls.orderitems[index][name] = value;
+    setFormControls(controls);
+  };
+  //handle item amount changes
+  const onchangeAmount = (event)=>{
+    const name = event.target.name
+    const value = event.target.value
+    const controls = { ...formControls };
+    controls.amount = controls.amount || {};
+    controls.amount[name] = value;
+    controls.amount.totalamount = controls.amount.amount - controls.amount.discount;
+    controls.amount.payable = controls.amount.totalamount +
+                              controls.amount.installation +
+                              controls.amount.shipping;
+    setFormControls(controls);
+  }
+  //on address change set corresponding address to the selected customer address using index
+  const changeAddress = (address, addressType)=>{
+    const controls = { ...formControls };
+    controls.customer[addressType] = address;
+    setFormControls(controls);
+  }
+  //open select customer menu
+  const onSelectCustomer = (customer) => {
+    const controls = { ...formControls };
+    controls.customer = controls.customer || {}
+    controls.customer.customer = customer
+    controls.customer.deliveryaddress = customer.address[0];
+    controls.customer.billingaddress = customer.address[0];
+    setFormControls(controls);
   };
   //handle submit
   const handleSubmit = () => {
@@ -195,42 +242,6 @@ export default function OrderDetailcomp(props){
       abortController.abort();
     };
   }
-  //handle item quantity changes
-  const onchangeItemQuantity = (index, name, value) => {
-    const controls = { ...formControls };
-    controls.orderitems[index].quantity[name] = value;
-    setFormControls(controls);
-  }
-  //handle item quantity changes
-  const onchangeItem = (index, name, value) => {
-    const controls = { ...formControls };
-    controls.orderitems[index][name] = value;
-    setFormControls(controls);
-  };
-  //handle item amount changes
-  const onchangeAmount = (event)=>{
-    const name = event.target.name
-    const value = event.target.value
-    const controls = { ...formControls };
-    controls.amount = controls.amount || {};
-    controls.amount[name] = value;
-    controls.amount.totalamount = controls.amount.amount - controls.amount.discount;
-    controls.amount.payable = controls.amount.totalamount +
-                              controls.amount.installation +
-                              controls.amount.shipping;
-    setFormControls(controls);
-  }
-  //on address change set corresponding address to the selected customer address using index
-  const changeAddress = (address, addressType)=>{
-    const controls = { ...formControls };
-    controls.customer[addressType] = address;
-    setFormControls(controls);
-  }
-  //get open state from props
-  React.useEffect(() => {
-    setOpen(props.open);
-    props.data && setFormControls(props.data);
-  }, [props]);
   //return component
   return (
     <React.Fragment>
@@ -263,6 +274,7 @@ export default function OrderDetailcomp(props){
             <CustomerDisplayComp
               data={formControls.customer}
               changeAddress={changeAddress}
+              onSelectCustomer={onSelectCustomer}
             />
           </Suspense>
           <Suspense fallback={<div>Loading...</div>}>
