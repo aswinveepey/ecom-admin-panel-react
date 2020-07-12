@@ -24,8 +24,8 @@ export default function CustomerDisplayComp(props) {
   const handleCloseAddressSelector = () => {
     setOpenAddressSelector(false);
   };
-  const handleChangeAddress = (index) => {
-    props.changeAddress(index, changeAddresstype);
+  const handleChangeAddress = (address) => {
+    props.changeAddress(address, changeAddresstype);
   };
 
   return (
@@ -144,7 +144,7 @@ export default function CustomerDisplayComp(props) {
       </Grid>
       <Suspense fallback={<div>Loading...</div>}>
         <AddressSelectComp
-          data={props.data?.customer.address}
+          data={props.data?.customer}
           open={openAddressSelector}
           handleClose={handleCloseAddressSelector}
           changeAddress={handleChangeAddress}

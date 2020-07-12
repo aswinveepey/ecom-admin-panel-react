@@ -107,8 +107,10 @@ function OrdertotalComp(props){
             <strong>Payable</strong>
           </TableCell>
           <TableCell>
-            {parseFloat(
-              props.data.amount + props.data.installation + props.data.shipping
+            {(
+              parseFloat(props.data.shipping) +
+              parseFloat(props.data.totalamount) +
+              parseFloat(props.data.installation)
             ).toFixed(2)}
           </TableCell>
         </TableRow>
@@ -148,15 +150,20 @@ export default function OrderDetailcomp(props){
   const onchangeAmount = (event)=>{
     const name = event.target.name
     const value = event.target.value
-    console.log(name)
     const controls = { ...formControls };
     controls.amount[name] = value;
+    controls.amount.totalamount =
+      controls.amount.amount - controls.amount.discount;
+    controls.amount.payable =
+      controls.amount.totalamount +
+      controls.amount.installation +
+      controls.amount.shipping;
     setFormControls(controls);
   }
   //on address change set corresponding address to the selected customer address using index
-  const changeAddress = (index, addressType)=>{
+  const changeAddress = (address, addressType)=>{
     const controls = { ...formControls };
-    controls.customer[addressType] = controls.customer?.customer?.address[index];
+    controls.customer[addressType] = address;
     setFormControls(controls);
   }
   //get open state from props
