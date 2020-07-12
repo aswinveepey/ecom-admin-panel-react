@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Suspense} from 'react'
 //Core Elements - Material UI
 import Button from "@material-ui/core/Button";
 import Grid from '@material-ui/core/Grid'
@@ -23,14 +23,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import { BASE_URL } from "../../constants";
 
-
+const AddressFormComp = React.lazy(() => import("./addressform"));
 //define styles
 const useStyles = makeStyles((theme) => ({
   addressitem: {
     height: '100%'
   },
 }));
-
 
 export default function CustomerDetailComp(props){
 
@@ -49,6 +48,9 @@ export default function CustomerDetailComp(props){
     { value: "Female", label: "Female" },
     { value: "Other", label: "Other" },
   ]);
+  const [addressFormOpen, setAddressFormOpen] = React.useState(false);
+  const[currentAddress, setCurrentAddress] = React.useState("")
+  const [currentAddressIndex, setCurrentAddressIndex] = React.useState("");
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose()
@@ -88,6 +90,32 @@ export default function CustomerDetailComp(props){
       abortController.abort();
     }
   }
+  //handle add adress click
+  const handleAddAddress = ()=>{
+    setAddressFormOpen(true);
+  }
+  const handleAddressFormClose = () => {
+    setAddressFormOpen(false);
+  };
+  //handle add/change address
+  const handleAddressChange = (data, index) => {
+    const controls = { ...formControls };
+    controls.address = controls.address || [];
+    if(index){
+      controls.address[index] = data
+    } else {
+      controls.address.push(data)
+    }
+    setFormControls(controls)
+    setAddressFormOpen(false);
+  };
+  //handle address deletion
+  const deleteAddress = (index)=>{
+    const controls = { ...formControls }
+    controls.address.splice(index, 1)
+    setFormControls(controls);
+  }
+  //handle change address click
   //change customer input handle
   const onchangeCustomerInput = (event)=>{
     event.preventDefault();
@@ -161,7 +189,7 @@ export default function CustomerDetailComp(props){
   },[accountSearchString, token])
 
   return (
-    <div>
+    <React.Fragment>
       <Dialog
         open={props.open}
         onClose={handleClose}
@@ -170,9 +198,8 @@ export default function CustomerDetailComp(props){
         aria-labelledby="customer-dialog"
       >
         <DialogTitle id="customer-dialog-title">
-          {formControls.firstname &&(
-            formControls?.firstname + " " + formControls?.lastname
-          )}
+          {formControls.firstname &&
+            formControls?.firstname + " " + formControls?.lastname}
         </DialogTitle>
         <form onSubmit={handleSubmit}>
           <DialogContent>
@@ -314,7 +341,7 @@ export default function CustomerDetailComp(props){
                     className={classes.addressitem}
                   >
                     <Card variant="outlined">
-                      <ButtonBase>
+                      <ButtonBase onClick={handleAddAddress}>
                         <CardContent>
                           <AddIcon />
                           <Typography>Add address</Typography>
@@ -349,7 +376,11 @@ export default function CustomerDetailComp(props){
                           <Typography>{item?.pincode}</Typography>
                         </CardContent>
                         <CardActions>
-                          <Button size="small" color="secondary">
+                          <Button
+                            size="small"
+                            color="secondary"
+                            onClick={deleteAddress.bind(this, index)}
+                          >
                             Delete
                           </Button>
                           <Button size="small" color="secondary">
@@ -372,7 +403,14 @@ export default function CustomerDetailComp(props){
             </Button>
           </DialogActions>
         </form>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AddressFormComp
+            open={addressFormOpen}
+            handleClose={handleAddressFormClose}
+            handleSubmit={handleAddressChange}
+          />
+        </Suspense>
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 }

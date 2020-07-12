@@ -6,6 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -28,7 +29,14 @@ export default function OrderitemDetailComp(props) {
   ]); 
 
   //quantty component change hadling
+  const onchangeItem = (index, event) => {
+    event.preventDefault()
+    const value = event.target.value;
+    const name = event.target.name;
+    props.onchangeItem(index, name, value);
+  };
   const onchangeItemQuantity = (index, event) => {
+    event.preventDefault();
     const value = event.target.value;
     const name = event.target.name;
     props.onchangeItemQuantity(index, name, value);
@@ -63,7 +71,23 @@ export default function OrderitemDetailComp(props) {
                 >
                   {orderitem.sku?.product?.name + " " + orderitem.sku?.name}
                 </TableCell>
-                <TableCell>{orderitem.status}</TableCell>
+                <TableCell>
+                  <TextField
+                    select
+                    value={orderitem.status || ""}
+                    // label="type"
+                    name="status"
+                    variant="standard"
+                    fullWidth
+                    onChange={onchangeItem.bind(this, index)}
+                  >
+                    {orderStatuses.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </TableCell>
                 <TableCell>
                   {parseFloat(orderitem.sku?.price?.mrp).toFixed(2)}
                 </TableCell>

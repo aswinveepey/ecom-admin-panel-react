@@ -1,11 +1,9 @@
 //library imports
-import React from 'react'
+import React, { Suspense } from "react";
 // import queryString from "query-string";
 //relative imports
 import AppBarComp from "../common/appbar";
 import UserCardList from './usercardlist'
-import UserDetailComp from './userdetail'
-import UserNewComp from "./usernew";
 import PaperBox from "../common/paperbox"
 //material ui core imports
 // import LinearProgress from "@material-ui/core/LinearProgress";
@@ -14,6 +12,9 @@ import Fab from '@material-ui/core/Fab'
 import Tooltip from "@material-ui/core/Tooltip";
 //material ui icon imports
 import AddIcon from '@material-ui/icons/Add'
+
+const UserDetailComp = React.lazy(() => import("./userdetail"));
+const UserNewComp = React.lazy(() => import("./usernew"));
 
 class UserComp extends React.Component {
   constructor(props){
@@ -41,11 +42,7 @@ class UserComp extends React.Component {
       <React.Fragment>
         <AppBarComp title="Users" />
         <PaperBox>
-          <Grid
-            container
-            direction="row"
-            spacing={2}
-          >
+          <Grid container direction="row" spacing={2}>
             <Grid item lg={2}>
               {/* <PaperBox> */}
               <Tooltip title="Add User">
@@ -66,10 +63,16 @@ class UserComp extends React.Component {
             </Grid>
             <Grid item lg={10}>
               {/* <PaperBox> */}
-              {!this.state.newuserflag && (
-                <UserDetailComp userId={this.state.selectedId} />
+              {
+              this.state.newuserflag?(
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserNewComp />
+                </Suspense>
+              ):(
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserDetailComp userId={this.state.selectedId} />
+                </Suspense>
               )}
-              {this.state.newuserflag && <UserNewComp />}
               {/* </PaperBox> */}
             </Grid>
           </Grid>
