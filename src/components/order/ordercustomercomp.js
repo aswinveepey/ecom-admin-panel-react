@@ -27,6 +27,9 @@ export default function CustomerDisplayComp(props) {
   const handleChangeAddress = (address) => {
     props.changeAddress(address, changeAddresstype);
   };
+  const selectCustomer = ()=>{
+    console.log("Open Dialog for customer selection")
+  }
 
   return (
     <React.Fragment>
@@ -38,10 +41,10 @@ export default function CustomerDisplayComp(props) {
                 Customer Details
               </Typography>
               <Typography variant="h5" component="h2">
-                {props.data?._id &&
-                  props.data?.customer?.firstname +
+                {props.data?.customer &&
+                  (props.data?.customer?.firstname +
                     " " +
-                    props.data?.customer?.lastname}
+                    props.data?.customer?.lastname)}
               </Typography>
               <Table size="small">
                 <TableBody>
@@ -70,6 +73,16 @@ export default function CustomerDisplayComp(props) {
                 </TableBody>
               </Table>
             </CardContent>
+            {!props.data?.customer?._id && (
+              <CardActions>
+                <Button
+                  size="small"
+                  onClick={selectCustomer}
+                >
+                  Select Customer
+                </Button>
+              </CardActions>
+            )}
           </Card>
         </Grid>
         <Grid item md={4}>

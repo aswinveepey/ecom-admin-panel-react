@@ -7,6 +7,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button"
+import IconButton from "@material-ui/core/IconButton"
+import DeleteIcon from "@material-ui/icons/Delete";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
   tablecell: {
     minWidth: 250,
   },
+  addSkuButton:{
+    marginTop:10
+  }
 }));
 
 export default function OrderitemDetailComp(props) {
@@ -43,10 +49,22 @@ export default function OrderitemDetailComp(props) {
   };
   return (
     <React.Fragment>
+      {!props.data?._id && (
+        <Button
+          color="primary"
+          variant="outlined"
+          aria-label="add"
+          className={classes.addSkuButton}
+          // onClick={openOrderDetail}
+        >
+          Add SKU
+        </Button>
+      )}
       <TableContainer>
         <Table size="small" aria-label="orderitems" className={classes.table}>
           <TableHead>
             <TableRow>
+              {!props.data?._id && <TableCell></TableCell>}
               <TableCell className={classes.tablecell}>Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>MRP</TableCell>
@@ -62,8 +80,19 @@ export default function OrderitemDetailComp(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.data?.map((orderitem, index) => (
+            {props.data?.orderitems?.map((orderitem, index) => (
               <TableRow key={orderitem.shortid}>
+                {!props.data?._id && (
+                  <TableCell>
+                    <IconButton
+                      size="small"
+                      aria-label="order detail"
+                      // onClick={openOrderDetail}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                )}
                 <TableCell
                   className={classes.tablecell}
                   component="th"
@@ -94,7 +123,17 @@ export default function OrderitemDetailComp(props) {
                 <TableCell>
                   {parseFloat(orderitem.sku?.price?.sellingprice).toFixed(2)}
                 </TableCell>
-                <TableCell>{orderitem.quantity?.booked}</TableCell>
+                <TableCell>
+                  <TextField
+                    disabled={props.data?._id ? true : false}
+                    variant="outlined"
+                    name="booked"
+                    fullWidth
+                    required
+                    onChange={onchangeItemQuantity.bind(this, index)}
+                    value={orderitem.quantity?.booked || ""}
+                  />
+                </TableCell>
                 <TableCell>
                   <TextField
                     variant="outlined"

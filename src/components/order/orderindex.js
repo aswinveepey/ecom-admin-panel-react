@@ -97,11 +97,11 @@ function ExpandableRow(props) {
         </TableCell>
         <TableCell>{row._id}</TableCell>
         <TableCell>{row.customer.customer._id}</TableCell>
-        <TableCell>{row.amount.amount.toFixed(2)}</TableCell>
-        <TableCell>{row.amount.discount.toFixed(2)}</TableCell>
-        <TableCell>{row.amount.totalamount.toFixed(2)}</TableCell>
-        <TableCell>{row.amount.installation.toFixed(2)}</TableCell>
-        <TableCell>{row.amount.shipping.toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.amount || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.discount || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.totalamount || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.installation || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.shipping || 0).toFixed(2)}</TableCell>
         <TableCell>{row.createdat}</TableCell>
       </TableRow>
       <TableRow>

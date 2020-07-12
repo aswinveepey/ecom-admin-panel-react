@@ -47,6 +47,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function OrdertotalComp(props){
   const classes = useStyles();
+  const onchangeAmount = async (event) => {
+    props.onchangeAmount(event);
+  }
   return (
     <Table size="small">
       <TableBody className={classes.totaltable}>
@@ -54,7 +57,16 @@ function OrdertotalComp(props){
           <TableCell>
             <strong>Amount</strong>
           </TableCell>
-          <TableCell>{props.data?.amount.toFixed(2) || 0}</TableCell>
+          <TableCell>
+            <TextField
+              variant="outlined"
+              name="amount"
+              disabled
+              fullWidth
+              // onChange={props.onchangeAmount}
+              value={parseFloat(props.data?.amount || 0).toFixed(2)}
+            />
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -65,8 +77,8 @@ function OrdertotalComp(props){
               variant="outlined"
               name="discount"
               fullWidth
-              onChange={props.onchangeAmount}
-              value={props.data?.discount?.toFixed(2)|| 0}
+              onChange={onchangeAmount}
+              value={parseFloat(props.data?.discount || 0).toFixed(2)}
             />
           </TableCell>
         </TableRow>
@@ -74,7 +86,16 @@ function OrdertotalComp(props){
           <TableCell>
             <strong>Total</strong>
           </TableCell>
-          <TableCell>{props.data?.totalamount?.toFixed(2) || 0}</TableCell>
+          <TableCell>
+            <TextField
+              variant="outlined"
+              name="totalamount"
+              fullWidth
+              disabled
+              // onChange={props.onchangeAmount}
+              value={parseFloat(props.data?.totalamount || 0).toFixed(2)}
+            />
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -86,7 +107,7 @@ function OrdertotalComp(props){
               name="installation"
               fullWidth
               onChange={props.onchangeAmount}
-              value={props.data?.installation?.toFixed(2) || 0}
+              value={parseFloat(props.data?.installation || 0).toFixed(2)}
             />
           </TableCell>
         </TableRow>
@@ -100,7 +121,7 @@ function OrdertotalComp(props){
               name="shipping"
               fullWidth
               onChange={props.onchangeAmount}
-              value={props.data?.shipping?.toFixed(2) || 0}
+              value={parseFloat(props.data?.shipping || 0).toFixed(2)}
             />
           </TableCell>
         </TableRow>
@@ -109,11 +130,18 @@ function OrdertotalComp(props){
             <strong>Payable</strong>
           </TableCell>
           <TableCell>
-            {(
-              props.data?.shipping +
-              props.data?.totalamount +
-              props.data?.installation
-            )?.toFixed(2) || 0}
+            <TextField
+              variant="outlined"
+              name="payable"
+              fullWidth
+              disabled
+              // onChange={props.onchangeAmount}
+              value={(
+                parseFloat(props.data?.shipping || 0) +
+                parseFloat(props.data?.totalamount || 0) +
+                parseFloat(props.data?.installation || 0)
+              ).toFixed(2)}
+            />
           </TableCell>
         </TableRow>
       </TableBody>
@@ -184,6 +212,7 @@ export default function OrderDetailcomp(props){
     const name = event.target.name
     const value = event.target.value
     const controls = { ...formControls };
+    controls.amount = controls.amount || {};
     controls.amount[name] = value;
     controls.amount.totalamount = controls.amount.amount - controls.amount.discount;
     controls.amount.payable = controls.amount.totalamount +
@@ -238,7 +267,7 @@ export default function OrderDetailcomp(props){
           </Suspense>
           <Suspense fallback={<div>Loading...</div>}>
             <OrderitemDetailComp
-              data={formControls.orderitems}
+              data={formControls}
               onchangeItemQuantity={onchangeItemQuantity}
               onchangeItem={onchangeItem}
             />
