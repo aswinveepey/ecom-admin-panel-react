@@ -60,7 +60,6 @@ export default function OrderDetailcomp(props){
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
-    console.log(props.data)
     props.data && setFormControls(props.data);
   }, [props]);
 
@@ -180,7 +179,6 @@ export default function OrderDetailcomp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    console.log(formControls);
     const requestOptions = {
       method: "POST",
       headers: {

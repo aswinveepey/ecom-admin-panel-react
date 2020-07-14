@@ -44,9 +44,6 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
   },
-  drawerPaper: {
-    width: drawerWidth,
-  },
   appbar: {
     height: "30vh !important",
   },
