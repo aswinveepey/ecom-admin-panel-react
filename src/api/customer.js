@@ -8,6 +8,11 @@ export default class CustomerApi {
   getCustomers= async (signal)=>{
     return await this.apiHelper.get(signal, "customer")
   }
+
+  //get one customer
+  getOneCustomer= async (signal, customerId)=>{
+    return await this.apiHelper.get(signal, "customer/id/"+customerId)
+  }
   //serach all customers
   searchCustomers= async (signal, param)=>{
     const reqBody = JSON.stringify({ searchString:  param});

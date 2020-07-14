@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import Cookies from "js-cookie";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,7 +10,8 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { BASE_URL } from "../../constants";
+//import order api class
+import OrderApi from "../../api/order";
 
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
@@ -49,8 +49,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-  const token = Cookies.get("token");
-  // const token = Cookies.get("token");
+  const orderApi = new OrderApi();
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
@@ -178,31 +177,18 @@ export default function OrderDetailcomp(props){
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls?._id
-      ? "order/id/" + formControls?._id
-      : "order/";
-    //POST category data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200) {
-          handleClose();
-        }
-      })
-      .catch((err) => console.log(err));
+    
+    if (formControls?._id){
+      orderApi
+        .updateOrder(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }else{
+      orderApi
+        .createOrder(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }   
     return function cleanup() {
       abortController.abort();
     };

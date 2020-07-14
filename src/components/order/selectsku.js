@@ -7,9 +7,9 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
-import { BASE_URL } from "../../constants";
-import Cookies from "js-cookie";
 import { makeStyles } from "@material-ui/core/styles";
+
+import SkuApi from "../../api/sku"
 
 const useStyles = makeStyles((theme) => ({
   selectButton: {
@@ -32,7 +32,7 @@ export default function SelectSKU(props) {
   const classes = useStyles();
   const [skuSearch, setSkuSearch] = React.useState("");
   const [skus, setSkus] = React.useState([]);
-  const token = Cookies.get("token");
+  const skuApi = new SkuApi();
 
   //handle close propogation
   const handleClose = () => {
@@ -53,29 +53,14 @@ export default function SelectSKU(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: skuSearch }),
-    };
-    const fetchurl = BASE_URL + "sku/search";
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setSkus(response.data);
-      })
+    skuApi
+      .searchSkus(signal, skuSearch)
+      .then((data) => setSkus(data))
       .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, skuSearch]);
+  }, [skuSearch]);
   return (
     <React.Fragment>
       <Dialog
