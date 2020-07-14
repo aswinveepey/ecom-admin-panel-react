@@ -61,11 +61,12 @@ class UserComp extends React.Component {
             </Grid>
             <Grid item lg={10}>
               {/* <PaperBox> */}
-              {this.state.newuserflag ? (
+              {this.state.newuserflag && (
                 <Suspense fallback={<div>Loading...</div>}>
                   <UserNewComp />
                 </Suspense>
-              ) : (
+              )}
+              {this.state.selectedId && (
                 <Suspense fallback={<div>Loading...</div>}>
                   <UserDetailComp userId={this.state.selectedId} />
                 </Suspense>

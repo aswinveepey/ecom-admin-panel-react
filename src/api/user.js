@@ -8,6 +8,10 @@ export default class UserApi {
   getUsers = async (signal) => {
     return await this.apiHelper.get(signal, "user");
   };
+  //get one users
+  getOneUser = async (signal, userId) => {
+    return await this.apiHelper.get(signal, "user/id/"+userId);
+  };
   //serach all users
   searchUsers = async (signal, param) => {
     const reqBody = JSON.stringify({ searchString: param });
