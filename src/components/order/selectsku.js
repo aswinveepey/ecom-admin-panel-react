@@ -44,6 +44,7 @@ export default function SelectSKU(props) {
     props.handleClose();
   };
   const onSkuSearch = (event) => {
+    event.persist();
     setSkuSearch(event.target.value);
   };
   //search hook

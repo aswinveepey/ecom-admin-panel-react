@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 export default function AddressSelectComp(props){
   const classes = useStyles();
   const [addresses, setAddresses] = React.useState([])
-  const [selectedAddress, setSelectedAddress] = React.useState("")
 
   const token = Cookies.get("token");
 
@@ -54,7 +53,7 @@ export default function AddressSelectComp(props){
     return function cleanup() {
       abortController.abort();
     };
-  }, [props]);
+  }, [props, token]);
   return (
     <React.Fragment>
       <Dialog

@@ -10,18 +10,16 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table"
-import TableBody from "@material-ui/core/TableBody"
-import TableRow from "@material-ui/core/TableRow"
-import TableCell from "@material-ui/core/TableCell"
 import { BASE_URL } from "../../constants";
-//Component import
+
+//lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
-const CustomerDisplayComp = React.lazy(() => import("./ordercustomercomp"));
+const CustomerDisplayComp = React.lazy(() => import("./customercomp"));
+const SelectSKU = React.lazy(() => import("./selectsku"));
+const OrdertotalComp = React.lazy(() => import("./ordertotal"));
 
-
+//styles
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -38,117 +36,16 @@ const useStyles = makeStyles((theme) => ({
   },
   totaltable:{
     float:"right"
+  },
+  addSkuButton:{
+    marginTop:10
   }
 }));
 
+//dialog transition
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-function OrdertotalComp(props){
-  const classes = useStyles();
-  const onchangeAmount = async (event)=>{
-    props.onchangeAmount(event)
-  }
-  return (
-    <Table size="small">
-      <TableBody className={classes.totaltable}>
-        <TableRow>
-          <TableCell>
-            <strong>Amount</strong>
-          </TableCell>
-          <TableCell>
-            <TextField
-              variant="outlined"
-              name="amount"
-              disabled
-              fullWidth
-              // onChange={onchangeAmount}
-              value={parseFloat(props.data?.amount || 0).toFixed(2)}
-            />
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>
-            <strong>Discount</strong>
-          </TableCell>
-          <TableCell>
-            <TextField
-              variant="outlined"
-              name="discount"
-              fullWidth
-              onChange={onchangeAmount}
-              value={parseFloat(props.data?.discount || 0).toFixed(2)}
-            />
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>
-            <strong>Total</strong>
-          </TableCell>
-          <TableCell>
-            <TextField
-              variant="outlined"
-              name="totalamount"
-              fullWidth
-              disabled
-              // onChange={onchangeAmount}
-              value={parseFloat(props.data?.totalamount || 0).toFixed(2)}
-            />
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>
-            <strong>Installation</strong>
-          </TableCell>
-          <TableCell>
-            <TextField
-              variant="outlined"
-              name="installation"
-              fullWidth
-              onChange={onchangeAmount}
-              value={parseFloat(props.data?.installation || 0).toFixed(2)}
-            />
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>
-            <strong>Shipping</strong>
-          </TableCell>
-          <TableCell>
-            <TextField
-              variant="outlined"
-              name="shipping"
-              fullWidth
-              onChange={onchangeAmount}
-              value={parseFloat(props.data?.shipping || 0).toFixed(2)}
-            />
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>
-            <strong>Payable</strong>
-          </TableCell>
-          <TableCell>
-            <TextField
-              variant="outlined"
-              name="payable"
-              fullWidth
-              disabled
-              // onChange={onchangeAmount}
-              value={(
-                parseFloat(props.data?.shipping || 0) +
-                parseFloat(props.data?.totalamount || 0) +
-                parseFloat(props.data?.installation || 0)
-              ).toFixed(2)}
-            />
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  );
-}
-
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
@@ -156,18 +53,28 @@ export default function OrderDetailcomp(props){
   // const token = Cookies.get("token");
 
   const [open, setOpen] = React.useState(false);
-  const [formControls, setFormControls] = React.useState({});
+  const [formControls, setFormControls] = React.useState([]);
   const [calculateTotals, setCalculateTotals] = React.useState(false);
+  const [addSkuOpen, setAddSkuOpen] = React.useState(false);
 
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
+    console.log(props.data)
     props.data && setFormControls(props.data);
   }, [props]);
 
   //delegate close behaviour to parent
   const handleClose = () => {
     props.handleClose();
+  };
+  //add sku handling in case of new order
+  const onClickAddSku = () => {
+    setAddSkuOpen(true);
+  };
+  //close sku add dialog handling
+  const closeAddSku = () => {
+    setAddSkuOpen(false);
   };
   //Calculate totals based on changes use effect will trigger on form control update
   React.useEffect(()=>{
@@ -194,6 +101,7 @@ export default function OrderDetailcomp(props){
         orderAmount += item.amount.totalamount;
         orderShipping += item.amount.shipping;
         orderInstallation += item.amount.installation;
+        return null;
       });
       controls.amount = controls.amount || {};
       controls.amount.amount = orderAmount;
@@ -210,7 +118,6 @@ export default function OrderDetailcomp(props){
     controls.orderitems[index].quantity = controls.orderitems[index].quantity || {};
     controls.orderitems[index].quantity[name] = value;
     setFormControls(controls);
-    // calculateTotals();
     setCalculateTotals(!calculateTotals);
   }
   //handle item status changes
@@ -233,19 +140,16 @@ export default function OrderDetailcomp(props){
     controls.orderitems.push(newItem)
     setFormControls(controls)
     setCalculateTotals(!calculateTotals);
-    // calculateTotals()
   }
   //handle SKU deletion
   const removeOrderItem = (index)=>{
     const controls = { ...formControls };
     controls.orderitems.splice(index,1)
     setFormControls(controls);
-    calculateTotals();
+    setCalculateTotals(!calculateTotals);
   }
   //handle item amount changes
-  const onchangeAmount = (event)=>{
-    const name = event.target.name
-    const value = event.target.value
+  const onchangeAmount = (name, value)=>{
     const controls = { ...formControls };
     controls.amount = controls.amount || {};
     controls.amount[name] = value;
@@ -276,6 +180,7 @@ export default function OrderDetailcomp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
+    console.log(formControls);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -334,24 +239,43 @@ export default function OrderDetailcomp(props){
         <Paper className={classes.gridpaper} variant="outlined">
           <Suspense fallback={<div>Loading...</div>}>
             <CustomerDisplayComp
-              data={formControls.customer}
+              data={formControls?.customer}
               changeAddress={changeAddress}
               onSelectCustomer={onSelectCustomer}
             />
           </Suspense>
+          {!props.data?._id && (
+            <Button
+              color="primary"
+              variant="outlined"
+              aria-label="add"
+              className={classes.addSkuButton}
+              onClick={onClickAddSku}
+            >
+              Add SKU
+            </Button>
+          )}
           <Suspense fallback={<div>Loading...</div>}>
             <OrderitemDetailComp
               data={formControls}
               onchangeItemQuantity={onchangeItemQuantity}
               onchangeItem={onchangeItem}
-              onAddSku={handleAddSku}
               removeOrderItem={removeOrderItem}
             />
           </Suspense>
-          <OrdertotalComp
-            data={formControls.amount}
-            onchangeAmount={onchangeAmount}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SelectSKU
+              open={addSkuOpen}
+              handleClose={closeAddSku}
+              selectSku={handleAddSku}
+            />
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            <OrdertotalComp
+              data={formControls?.amount}
+              onchangeAmount={onchangeAmount}
+            />
+          </Suspense>
         </Paper>
       </Dialog>
     </React.Fragment>

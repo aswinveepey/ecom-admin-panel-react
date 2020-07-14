@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,39 +7,32 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import DeleteIcon from "@material-ui/icons/Delete";
-//Styles
 import { makeStyles } from "@material-ui/core/styles";
 
-const SelectSKU = React.lazy(() => import("./selectsku"));
-
+// styles
 const useStyles = makeStyles((theme) => ({
   tablecell: {
     minWidth: 250,
-  },
-  addSkuButton:{
-    marginTop:10
   }
 }));
 
 export default function OrderitemDetailComp(props) {
   const classes = useStyles();
-  const [orderStatuses, setOrderStatuses] = React.useState([
-    { value: "Booked", label: "Booked" },
-    { value: "Cancelled", label: "Cancelled" },
-    { value: "Confirmed", label: "Confirmed" },
-    { value: "Shipped", label: "Shipped" },
-    { value: "Delivered", label: "Delivered" },
-    { value: "Returned", label: "Returned" },
-    { value: "Partial Delivery", label: "Partial Delivery" },
-  ]);
-  const[addSkuOpen, setAddSkuOpen] = React.useState(false)
+  const orderStatuses = [
+                          { value: "Booked", label: "Booked" },
+                          { value: "Cancelled", label: "Cancelled" },
+                          { value: "Confirmed", label: "Confirmed" },
+                          { value: "Shipped", label: "Shipped" },
+                          { value: "Delivered", label: "Delivered" },
+                          { value: "Returned", label: "Returned" },
+                          { value: "Partial Delivery", label: "Partial Delivery" },
+                        ];
 
   //quantty component change hadling
   const onchangeItem = (index, event) => {
-    event.preventDefault()
+    event.preventDefault();
     const value = event.target.value;
     const name = event.target.name;
     props.onchangeItem(index, name, value);
@@ -54,28 +47,8 @@ export default function OrderitemDetailComp(props) {
     const name = event.target.name;
     props.onchangeItemQuantity(index, name, value);
   };
-  const onClickAddSku = ()=>{
-    setAddSkuOpen(true)
-  }
-  const closeAddSku = ()=>{
-    setAddSkuOpen(false)
-  }
-  const handleAddSku = (sku)=>{
-    props.onAddSku(sku)
-  }
   return (
     <React.Fragment>
-      {!props.data?._id && (
-        <Button
-          color="primary"
-          variant="outlined"
-          aria-label="add"
-          className={classes.addSkuButton}
-          onClick={onClickAddSku}
-        >
-          Add SKU
-        </Button>
-      )}
       <TableContainer>
         <Table size="small" aria-label="orderitems" className={classes.table}>
           <TableHead>
@@ -120,7 +93,6 @@ export default function OrderitemDetailComp(props) {
                   <TextField
                     select
                     value={orderitem.status || ""}
-                    // label="type"
                     name="status"
                     variant="standard"
                     fullWidth
@@ -210,13 +182,6 @@ export default function OrderitemDetailComp(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Suspense fallback={<div>Loading...</div>}>
-        <SelectSKU
-          open={addSkuOpen}
-          handleClose={closeAddSku}
-          selectSku={handleAddSku}
-        />
-      </Suspense>
     </React.Fragment>
   );
 }
