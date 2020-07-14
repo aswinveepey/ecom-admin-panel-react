@@ -44,14 +44,14 @@ export default function LoginFormComp(props){
   const [submitprogress, setSubmitprogress] = React.useState(false);
 
   //handle username change
-  function handleUsernameChange(event){
+  const handleUsernameChange = (event)=>{
     event.preventDefault();
     setUsernameError(false)
     setUsername(event.target.value)
   }
-  function handlePasswordChange(event) {
-    setPasswordError(false);
+  const handlePasswordChange = (event)=>{
     event.preventDefault();
+    setPasswordError(false);
     setPassword(event.target.value);
   }
   //handle password change
@@ -102,7 +102,7 @@ export default function LoginFormComp(props){
             variant="outlined"
             autoComplete="username"
             value={username}
-            onChange={(event) => handleUsernameChange(event)}
+            onChange={handleUsernameChange}
             required
             error={usernameError}
             helperText={usernameError ? "Invalid Username" : ""}
@@ -117,7 +117,7 @@ export default function LoginFormComp(props){
             autoComplete="current-password"
             variant="outlined"
             value={password}
-            onChange={(event) => handlePasswordChange(event)}
+            onChange={handlePasswordChange}
             required
             error={passwordError}
             helperText={passwordError ? "Invalid Password" : ""}
