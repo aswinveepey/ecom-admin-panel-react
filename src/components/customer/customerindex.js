@@ -1,9 +1,7 @@
 import React from "react";
 import CustomerDetailComp from "./customerdetail";
 import DataTableComp from '../common/datatable'
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+import CustomerApi from "../../api/customer";
 
 
 export default function CustomerIndexComp(props){
@@ -11,8 +9,7 @@ export default function CustomerIndexComp(props){
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [customerSearch, setCustomerSearch] = React.useState("");
-
-  const token = Cookies.get("token");
+  const customerapi = new CustomerApi();
 
   const gridData = {
     gridOptions: {
@@ -86,45 +83,14 @@ export default function CustomerIndexComp(props){
   }
   //datafetch
   React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
-    if(customerSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: customerSearch }),
-      };
-      fetchurl = BASE_URL + "customer/search"
+    if (customerSearch) {
+      customerapi
+        .searchCustomers(customerSearch)
+        .then((response) => setRowData(response));
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "customer";
+      customerapi.getCustomers().then((response) => setRowData(response));
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [token, customerSearch]);
+  }, [customerSearch]);
   //return component
   return (
     <React.Fragment>

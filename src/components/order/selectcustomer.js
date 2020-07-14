@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { BASE_URL } from "../../constants";
 import Cookies from "js-cookie";
 import { makeStyles } from "@material-ui/core/styles";
+import CustomerApi from "../../api/customer";
 
 const useStyles = makeStyles((theme) => ({
   selectButton: {
@@ -32,7 +33,7 @@ export default function SelectCustomer(props){
   const classes = useStyles();
   const [customerSearch, setCustomerSearch] = React.useState("")
   const [customers, setCustomers] = React.useState([])
-  const token = Cookies.get("token");
+  const customerapi = new CustomerApi();
 
   //handle close propogation
   const handleClose = () => {
@@ -51,32 +52,11 @@ export default function SelectCustomer(props){
   //search hook
   //datafetch
   React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: customerSearch }),
-    };
-    const fetchurl = BASE_URL + "customer/search";
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setCustomers(response.data);
-      })
+    customerapi
+      .searchCustomers(customerSearch)
+      .then((data) => setCustomers(data))
       .catch((err) => console.log(err));
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [token, customerSearch]);
+  }, [customerSearch]);
   return (
     <React.Fragment>
       <Dialog
