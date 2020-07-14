@@ -40,10 +40,12 @@ export default function SelectCustomer(props){
   };
   //on select customer pass data back to parent
   const selectCustomer = (customer) => {
-    props.selectCustomer(customer);
-    props.handleClose();
+    const selectedCustomer = customer
+    props.selectCustomer(selectedCustomer);
+    handleClose();
   };
   const onCustomerSearch = (event)=>{
+    event.preventDefault();
     setCustomerSearch(event.target.value)
   }
   //search hook
@@ -95,7 +97,7 @@ export default function SelectCustomer(props){
           {customers.map((customer) => (
             <Card variant="outlined" key={customer._id}>
               <Button
-                onClick={selectCustomer.bind(this, customer)}
+                onClick={(event)=>{selectCustomer(customer, event);}}
                 className={classes.selectButton}
               >
                 <CardContent>

@@ -70,7 +70,7 @@ function ExpandableRow(props) {
   const [orderExpand, setOrderExpand] = React.useState(false);
 
   //open Order Detail
-  const openOrderDetail = (event) => {
+  const openOrderDetail = (row, event) => {
     event.preventDefault();
     props.openOrderDetail(row);
   };
@@ -90,7 +90,7 @@ function ExpandableRow(props) {
           <IconButton
             size="small"
             aria-label="order detail"
-            onClick={openOrderDetail}
+            onClick={openOrderDetail.bind(this,row)}
           >
             <EditIcon />
           </IconButton>
@@ -132,8 +132,9 @@ export default function OrderIndexComp(props) {
   const token = Cookies.get("token");
 
   //open Order Detail
-  const openOrderDetail = (data) => {
-    setOrderDetailData(data);
+  const openOrderDetail = (detailData) => {
+    //this step is important in preventing circular json issue & synthetic event issue
+    detailData._id && setOrderDetailData(detailData);
     setOrderDetailOpen(true);
   };
   //close Order Detail
@@ -142,7 +143,8 @@ export default function OrderIndexComp(props) {
   };
   //handle Order Search
   const handleOrderSearch = (event) => {
-    setOrderSearch(event.target.value);
+    event.persist()
+    setOrderSearch(event);
   };
 
   //datafetch
