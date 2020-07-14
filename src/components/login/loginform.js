@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { useHistory } from "react-router";
 //Constants Import
-import { BASE_URL } from "../../constants";
+import AuthApi from "../../api/auth"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginFormComp(props){
   const classes = useStyles();
   const history = useHistory();
+  const authApi = new AuthApi();
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
   const [username, setUsername] = React.useState('');
@@ -57,45 +58,21 @@ export default function LoginFormComp(props){
   //handle login form submit
   var handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitprogress(true);
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username, password: password }),
-    };
-    fetch(
-      BASE_URL + "auth/authenticate",
-      requestOptions,
-      {
-        signal: signal,
-      }
-    ).then(async (authResponse)=>{
-      const { status } = authResponse;
-      if (status === 200) {
-        const { token } = await authResponse.json();
-        try {
-          Cookies.set("token", token, { expires: 30 });
-        } catch (error) {
-          console.log("Unable to set cookie");
-        }
-        history && history.push("/home");
-      } else {
-        authResponse.json().then((data) => {
-          const { message } = data;
-          if (message === "Username Error") {
-            setUsernameError(true);
-          } else if (message === "Password Error") {
-            setPasswordError(true);
-          } else {
-            console.log("Something went wrong");
+    const reqBody = { username: username, password: password };
+    authApi.authenticate(signal, reqBody)
+      .then((data) => {
+          try {
+            Cookies.set("token", data, { expires: 30 });
+          } catch (error) {
+            console.log("Unable to set cookie");
           }
-        });
-      }
-    }).catch(error=>console.log(error));
-    setSubmitprogress(false);
+          history && history.push("/home");
+      })
+      .catch((error) => console.log(error));
+
     return function cleanup() {
       abortController.abort();
     };
