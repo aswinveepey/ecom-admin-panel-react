@@ -8,7 +8,6 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import Dashboard from "@material-ui/icons/Dashboard";
 import Contacts from "@material-ui/icons/Contacts";
@@ -35,19 +34,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function DrawerComp(props){
+export default function DrawerComp(props){
   // const drawerInitState = props.open;
   const classes = useStyles();
   const token = Cookies.get("token");
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo = "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +tenantLogoFile;
 
-  const [drawerOpen, setDrawerOpen] = React.useState(props.open);
   const [navData, setNavData] = React.useState([]);
-  
-  const handleDrawerToggle = () => {
-    props.handler();
-  };
 
   //fetch drawer data
   React.useEffect(() => {
@@ -67,10 +61,8 @@ function DrawerComp(props){
       })
         .then(async (data) => {
           const response = await data.json();
-          // console.log(response);
           const { status } = data;
           status === 200 && setNavData(response.data);
-          // console.log(options)
         })
         .catch((err) => console.log(err));
     } catch (error) {}
@@ -79,11 +71,6 @@ function DrawerComp(props){
     };
   }, [token]);
 
-  //open drawer
-  React.useEffect(() => {
-    // console.log(drawerOpen);
-    setDrawerOpen(props.open);
-  }, [props.open]);
   function renderIcon(param) {
     var SwitchComp;
     switch (param) {
@@ -110,47 +97,39 @@ function DrawerComp(props){
 
 
   return (
-    <nav>
-      <SwipeableDrawer
-        variant="persistent"
-        open={drawerOpen}
-        anchor="left"
-        onClose={handleDrawerToggle}
-        onOpen={handleDrawerToggle}
-      >
-        <div className={classes.drawerdiv}>
-          <IconButton onClick={handleDrawerToggle}>
-            <ChevronLeftIcon />
-          </IconButton>
-          <Divider />
-          <div>
-            <List>
-              <ListItem>
-                <img src={tenantLogo} alt="brand logo" className={classes.logoImg} />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              {navData.map((item) => (
-                <ListItem
-                  button
-                  key={item.name}
-                  component={NavLink}
-                  to={item.nav}
-                  activeClassName="Mui-selected"
-                >
-                  <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItem>
-              ))}
-            </List>
-            <Divider />
-            <Divider />
-          </div>
-        </div>
-      </SwipeableDrawer>
-    </nav>
+    <div className={classes.drawerdiv}>
+      <IconButton onClick={props.handleDrawerToggle}>
+        <ChevronLeftIcon />
+      </IconButton>
+      <Divider />
+      <div>
+        <List>
+          <ListItem>
+            <img
+              src={tenantLogo}
+              alt="brand logo"
+              className={classes.logoImg}
+            />
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          {navData.map((item) => (
+            <ListItem
+              button
+              key={item.name}
+              component={NavLink}
+              to={item.nav}
+              activeClassName="Mui-selected"
+            >
+              <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <Divider />
+      </div>
+    </div>
   );
 }
-
-export default DrawerComp;

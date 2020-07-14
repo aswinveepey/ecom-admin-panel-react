@@ -1,9 +1,12 @@
 import React from "react";
+import Paper from "@material-ui/core/Paper";
 //Material ui core imports
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Drawer from "@material-ui/core/Drawer"
 //Material Icon Imports
 import MenuIcon from "@material-ui/icons/Menu";
 //styles import
@@ -12,8 +15,21 @@ import { makeStyles } from "@material-ui/core/styles";
 import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
 
-// export default withStyles(styles)(AppBarComp);
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme) => ({
+  raisedpaper: {
+    top: "10vh",
+    width: "96%",
+    margin: "2%",
+    position: "absolute",
+    padding: "1%",
+    minHeight: "70vh",
+    // overflow:"auto"
+  },
+  content: {
+    flexGrow: 1,
+  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -24,29 +40,36 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
-  appbar:{
-    height: '30vh !important'
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
   },
-  apptoolbar:{
-    top: '2vh !important'
-  }
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  appbar: {
+    height: "30vh !important",
+  },
+  apptoolbar: {
+    top: "2vh !important",
+  },
 }));
 
-export default function AppBarComp(props){
+export default function Scaffold(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
-
-  function handleDrawerToggle(){
+  const handleDrawerToggle = ()=>{
     setOpen(!open);
   }
-  React.useEffect(()=>{
+  React.useEffect(() => {
     if (props.search === false) {
       setSearch(false);
     }
-  },[props])
+  }, [props]);
   return (
-    <React.Fragment>
+    <div className={classes.root}>
+      <CssBaseline />
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.apptoolbar}>
           <IconButton
@@ -64,8 +87,19 @@ export default function AppBarComp(props){
           {search && <AppSearchComp />}
         </Toolbar>
       </AppBar>
-      <DrawerComp open={open} handler={handleDrawerToggle} />
-    </React.Fragment>
+      <nav className={classes.drawer}>
+        <Drawer
+          variant="persistent"
+          open={open}
+          anchor="left"
+          onClose={handleDrawerToggle}
+        >
+          <DrawerComp handleDrawerToggle={handleDrawerToggle}/>
+        </Drawer>
+      </nav>
+      <main className={classes.content}>
+        <Paper className={classes.raisedpaper}>{props.children}</Paper>
+      </main>
+    </div>
   );
-
 }
