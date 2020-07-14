@@ -19,10 +19,9 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AddIcon from "@material-ui/icons/Add";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+
 import CustomerApi from "../../api/customer";
+import AccountApi from "../../api/account";
 
 const AddressFormComp = React.lazy(() => import("./addressform"));
 //define styles
@@ -36,7 +35,8 @@ export default function CustomerDetailComp(props){
 
   const classes = useStyles();
   const customerapi = new CustomerApi();
-  const token = Cookies.get("token");
+  const accountapi = new AccountApi();
+
   const [formControls, setFormControls] = React.useState([]);
   const [accounts, setAccounts] = React.useState([]);
   const [accountSearchString, setAccountSearchString] = React.useState("");
@@ -57,9 +57,11 @@ export default function CustomerDetailComp(props){
   // handle dialog form submit
   const handleSubmit = (event)=>{
     event.preventDefault();
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     if(formControls._id){
       customerapi
-        .updateCustomer(formControls)
+        .updateCustomer(signal, formControls)
         .then((data) => {
           console.log(data);
           handleClose();
@@ -67,13 +69,16 @@ export default function CustomerDetailComp(props){
         .catch((err) => console.log(err));
     } else {
       customerapi
-        .createCustomer(formControls)
+        .createCustomer(signal, formControls)
         .then((data) => {
           console.log(data);
           handleClose();
         })
         .catch((err) => console.log(err));
     }
+    return function cleanup() {
+      abortController.abort();
+    };
   }
   //handle add adress click
   const handleAddAddress = ()=>{
@@ -142,36 +147,16 @@ export default function CustomerDetailComp(props){
   }, [props]);
   //get account from search string
   React.useEffect(()=>{
-    //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: accountSearchString }),
-    };
-    //fetch data and set data
-    if (accountSearchString.length>2){
-      fetch(
-        BASE_URL + "account/search", 
-        requestOptions, 
-        { signal: signal }
-        )
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setAccounts(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
-    return function cleanup(){
-      abortController.abort();
-    }
-  },[accountSearchString, token])
+    accountapi
+      .searchAccounts(signal, accountSearchString)
+      .then((data) => setAccounts(data))
+      .catch((err) => console.log(err));
+    return function cleanup() {
+        abortController.abort();
+      };
+  },[accountSearchString])
 
   return (
     <React.Fragment>

@@ -83,13 +83,18 @@ export default function CustomerIndexComp(props){
   }
   //datafetch
   React.useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     if (customerSearch) {
       customerapi
-        .searchCustomers(customerSearch)
+        .searchCustomers(signal, customerSearch)
         .then((response) => setRowData(response));
     } else {
-      customerapi.getCustomers().then((response) => setRowData(response));
+      customerapi.getCustomers(signal).then((response) => setRowData(response));
     }
+    return function cleanup() {
+      abortController.abort();
+    };
   }, [customerSearch]);
   //return component
   return (

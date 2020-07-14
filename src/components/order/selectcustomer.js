@@ -7,9 +7,8 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper"
 import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
-import { BASE_URL } from "../../constants";
-import Cookies from "js-cookie";
 import { makeStyles } from "@material-ui/core/styles";
+
 import CustomerApi from "../../api/customer";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,10 +51,15 @@ export default function SelectCustomer(props){
   //search hook
   //datafetch
   React.useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     customerapi
-      .searchCustomers(customerSearch)
+      .searchCustomers(signal, customerSearch)
       .then((data) => setCustomers(data))
       .catch((err) => console.log(err));
+    return function cleanup() {
+      abortController.abort();
+    };
   }, [customerSearch]);
   return (
     <React.Fragment>
