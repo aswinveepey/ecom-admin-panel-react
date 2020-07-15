@@ -134,8 +134,6 @@ export default function ProductIndexComp(props){
   const [productDetailOpen, setProductDetailOpen] = React.useState(false);
   const [productDetailData, setProductDetailData] = React.useState([])
   const [productSearch, setProductSearch] = React.useState("");
-  // const [loading, setLoading] = React.useState(true);
-  const productApi = new ProductApi();
 
   //open Product Detail
   const openProductDetail = (data) => {
@@ -154,6 +152,7 @@ export default function ProductIndexComp(props){
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
+    const productApi = new ProductApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(productSearch){

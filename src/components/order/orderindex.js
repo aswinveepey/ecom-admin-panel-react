@@ -124,7 +124,6 @@ function ExpandableRow(props) {
 }
 export default function OrderIndexComp(props) {
   const classes = useStyles();
-  const orderApi = new OrderApi();
   const [rowData, setRowData] = React.useState([]);
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
@@ -149,6 +148,7 @@ export default function OrderIndexComp(props) {
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
+    const orderApi = new OrderApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(orderSearch){

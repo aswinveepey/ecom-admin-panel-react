@@ -22,13 +22,13 @@ import RoleApi from "../../api/role"
 import TerritoryApi from "../../api/territory"
 import DivisionApi from "../../api/division"
 
-export default function UserDetailComp(props) {
-  const userApi = new UserApi()
-  const roleApi = new RoleApi()
-  const territoryApi = new TerritoryApi()
-  const divisionApi = new DivisionApi()
+const userApi = new UserApi();
+const roleApi = new RoleApi();
+const territoryApi = new TerritoryApi();
+const divisionApi = new DivisionApi();
 
-  const userId = props.userId
+export default function UserDetailComp(props) {
+
   const [editTogggle, setEditToggle] = React.useState(false)
   const [roles, setRoles] = React.useState([])
   const [territories, setTerritories] = React.useState([])
@@ -40,7 +40,7 @@ export default function UserDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     userApi
-      .getOneUser(signal, userId)
+      .getOneUser(signal, props.userId)
       .then((data) => setFormControls(data))
       .catch((err) => console.log(err));
     roleApi

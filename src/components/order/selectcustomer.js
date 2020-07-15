@@ -28,11 +28,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const customerapi = new CustomerApi();
+
 export default function SelectCustomer(props){
   const classes = useStyles();
   const [customerSearch, setCustomerSearch] = React.useState("")
   const [customers, setCustomers] = React.useState([])
-  const customerapi = new CustomerApi();
 
   //handle close propogation
   const handleClose = () => {

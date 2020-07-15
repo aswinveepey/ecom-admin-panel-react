@@ -11,9 +11,9 @@ import Paper from "@material-ui/core/Paper";
 import UserApi from "../../api/user";
 
 const cardElevation = 0
+const userApi = new UserApi();
 
 export default function UserCardList(props) {
-  const userApi = new UserApi();
   const [userData, setUserData] = React.useState([]);
   const [fetchStatus, setFetchStatus] = React.useState("loading");
   const [selectedId, setSelectedId] = React.useState();

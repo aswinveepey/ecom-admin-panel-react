@@ -11,7 +11,6 @@ export default function DivisionIndexComp(params) {
   const [dialogData, setDialogData] = React.useState([]);
   const [divisionSearch, setDivisionSearch] = React.useState("");
 
-  const divisionApi = new DivisionApi();
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
@@ -63,6 +62,7 @@ export default function DivisionIndexComp(params) {
   }
   //datafetch
   React.useEffect(() => {
+    const divisionApi = new DivisionApi();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;

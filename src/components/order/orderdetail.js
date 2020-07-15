@@ -47,9 +47,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const orderApi = new OrderApi();
+
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-  const orderApi = new OrderApi();
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);

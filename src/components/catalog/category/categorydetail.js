@@ -64,10 +64,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const categoryApi = new CategoryApi();
+
 export default function CategoryDetailComp(props) {
   const classes = useStyles();
 
-  const categoryApi = new CategoryApi();
   const [formControls, setFormControls] = React.useState([]);
   const [parentSearchString, setParentSearchString] = React.useState("");
   const [categories, setCategories] = React.useState([]);

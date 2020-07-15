@@ -5,13 +5,13 @@ import CategoryApi from "../../../api/category"
 const DataTableComp = React.lazy(() => import("../../common/datatable"));
 const CategoryDetailComp = React.lazy(() => import("./categorydetail"));
 
+const categoryApi = new CategoryApi();
+
 export default function CategoryIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [categorySearch, setCategorySearch] = React.useState("");
-
-  const categoryApi = new CategoryApi();
 
   const gridData = {
     gridOptions: {

@@ -88,11 +88,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const productApi = new ProductApi();
+const categoryApi = new CategoryApi();
+const brandApi = new BrandApi();
+
 export default function ProductDetailComp(props) {
   const classes = useStyles();
-  const productApi = new ProductApi()
-  const categoryApi = new CategoryApi()
-  const brandApi = new BrandApi()
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);

@@ -84,10 +84,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const skuApi = new SkuApi()
+const territoryApi = new TerritoryApi()
+
 export default function SkuDetailComp(props) {
   const classes = useStyles();
-  const skuApi = new SkuApi()
-  const territoryApi = new TerritoryApi()
   const [territorySearchString, setTerritorySearchString] = React.useState("");
   const [territories, setTerritories] = React.useState([]);
   const [skuId, setSkuId] = React.useState("");

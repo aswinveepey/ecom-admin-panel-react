@@ -3,13 +3,13 @@ import CustomerDetailComp from "./customerdetail";
 import DataTableComp from '../common/datatable'
 import CustomerApi from "../../api/customer";
 
+const customerapi = new CustomerApi();
 
 export default function CustomerIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [customerSearch, setCustomerSearch] = React.useState("");
-  const customerapi = new CustomerApi();
 
   const gridData = {
     gridOptions: {

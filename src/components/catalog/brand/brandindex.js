@@ -5,13 +5,13 @@ import BrandApi from "../../../api/brand"
 const DataTableComp = React.lazy(() => import("../../common/datatable"));
 const BrandDetailComp = React.lazy(() => import("./branddetail"));
 
+const brandApi = new BrandApi();
+
 export default function BrandIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
   const [brandSearch, setBrandSearch] = React.useState("");
-
-  const brandApi = new BrandApi();
 
   const gridData = {
     gridOptions: {

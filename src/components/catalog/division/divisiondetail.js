@@ -63,10 +63,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const divisionApi = new DivisionApi();
+const categoryApi = new CategoryApi();
+
 export default function DivisionDetailComp(props) {
   const classes = useStyles();
-  const divisionApi = new DivisionApi();
-  const categoryApi = new CategoryApi();
 
   const [formControls, setFormControls] = React.useState([]);
   const [categorySearchString, setCategorySearchString] = React.useState("");

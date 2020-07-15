@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomerDetailComp(props){
+const customerapi = new CustomerApi();
+const accountapi = new AccountApi();
 
+export default function CustomerDetailComp(props){
   const classes = useStyles();
-  const customerapi = new CustomerApi();
-  const accountapi = new AccountApi();
 
   const [formControls, setFormControls] = React.useState([]);
   const [accounts, setAccounts] = React.useState([]);

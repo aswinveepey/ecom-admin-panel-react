@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const customerApi = new CustomerAPI();
+
 export default function AddressSelectComp(props){
   const classes = useStyles();
   const [addresses, setAddresses] = React.useState([])
-
-  const customerApi = new CustomerAPI();
 
   const handleClose = ()=>{
     props.handleClose()

@@ -11,8 +11,6 @@ export default function AccountIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const [accountSearch, setAccountSearch] = React.useState("");
 
-  const accountApi = new AccountApi()
-
 
   const gridData = {
     gridOptions: {
@@ -82,6 +80,7 @@ export default function AccountIndexComp(props) {
   }
   //datafetch
   React.useEffect(() => {
+    const accountApi = new AccountApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
 

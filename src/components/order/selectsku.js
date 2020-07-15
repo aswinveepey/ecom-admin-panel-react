@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "1%",
   },
 }));
+const skuApi = new SkuApi();
 
 export default function SelectSKU(props) {
   const classes = useStyles();
   const [skuSearch, setSkuSearch] = React.useState("");
   const [skus, setSkus] = React.useState([]);
-  const skuApi = new SkuApi();
 
   //handle close propogation
   const handleClose = () => {
