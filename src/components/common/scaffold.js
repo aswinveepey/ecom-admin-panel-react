@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer"
 import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 import CloseIcon from "@material-ui/icons/Close";
 //Material Icon Imports
 import MenuIcon from "@material-ui/icons/Menu";
@@ -65,8 +66,8 @@ export default function Scaffold(props) {
     setOpen(!open);
   }
   const handleSnackBarClose = ()=>{
-    setSnackBarOpen(false)
     setError("");
+    setSnackBarOpen(false)
   }
   React.useEffect(()=>{
     error && setSnackBarOpen(true)
@@ -117,20 +118,19 @@ export default function Scaffold(props) {
         open={snackBarOpen}
         autoHideDuration={10000}
         onClose={handleSnackBarClose}
-        message={error}
-        action={
-          <React.Fragment>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleSnackBarClose}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
+      >
+        <React.Fragment>
+          <Alert severity="error">{error}</Alert>
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleSnackBarClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </React.Fragment>
+      </Snackbar>
     </div>
   );
 }
