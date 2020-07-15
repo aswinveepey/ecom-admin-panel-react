@@ -15,7 +15,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 //styles import
 import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
-import { APIErrorContext } from "../../providers/apierrorprovider";
+import useAPIError from "../../hooks/useapierror";
+import useAPISuccess from "../../hooks/useapisuccess";
 import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
 
@@ -58,20 +59,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Scaffold(props) {
   const classes = useStyles();
-  const { error, setError } = React.useContext(APIErrorContext);
+  const { error, setError } = useAPIError();
+  const { success, setSuccess } = useAPISuccess();
   const [open, setOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
+
   const handleDrawerToggle = ()=>{
     setOpen(!open);
   }
   const handleSnackBarClose = ()=>{
-    setError("");
-    setSnackBarOpen(false)
+    setError({});
+    setSuccess({})
+    setSnackBarOpen(false);
   }
   React.useEffect(()=>{
-    error && setSnackBarOpen(true)
-  },[error])
+    if(error || success){
+      setSnackBarOpen(true);
+    }
+  },[error, success])
+
   React.useEffect(() => {
     if (props.search === false) {
       setSearch(false);
@@ -120,7 +127,8 @@ export default function Scaffold(props) {
         onClose={handleSnackBarClose}
       >
         <React.Fragment>
-          <Alert severity="error">{error}</Alert>
+          {error && (<Alert severity="error">{error?.message}</Alert>)}
+          {success && (<Alert severity="success">{success?.message}</Alert>)}
           <IconButton
             size="small"
             aria-label="close"

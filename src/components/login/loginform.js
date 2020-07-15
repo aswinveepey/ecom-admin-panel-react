@@ -1,7 +1,5 @@
 import React from 'react'
-
 import Cookies from "js-cookie";
-
 import Grid from '@material-ui/core/Grid'
 import Typography from "@material-ui/core/Typography"
 import TextField from "@material-ui/core/TextField"
@@ -9,8 +7,9 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
-
 import { useHistory } from "react-router";
+import useAPIError from "../../hooks/useapierror";
+import useAPISuccess from "../../hooks/useapisuccess";
 //Constants Import
 import AuthApi from "../../api/auth"
 
@@ -42,6 +41,8 @@ export default function LoginFormComp(props){
   const [usernameError, setUsernameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const [submitprogress, setSubmitprogress] = React.useState(false);
+  const { setError } = useAPIError();
+  const { setSuccess } = useAPISuccess();
 
   //handle username change
   const handleUsernameChange = (event)=>{
@@ -64,14 +65,15 @@ export default function LoginFormComp(props){
     const reqBody = { username: username, password: password };
     authApi.authenticate(signal, reqBody)
       .then((data) => {
+        setSuccess({message:"Authenticated"});
           try {
             Cookies.set("token", data, { expires: 30 });
           } catch (error) {
-            console.log("Unable to set cookie");
+            setError({message:"Unable to set cookie"});
           }
           history && history.push("/home");
       })
-      .catch((error) => console.log(error));
+      .catch((error) => setError(error));
 
     return function cleanup() {
       abortController.abort();

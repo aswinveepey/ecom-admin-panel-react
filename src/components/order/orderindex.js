@@ -1,7 +1,7 @@
 import React from "react";
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
-import { APIErrorContext } from "../../providers/apierrorprovider";
+import useAPIError from "../../hooks/useapierror"
 
 //import order api class
 import OrderApi from "../../api/order";
@@ -129,7 +129,7 @@ export default function OrderIndexComp(props) {
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
-  const { error, setError } = React.useContext(APIErrorContext);
+  const { setError } = useAPIError();
 
   //open Order Detail
   const openOrderDetail = (detailData) => {
@@ -158,14 +158,14 @@ export default function OrderIndexComp(props) {
         .searchOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
-          setError(err.message || "")
+          setError(err || {})
         });
     } else {
       orderApi
         .getOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
-          setError(err.message || "")
+          setError(err || {})
         });
     }
     return function cleanup() {

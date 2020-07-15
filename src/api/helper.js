@@ -21,7 +21,8 @@ export default class ApiHelper{
     if (status === 200) {
       return responseData.data;
     }
-    if (responseData.message) throw new Error(responseData.message);
+    throw new Error(responseData.message);
+    // setError(responseData.message);
   }
   post = async (signal, reqUrl, reqBody)=>{
     const requestOptions = {
@@ -36,6 +37,6 @@ export default class ApiHelper{
     if (status === 200) {
       return responseData.data;
     }
-    if(responseData.message) throw new Error(responseData.message)
+    throw new Error(responseData.message);
   }
 }
