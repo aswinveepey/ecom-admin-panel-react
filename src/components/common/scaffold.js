@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Scaffold(props) {
   const classes = useStyles();
-  const { error } = React.useContext(APIErrorContext);
+  const { error, setError } = React.useContext(APIErrorContext);
   const [open, setOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
@@ -66,10 +66,10 @@ export default function Scaffold(props) {
   }
   const handleSnackBarClose = ()=>{
     setSnackBarOpen(false)
+    setError("");
   }
   React.useEffect(()=>{
-    console.log(error)
-    setSnackBarOpen(true)
+    error && setSnackBarOpen(true)
   },[error])
   React.useEffect(() => {
     if (props.search === false) {
