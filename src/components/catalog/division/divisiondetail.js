@@ -272,7 +272,6 @@ export default function DivisionDetailComp(props) {
                     name="_id"
                     variant="standard"
                     fullWidth
-                    // onChange={(event) => onchangeCategoryInput(event)}
                   />
                 </Grid>
               )}

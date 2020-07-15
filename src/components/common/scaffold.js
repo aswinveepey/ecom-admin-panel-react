@@ -67,12 +67,12 @@ export default function Scaffold(props) {
     setOpen(!open);
   }
   const handleSnackBarClose = ()=>{
-    setError({});
-    setSuccess({})
+    setError(null);
+    setSuccess(null)
     setSnackBarOpen(false);
   }
   React.useEffect(()=>{
-    if(error || success){
+    if(error|| success){
       setSnackBarOpen(true);
     }
   },[error, success])

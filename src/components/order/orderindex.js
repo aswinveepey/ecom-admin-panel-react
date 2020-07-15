@@ -1,6 +1,7 @@
 import React from "react";
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
+//api feedback hook
 import useAPIFeedback from "../../hooks/useapifeedback";
 
 //import order api class
@@ -158,14 +159,14 @@ export default function OrderIndexComp(props) {
         .searchOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
-          setError(err || {})
+          setError(err)
         });
     } else {
       orderApi
         .getOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
-          setError(err || {})
+          setError(err)
         });
     }
     return function cleanup() {
