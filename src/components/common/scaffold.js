@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Paper from "@material-ui/core/Paper";
 //Material ui core imports
 import AppBar from "@material-ui/core/AppBar";
@@ -7,11 +7,14 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer"
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 //Material Icon Imports
 import MenuIcon from "@material-ui/icons/Menu";
 //styles import
 import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
+import { APIErrorContext } from "../../providers/apierrorprovider";
 import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
 
@@ -54,11 +57,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Scaffold(props) {
   const classes = useStyles();
+  const { error } = React.useContext(APIErrorContext);
   const [open, setOpen] = React.useState(false);
+  const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
   const handleDrawerToggle = ()=>{
     setOpen(!open);
   }
+  const handleSnackBarClose = ()=>{
+    setSnackBarOpen(false)
+  }
+  React.useEffect(()=>{
+    console.log(error)
+    setSnackBarOpen(true)
+  },[error])
   React.useEffect(() => {
     if (props.search === false) {
       setSearch(false);
@@ -91,12 +103,34 @@ export default function Scaffold(props) {
           anchor="left"
           onClose={handleDrawerToggle}
         >
-          <DrawerComp handleDrawerToggle={handleDrawerToggle}/>
+          <DrawerComp handleDrawerToggle={handleDrawerToggle} />
         </Drawer>
       </nav>
       <main className={classes.content}>
         <Paper className={classes.raisedpaper}>{props.children}</Paper>
       </main>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={snackBarOpen}
+        autoHideDuration={10000}
+        onClose={handleSnackBarClose}
+        message={error}
+        action={
+          <React.Fragment>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackBarClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import { BASE_URL } from "../constants";
 import Cookies from "js-cookie";
 
-
 export default class ApiHelper{
   constructor(){
     this.headers = {
@@ -22,6 +21,7 @@ export default class ApiHelper{
     if (status === 200) {
       return responseData.data;
     }
+    if (responseData.message) throw new Error(responseData.message);
   }
   post = async (signal, reqUrl, reqBody)=>{
     const requestOptions = {
@@ -36,5 +36,6 @@ export default class ApiHelper{
     if (status === 200) {
       return responseData.data;
     }
+    if(responseData.message) throw new Error(responseData.message)
   }
 }
