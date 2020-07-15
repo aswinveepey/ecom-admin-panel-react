@@ -96,9 +96,9 @@ export default function ProductDetailComp(props) {
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
-  const [categorySearchString, setCategorySearchString] = React.useState([]);
+  const [categorySearchString, setCategorySearchString] = React.useState("");
   const [categories, setCategories] = React.useState([]);
-  const [brandSearchString, setBrandSearchString] = React.useState([]);
+  const [brandSearchString, setBrandSearchString] = React.useState("");
   const [brands, setBrands] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);

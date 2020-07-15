@@ -88,7 +88,7 @@ export default function SkuDetailComp(props) {
   const classes = useStyles();
   const skuApi = new SkuApi()
   const territoryApi = new TerritoryApi()
-  const [territorySearchString, setTerritorySearchString] = React.useState([]);
+  const [territorySearchString, setTerritorySearchString] = React.useState("");
   const [territories, setTerritories] = React.useState([]);
   const [skuId, setSkuId] = React.useState("");
 
@@ -290,7 +290,8 @@ export default function SkuDetailComp(props) {
     //set request options
     territoryApi
       .searchTerritories(signal, territorySearchString)
-      .then((data) => setTerritories(data).catch((err) => console.log(err)));
+      .then((data) => setTerritories(data))
+      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
