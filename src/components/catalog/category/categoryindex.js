@@ -1,9 +1,9 @@
-import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
-import DataTableComp from "../../common/datatable";
-import CategoryDetailComp from "./categorydetail";
+import React, {Suspense} from "react";
+//api import
+import CategoryApi from "../../../api/category"
+
+const DataTableComp = React.lazy(() => import("../../common/datatable"));
+const CategoryDetailComp = React.lazy(() => import("./categorydetail"));
 
 export default function CategoryIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
@@ -11,7 +11,8 @@ export default function CategoryIndexComp(params) {
   const [dialogData, setDialogData] = React.useState([]);
   const [categorySearch, setCategorySearch] = React.useState("");
 
-  const token = Cookies.get("token");
+  const categoryApi = new CategoryApi();
+
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
@@ -67,58 +68,41 @@ export default function CategoryIndexComp(params) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
     if(categorySearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: categorySearch }),
-      };
-      fetchurl = BASE_URL + "category/search"
+      categoryApi
+        .searchCategories(signal, categorySearch)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "category";
+      categoryApi
+        .getCategories(signal)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, categorySearch]);
+  }, [categorySearch]);
   //return component
   return (
     <React.Fragment>
-      <DataTableComp
-        title="Category"
-        handleRowDoubleClick={handleRowDoubleClick}
-        handleNewClick={handleNewClick}
-        gridData={gridData}
-        rowData={rowData}
-        onchangeSearchInput={onchangeSearchInput}
-      />
-      <CategoryDetailComp
-        handleDialogClose={handleDialogClose}
-        open={openDialog}
-        data={dialogData}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <DataTableComp
+          title="Category"
+          handleRowDoubleClick={handleRowDoubleClick}
+          handleNewClick={handleNewClick}
+          gridData={gridData}
+          rowData={rowData}
+          onchangeSearchInput={onchangeSearchInput}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <CategoryDetailComp
+          handleDialogClose={handleDialogClose}
+          open={openDialog}
+          data={dialogData}
+        />
+      </Suspense>
     </React.Fragment>
   ); 
 }

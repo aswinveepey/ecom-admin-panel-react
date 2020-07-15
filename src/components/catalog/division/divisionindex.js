@@ -1,9 +1,9 @@
-import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
-import DataTableComp from "../../common/datatable";
-import DivisionDetailComp from "./divisiondetail";
+import React, { Suspense } from "react";
+//api import
+import DivisionApi from "../../../api/division"
+
+const DataTableComp = React.lazy(() => import("../../common/datatable"));
+const DivisionDetailComp = React.lazy(()=>import("./divisiondetail"))
 
 export default function DivisionIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
@@ -11,7 +11,7 @@ export default function DivisionIndexComp(params) {
   const [dialogData, setDialogData] = React.useState([]);
   const [divisionSearch, setDivisionSearch] = React.useState("");
 
-  const token = Cookies.get("token");
+  const divisionApi = new DivisionApi();
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
@@ -66,58 +66,41 @@ export default function DivisionIndexComp(params) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
     if(divisionSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: divisionSearch }),
-      };
-      fetchurl = BASE_URL + "division/search"
+      divisionApi
+        .searchDivisions(signal, divisionSearch)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "division";
+      divisionApi
+        .getDivisions(signal)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, divisionSearch]);
+  }, [divisionSearch]);
   //return component
   return (
     <React.Fragment>
-      <DataTableComp
-        title="Division"
-        handleRowDoubleClick={handleRowDoubleClick}
-        handleNewClick={handleNewClick}
-        gridData={gridData}
-        rowData={rowData}
-        onchangeSearchInput={onchangeSearchInput}
-      />
-      <DivisionDetailComp
-        handleDialogClose={handleDialogClose}
-        open={openDialog}
-        data={dialogData}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <DataTableComp
+          title="Division"
+          handleRowDoubleClick={handleRowDoubleClick}
+          handleNewClick={handleNewClick}
+          gridData={gridData}
+          rowData={rowData}
+          onchangeSearchInput={onchangeSearchInput}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <DivisionDetailComp
+          handleDialogClose={handleDialogClose}
+          open={openDialog}
+          data={dialogData}
+        />
+      </Suspense>
     </React.Fragment>
   );
 }

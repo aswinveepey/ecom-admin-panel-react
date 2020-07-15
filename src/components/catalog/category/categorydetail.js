@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 //Core Elements - Material UI
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -15,13 +15,13 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import MultiAttributeComp from "../../common/multiattribute";
-import ImageUploadComp from "../../common/imageupload"
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
+//api import
+import CategoryApi from "../../../api/category"
+
+const MultiAttributeComp = React.lazy(()=>import("../../common/multiattribute"))
+const ImageUploadComp = React.lazy(() => import("../../common/imageupload"));
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -67,9 +67,9 @@ const useStyles = makeStyles((theme) => ({
 export default function CategoryDetailComp(props) {
   const classes = useStyles();
 
-  const token = Cookies.get("token");
+  const categoryApi = new CategoryApi();
   const [formControls, setFormControls] = React.useState([]);
-  const [parentSearchString, setParentSearchString] = React.useState([]);
+  const [parentSearchString, setParentSearchString] = React.useState("");
   const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
@@ -99,33 +99,17 @@ export default function CategoryDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls._id
-      ? "category/id/" + formControls._id
-      : "category/";
-    //POST category data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200 || status === 201) {
-          handleClose();
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      });
+    if(formControls._id){
+      categoryApi
+        .updateCategory(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      categoryApi
+        .createCategory(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };
@@ -212,29 +196,15 @@ export default function CategoryDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: parentSearchString }),
-    };
-    //fetch data and set data
-    if (parentSearchString.length > 2) {
-      fetch(BASE_URL + "category/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setCategories(response.data);
-        })
+    parentSearchString &&
+      categoryApi
+        .searchCategories(signal, parentSearchString)
+        .then((data) => setCategories(data))
         .catch((err) => console.log(err));
-    }
     return function cleanup() {
       abortController.abort();
     };
-  }, [parentSearchString, token]);
+  }, [parentSearchString]);
 
   return (
     <React.Fragment>
@@ -338,7 +308,6 @@ export default function CategoryDetailComp(props) {
                     name="_id"
                     variant="standard"
                     fullWidth
-                    // onChange={(event) => onchangeCategoryInput(event)}
                   />
                 </Grid>
               )}
@@ -350,7 +319,7 @@ export default function CategoryDetailComp(props) {
                   variant="standard"
                   required
                   fullWidth
-                  onChange={(event) => onchangeCategoryInput(event)}
+                  onChange={onchangeCategoryInput}
                 />
               </Grid>
               {/* Parent select */}
@@ -373,22 +342,24 @@ export default function CategoryDetailComp(props) {
                       name="parent"
                       variant="standard"
                       fullWidth
-                      onChange={(event) => onChangeParentSearch(event)}
+                      onChange={onChangeParentSearch}
                     />
                   )}
                 />
               </Grid>
               <Grid item>
                 {/* filterattributes */}
-                <MultiAttributeComp
-                  data={formControls.filterattributes}
-                  label="FilterAttributes"
-                  onchangeAttributeName={onchangeFilterAttributeName}
-                  onAttributeAdd={onFilterAttributeAdd}
-                  onAttributeDelete={onFilterAttributeDelete}
-                  handleAttrValueDelete={handleAttrValueDelete}
-                  handleAttrValueAdd={handleAttrValueAdd}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MultiAttributeComp
+                    data={formControls.filterattributes}
+                    label="FilterAttributes"
+                    onchangeAttributeName={onchangeFilterAttributeName}
+                    onAttributeAdd={onFilterAttributeAdd}
+                    onAttributeDelete={onFilterAttributeDelete}
+                    handleAttrValueDelete={handleAttrValueDelete}
+                    handleAttrValueAdd={handleAttrValueAdd}
+                  />
+                </Suspense>
               </Grid>
             </Grid>
           </DialogContent>
@@ -402,18 +373,22 @@ export default function CategoryDetailComp(props) {
           </DialogActions>
         </form>
       </Dialog>
-      <ImageUploadComp
-        open={openImageUpload}
-        handleDialogClose={handleImageUploadClose}
-        handleImageChange={handleImageChange}
-        keyPath="category/"
-      />
-      <ImageUploadComp
-        open={openThumbnailUpload}
-        handleDialogClose={handleThumbnailUploadClose}
-        handleImageChange={handleThumbnailChange}
-        keyPath="category/thumbnail/"
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
+          open={openImageUpload}
+          handleDialogClose={handleImageUploadClose}
+          handleImageChange={handleImageChange}
+          keyPath="category/"
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
+          open={openThumbnailUpload}
+          handleDialogClose={handleThumbnailUploadClose}
+          handleImageChange={handleThumbnailChange}
+          keyPath="category/thumbnail/"
+        />
+      </Suspense>
     </React.Fragment>
   );
 }

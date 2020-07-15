@@ -1,5 +1,4 @@
-import React from "react";
-import Cookies from "js-cookie";
+import React, {Suspense} from "react";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -20,13 +19,16 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
-//Constants Import
-import { BASE_URL } from "../../../constants";
+//api import
+import ProductApi from "../../../api/product"
+import CategoryApi from "../../../api/category"
+import BrandApi from "../../../api/brand"
 //Component import
-import SkuIndexComp from "./skuindex";
-import SingleAttributeComp from "../../common/singleattribute";
-import MultiAttributeComp from "../../common/multiattribute";
-import ImageUploadComp from "../../common/imageupload";
+const SkuIndexComp = React.lazy(() => import("./skuindex"));
+const SingleAttributeComp = React.lazy(() => import("../../common/singleattribute"));
+const MultiAttributeComp = React.lazy(() => import("../../common/multiattribute"));
+const ImageUploadComp = React.lazy(() => import("../../common/imageupload"))
+
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -88,7 +90,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function ProductDetailComp(props) {
   const classes = useStyles();
-  const token = Cookies.get("token");
+  const productApi = new ProductApi()
+  const categoryApi = new CategoryApi()
+  const brandApi = new BrandApi()
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
@@ -290,31 +294,17 @@ export default function ProductDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls._id
-      ? "product/id/" + formControls._id
-      : "product/";
-    //POST category data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200) {
-          handleClose();
-        }
-      })
-      .catch((err) => console.log(err));
+    if(formControls._id){
+      productApi
+        .updateProduct(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      productApi
+        .createProduct(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };
@@ -325,58 +315,28 @@ export default function ProductDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: categorySearchString }),
-    };
-    //fetch data and set data
-    if (categorySearchString.length > 2) {
-      fetch(BASE_URL + "category/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setCategories(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
+    categoryApi
+      .searchCategories(signal, categorySearchString)
+      .then((data) => setCategories(data))
+      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [categorySearchString, token]);
+  }, [categorySearchString]);
 
   //get brand from search string
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: brandSearchString }),
-    };
-    //fetch data and set data
-    if (brandSearchString.length > 2) {
-      fetch(BASE_URL + "brand/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setBrands(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
+    brandApi
+      .searchBrands(signal, brandSearchString)
+      .then((data) => setBrands(data))
+      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [brandSearchString, token]);
+  }, [brandSearchString]);
 
   return (
     <React.Fragment>
@@ -398,10 +358,7 @@ export default function ProductDetailComp(props) {
             >
               <CloseIcon />
             </IconButton>
-            <Typography
-              variant="subtitle1"
-              className={classes.title}
-            >
+            <Typography variant="subtitle1" className={classes.title}>
               {formControls?.name || "Add Product"}
             </Typography>
             <Button autoFocus color="inherit" onClick={handleSubmit}>
@@ -603,26 +560,30 @@ export default function ProductDetailComp(props) {
                     <Typography variant="subtitle2" gutterBottom>
                       Set values for category filter
                     </Typography>
-                    <SingleAttributeComp
-                      data={formControls.attributes}
-                      // label="Attributes"
-                      onchangeAttribute={onchangeAttribute}
-                      onAttributeAdd={onAttributeAdd}
-                      onAttributeDelete={onAttributeDelete}
-                    />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <SingleAttributeComp
+                        data={formControls.attributes}
+                        // label="Attributes"
+                        onchangeAttribute={onchangeAttribute}
+                        onAttributeAdd={onAttributeAdd}
+                        onAttributeDelete={onAttributeDelete}
+                      />
+                    </Suspense>
                     <Typography variant="h6">SKU Filter Attributes</Typography>
                     <Typography variant="subtitle2" gutterBottom>
                       Set the attributes & values for sku selection
                     </Typography>
-                    <MultiAttributeComp
-                      data={formControls.variantattributes}
-                      // label="FilterAttributes"
-                      onchangeAttributeName={onchangeVariantAttribute}
-                      onAttributeAdd={onVariantAttributeAdd}
-                      onAttributeDelete={onVariantAttributeDelete}
-                      handleAttrValueDelete={handleVariantAttrValueDelete}
-                      handleAttrValueAdd={handleVariantAttrValueAdd}
-                    />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <MultiAttributeComp
+                        data={formControls.variantattributes}
+                        // label="FilterAttributes"
+                        onchangeAttributeName={onchangeVariantAttribute}
+                        onAttributeAdd={onVariantAttributeAdd}
+                        onAttributeDelete={onVariantAttributeDelete}
+                        handleAttrValueDelete={handleVariantAttrValueDelete}
+                        handleAttrValueAdd={handleVariantAttrValueAdd}
+                      />
+                    </Suspense>
                   </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -725,12 +686,12 @@ export default function ProductDetailComp(props) {
               <Typography variant="subtitle1" gutterBottom component="div">
                 SKUs
               </Typography>
-              {formControls.skus && (
+              <Suspense fallback={<div>Loading...</div>}>
                 <SkuIndexComp
-                  data={formControls.skus}
-                  product_id={formControls._id}
+                  data={formControls?.skus}
+                  product_id={formControls?._id}
                 />
-              )}
+              </Suspense>
             </Paper>
           </Grid>
         </Grid>
@@ -738,18 +699,22 @@ export default function ProductDetailComp(props) {
         {/* </Grid> */}
       </Dialog>
       {/* Image upload component on click */}
-      <ImageUploadComp
-        open={openImageUpload}
-        handleDialogClose={handleImageUploadClose}
-        handleImageChange={handleImageChange}
-        keyPath="product/"
-      />
-      <ImageUploadComp
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
+          open={openImageUpload}
+          handleDialogClose={handleImageUploadClose}
+          handleImageChange={handleImageChange}
+          keyPath="product/"
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
         open={openThumbnailUpload}
         handleDialogClose={handleThumbnailUploadClose}
         handleImageChange={handleThumbnailChange}
         keyPath="product/thumbnail/"
       />
+      </Suspense>
     </React.Fragment>
   );
 }

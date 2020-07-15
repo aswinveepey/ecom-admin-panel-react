@@ -18,9 +18,9 @@ import CardActions from "@material-ui/core/CardActions";
 import ImageUploadComp from "../../common/imageupload";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
+//api import
+import DivisionApi from "../../../api/division"
+import CategoryApi from "../../../api/category"
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -65,10 +65,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DivisionDetailComp(props) {
   const classes = useStyles();
+  const divisionApi = new DivisionApi();
+  const categoryApi = new CategoryApi();
 
-  const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
-  const [categorySearchString, setCategorySearchString] = React.useState([]);
+  const [categorySearchString, setCategorySearchString] = React.useState("");
   const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
@@ -98,33 +99,17 @@ export default function DivisionDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls._id
-      ? "division/id/" + formControls._id
-      : "division/";
-    //POST division data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200 || status === 201) {
-          handleClose();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if(formControls._id){
+      divisionApi
+        .updateDivision(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      divisionApi
+        .createDivision(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };
@@ -174,29 +159,14 @@ export default function DivisionDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: categorySearchString }),
-    };
-    //fetch data and set data
-    if (categorySearchString.length > 2) {
-      fetch(BASE_URL + "division/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setCategories(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
+    categoryApi
+      .searchCategories(signal, categorySearchString)
+      .then((data) => setCategories(data))
+      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [categorySearchString, token]);
+  }, [categorySearchString]);
 
   return (
     <React.Fragment>

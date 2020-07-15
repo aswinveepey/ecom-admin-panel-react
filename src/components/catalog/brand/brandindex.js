@@ -1,9 +1,9 @@
-import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
-import DataTableComp from "../../common/datatable";
-import BrandDetailComp from "./branddetail";
+import React, {Suspense} from "react";
+//api import
+import BrandApi from "../../../api/brand"
+
+const DataTableComp = React.lazy(() => import("../../common/datatable"));
+const BrandDetailComp = React.lazy(() => import("./branddetail"));
 
 export default function BrandIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
@@ -11,7 +11,8 @@ export default function BrandIndexComp(params) {
   const [dialogData, setDialogData] = React.useState([]);
   const [brandSearch, setBrandSearch] = React.useState("");
 
-  const token = Cookies.get("token");
+  const brandApi = new BrandApi();
+
   const gridData = {
     gridOptions: {
       rowSelection: "multiple",
@@ -54,74 +55,57 @@ export default function BrandIndexComp(params) {
     setOpenDialog(true);
   }
   //new account
-  function handleNewClick() {
-    setDialogData([]);
+  const handleNewClick = ()=>{
     setOpenDialog(true);
   }
-  function handleDialogClose() {
+  const handleDialogClose = () => {
     setOpenDialog(false);
   }
   //handle search input
-  function onchangeSearchInput(event){
-    setBrandSearch(event.target.value)
+  const onchangeSearchInput = (event)=>{
+    const value = event.target.value
+    setBrandSearch(value)
   }
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
     if(brandSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: brandSearch }),
-      };
-      fetchurl = BASE_URL + "brand/search"
+      brandApi
+        .searchBrands(signal, brandSearch)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "brand";
+      brandApi
+        .getBrands(signal)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, brandSearch]);
+  }, [brandSearch]);
   //return component
   return (
     <React.Fragment>
-      <DataTableComp
-        title="Brand"
-        handleRowDoubleClick={handleRowDoubleClick}
-        handleNewClick={handleNewClick}
-        gridData={gridData}
-        rowData={rowData}
-        onchangeSearchInput={onchangeSearchInput}
-      />
-      <BrandDetailComp
-        handleDialogClose={handleDialogClose}
-        open={openDialog}
-        data={dialogData}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <DataTableComp
+          title="Brand"
+          handleRowDoubleClick={handleRowDoubleClick}
+          handleNewClick={handleNewClick}
+          gridData={gridData}
+          rowData={rowData}
+          onchangeSearchInput={onchangeSearchInput}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <BrandDetailComp
+          handleDialogClose={handleDialogClose}
+          open={openDialog}
+          data={dialogData}
+        />
+      </Suspense>
     </React.Fragment>
   );
 }

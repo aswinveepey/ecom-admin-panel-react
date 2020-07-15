@@ -1,7 +1,4 @@
 import React from 'react'
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
 import SkuIndexComp from "./skuindex"
 import ProductDetailComp from "./productdetail"
 //<aterial UI
@@ -20,13 +17,13 @@ import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
-
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import SearchIcon from "@material-ui/icons/Search";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
+import ProductApi from "../../../api/product"
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -138,7 +135,7 @@ export default function ProductIndexComp(props){
   const [productDetailData, setProductDetailData] = React.useState([])
   const [productSearch, setProductSearch] = React.useState("");
   // const [loading, setLoading] = React.useState(true);
-  const token = Cookies.get("token");
+  const productApi = new ProductApi();
 
   //open Product Detail
   const openProductDetail = (data) => {
@@ -159,42 +156,21 @@ export default function ProductIndexComp(props){
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
     if(productSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: productSearch }),
-      };
-      fetchurl = BASE_URL + "product/search"
+      productApi
+        .searchProducts(signal, productSearch)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "product";
+      productApi
+        .getProducts(signal)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, productSearch]);
+  }, [productSearch]);
 
   return (
     <React.Fragment>

@@ -8,6 +8,10 @@ export default class SkuApi {
   getSkus = async (signal) => {
     return await this.apiHelper.get(signal, "sku");
   };
+  //get one sku
+  getOneSku = async (signal, skuId) => {
+    return await this.apiHelper.get(signal, "sku/id/"+skuId);
+  };
   //serach all skus
   searchSkus = async (signal, param) => {
     const reqBody = JSON.stringify({ searchString: param });
