@@ -8,8 +8,7 @@ import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
-import useAPIError from "../../hooks/useapierror";
-import useAPISuccess from "../../hooks/useapisuccess";
+import useAPIFeedback from "../../hooks/useapifeedback";
 //Constants Import
 import AuthApi from "../../api/auth"
 
@@ -41,8 +40,7 @@ export default function LoginFormComp(props){
   const [usernameError, setUsernameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const [submitprogress, setSubmitprogress] = React.useState(false);
-  const { setError } = useAPIError();
-  const { setSuccess } = useAPISuccess();
+  const { setError, setSuccess } = useAPIFeedback();
 
   //handle username change
   const handleUsernameChange = (event)=>{

@@ -2,8 +2,7 @@ import React, { Suspense, lazy } from "react";
 import './App.css';
 import LoaderComp from "./components/loader"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import APIErrorProvider from "../src/providers/apierrorprovider";
-import APISuccessProvider from "../src/providers/apisuccessprovider";
+import APIFeedbackProvider from "../src/providers/apifeedbackprovider";
 
 const Login = lazy(() => import("./components/login/login.js"));
 const Home = lazy(() => import("./components/home/home.js"));
@@ -15,8 +14,7 @@ const NotFoundComp = lazy(() => import("./components/404"));
 
 function App() {
   return (
-    <APIErrorProvider>
-      <APISuccessProvider>
+    <APIFeedbackProvider>
         <Router>
           <Suspense fallback={<LoaderComp />}>
             <Switch>
@@ -32,9 +30,7 @@ function App() {
             </Switch>
           </Suspense>
         </Router>
-      </APISuccessProvider>
-    </APIErrorProvider>
+    </APIFeedbackProvider>
   );
-  // return <Login />;
 }
 export default App;

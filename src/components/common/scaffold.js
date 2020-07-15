@@ -15,8 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 //styles import
 import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
-import useAPIError from "../../hooks/useapierror";
-import useAPISuccess from "../../hooks/useapisuccess";
+import useAPIFeedback from "../../hooks/useapifeedback";
 import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
 
@@ -59,8 +58,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Scaffold(props) {
   const classes = useStyles();
-  const { error, setError } = useAPIError();
-  const { success, setSuccess } = useAPISuccess();
+  const { error, setError, success, setSuccess } = useAPIFeedback();
   const [open, setOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);

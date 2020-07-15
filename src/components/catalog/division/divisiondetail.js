@@ -124,7 +124,6 @@ export default function DivisionDetailComp(props) {
     controls[name] = value;
     setFormControls(controls);
   };
-
   //change account input handle
   const onchangeCategoryInput = (event, value) => {
     event.preventDefault();
@@ -135,7 +134,8 @@ export default function DivisionDetailComp(props) {
   //Change search term - Account
   const onChangeCategorySearch = (event) => {
     event.preventDefault();
-    setCategorySearchString(event.target.value);
+    const value = event.target.value;
+    setCategorySearchString(value);
   };
   //handle image change
   const handleImageChange = (image) => {
@@ -151,6 +151,7 @@ export default function DivisionDetailComp(props) {
     controls.assets["thumbnail"] = thumbnail;
     setFormControls(controls);
   };
+
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -277,7 +278,7 @@ export default function DivisionDetailComp(props) {
               )}
               <Grid item>
                 <TextField
-                  value={formControls?.name}
+                  value={formControls?.name || ""}
                   label="Division Name"
                   name="name"
                   variant="standard"
@@ -288,10 +289,11 @@ export default function DivisionDetailComp(props) {
               </Grid>
               {/* Category select */}
               <Grid item>
-                {/* <Autocomplete
+                <Autocomplete
+                  freeSolo
                   multiple
-                  options={categories || []}
-                  value={formControls.categories.map((data) => data)}
+                  options={categories}
+                  value={formControls.categories?.map((data) => data) || []}
                   getOptionLabel={(option) =>
                     typeof option === "string" ? option : option.name
                   }
@@ -299,17 +301,20 @@ export default function DivisionDetailComp(props) {
                     option ? option.name === value.name : false
                   }
                   name="categories"
-                  onChange={onchangeCategoryInput}
+                  onChange={(event, value) =>
+                    onchangeCategoryInput(event, value)
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Categories"
                       variant="standard"
+                      name="categories"
                       fullWidth
                       onChange={onChangeCategorySearch}
                     />
                   )}
-                /> */}
+                />
               </Grid>
             </Grid>
           </DialogContent>
