@@ -2,9 +2,8 @@
 import React, { Suspense } from "react";
 // import queryString from "query-string";
 //relative imports
-import AppBarComp from "../common/appbar";
+import Scaffold from "../common/scaffold";
 import UserCardList from './usercardlist'
-import PaperBox from "../common/paperbox"
 //material ui core imports
 // import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
@@ -40,8 +39,7 @@ class UserComp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <AppBarComp title="Users" />
-        <PaperBox>
+        <Scaffold title="Users">
           <Grid container direction="row" spacing={2}>
             <Grid item lg={2}>
               {/* <PaperBox> */}
@@ -63,12 +61,12 @@ class UserComp extends React.Component {
             </Grid>
             <Grid item lg={10}>
               {/* <PaperBox> */}
-              {
-              this.state.newuserflag?(
+              {this.state.newuserflag && (
                 <Suspense fallback={<div>Loading...</div>}>
                   <UserNewComp />
                 </Suspense>
-              ):(
+              )}
+              {this.state.selectedId && (
                 <Suspense fallback={<div>Loading...</div>}>
                   <UserDetailComp userId={this.state.selectedId} />
                 </Suspense>
@@ -76,7 +74,7 @@ class UserComp extends React.Component {
               {/* </PaperBox> */}
             </Grid>
           </Grid>
-        </PaperBox>
+        </Scaffold>
       </React.Fragment>
     );
   }

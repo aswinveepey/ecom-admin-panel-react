@@ -16,9 +16,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AddIcon from "@material-ui/icons/Add";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+import AccountApi from "../../api/account";
 
 
 //define styles
@@ -34,14 +32,14 @@ const useStyles = makeStyles((theme) => ({
 export default function AccountDetailComp(props) {
 
   const classes = useStyles();
+  const accountApi = new AccountApi();
 
-  const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
-  const [accountTypes, setAccountTypes] = React.useState([
-    { value: "Corporate", label: "Corporate" },
-    { value: "Enterprise", label: "Enterprise" },
-    { value: "Other", label: "Other" },
-  ]);
+  const accountTypes = [
+                          { value: "Corporate", label: "Corporate" },
+                          { value: "Enterprise", label: "Enterprise" },
+                          { value: "Other", label: "Other" },
+                        ];
 
   const onchangeAccountInput = (event) => {
     // console.log(event);
@@ -71,32 +69,20 @@ export default function AccountDetailComp(props) {
     props.handleDialogClose();
   };
   const handleSubmit = (event) => {
-    event.preventDefault();
-    //clean up subscriptions using abortcontroller & signals
+    event.preventDefault()
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //fetch data and set data
-    const SUFFIX_URL = formControls._id?"account/id/"+formControls._id:"account/"
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        if (status === 200) {
-          handleClose();
-        }
-      })
-      .catch((err) => console.log(err));
+    if(formControls._id){
+      accountApi
+        .updateAccount(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      accountApi
+        .createAccount(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };

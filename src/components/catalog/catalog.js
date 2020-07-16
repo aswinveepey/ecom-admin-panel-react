@@ -1,8 +1,7 @@
 import React, { Suspense } from "react";
-import AppBarComp from "../common/appbar";
+import Scaffold from "../common/scaffold";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import PaperBox from "../common/paperbox";
 
 const CategoryIndexComp = React.lazy(()=>import("./category/categoryindex"))
 const BrandIndexComp = React.lazy(()=>import("./brand/brandindex"))
@@ -17,9 +16,8 @@ export default function CatalogComp(props) {
     setTabValue(newTabValue);
   };
   return (
-    <div>
-      <AppBarComp title="Catalog" />
-      <PaperBox>
+    <React.Fragment>
+      <Scaffold title="Dashboard">
         <Tabs
           value={tabValue}
           onChange={handleChange}
@@ -40,7 +38,7 @@ export default function CatalogComp(props) {
           {tabValue === 2 && <BrandIndexComp />}
           {tabValue === 3 && <DivisionIndexComp />}
         </Suspense>
-      </PaperBox>
-    </div>
+      </Scaffold>
+    </React.Fragment>
   );
 }

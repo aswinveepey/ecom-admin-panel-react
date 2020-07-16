@@ -1,12 +1,11 @@
 import React from 'react';
-import AppBarComp from "../common/appbar";
+import Scaffold from "../common/scaffold";
 import CustomerTabbedComp from "./customertabbednav"
 
 export default function CustomerComp(props){
   return (
-    <div>
-      <AppBarComp title="Customers" />
+    <Scaffold title="Customers">
       <CustomerTabbedComp />
-    </div>
-  )
+    </Scaffold>
+  );
 }

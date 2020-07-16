@@ -1,15 +1,11 @@
 import React from 'react';
-import AppBarComp from "../common/appbar";
 import DashComp from "./dash"
-import PaperBox from "../common/paperbox"
+import Scaffold from "../common/scaffold"
 
 export default function Home(props){
   return (
-    <React.Fragment>
-      <AppBarComp title="Dashboard" />
-      <PaperBox>
-        <DashComp />
-      </PaperBox>
-    </React.Fragment>
+    <Scaffold title="Dashboard">
+      <DashComp />
+    </Scaffold>
   );
 }

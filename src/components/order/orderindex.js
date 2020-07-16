@@ -1,13 +1,15 @@
 import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
-//<aterial UI
+//api feedback hook
+import useAPIFeedback from "../../hooks/useapifeedback";
+
+//import order api class
+import OrderApi from "../../api/order";
+
+//material UI
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
-// import LinearProgress from "@material-ui/core/LinearProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -128,8 +130,7 @@ export default function OrderIndexComp(props) {
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
-  // const [loading, setLoading] = React.useState(true);
-  const token = Cookies.get("token");
+  const { setError } = useAPIFeedback();
 
   //open Order Detail
   const openOrderDetail = (detailData) => {
@@ -150,44 +151,28 @@ export default function OrderIndexComp(props) {
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
+    const orderApi = new OrderApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
     if(orderSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: orderSearch }),
-      };
-      fetchurl = BASE_URL + "order/search"
+      orderApi
+        .searchOrders(signal, orderSearch)
+        .then((response) => setRowData(response))
+        .catch((err) => {
+          setError(err)
+        });
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "order";
+      orderApi
+        .getOrders(signal, orderSearch)
+        .then((response) => setRowData(response))
+        .catch((err) => {
+          setError(err)
+        });
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, orderSearch]);
+  }, [orderSearch]);
 
   return (
     <React.Fragment>

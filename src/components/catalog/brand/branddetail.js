@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 //Core Elements - Material UI
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -9,12 +9,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Fab from "@material-ui/core/Fab";
-import ImageUploadComp from "../../common/imageupload";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
+//api import
+import BrandApi from "../../../api/brand"
+
+const ImageUploadComp = React.lazy(()=>import("../../common/imageupload"))
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BrandDetailComp(props) {
   const classes = useStyles();
-
-  const token = Cookies.get("token");
+  const brandApi = new BrandApi()
+  
   const [formControls, setFormControls] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
 
@@ -73,31 +73,17 @@ export default function BrandDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls._id
-      ? "brand/id/" + formControls._id
-      : "brand/";
-    //POST customer data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200) {
-          handleClose();
-        }
-      })
-      .catch((err) => console.log(err));
+    if(formControls._id){
+      brandApi
+        .updateBrand(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      brandApi
+        .createBrand(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };
@@ -182,12 +168,14 @@ export default function BrandDetailComp(props) {
           </DialogActions>
         </form>
       </Dialog>
-      <ImageUploadComp
-        open={openImageUpload}
-        handleDialogClose={handleImageUploadClose}
-        handleImageChange={handleImageChange}
-        keyPath="brand/"
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
+          open={openImageUpload}
+          handleDialogClose={handleImageUploadClose}
+          handleImageChange={handleImageChange}
+          keyPath="brand/"
+        />
+      </Suspense>
     </React.Fragment>
   );
 }

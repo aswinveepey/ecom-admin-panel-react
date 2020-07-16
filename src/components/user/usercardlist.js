@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Grid,
   Card,
@@ -7,90 +7,77 @@ import {
   Divider,
   Avatar,
 } from "@material-ui/core";
-import Paper from '@material-ui/core/Paper'
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+import Paper from "@material-ui/core/Paper";
+import UserApi from "../../api/user";
 
-class UserCardList extends React.Component {
-  state = {
-    userdata: "",
-    fetchstatus: 'loading',
-    cardelevation: 0,
-    selectedId: null
-  };
-  componentDidMount() {
-    this.fetchUserData();
-  }
-  fetchUserData = async () => {
-    let token;
-    try {
-      token = Cookies.get("token");
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Authorization: token },
+const cardElevation = 0
+const userApi = new UserApi();
+
+export default function UserCardList(props) {
+  const [userData, setUserData] = React.useState([]);
+  const [fetchStatus, setFetchStatus] = React.useState("loading");
+  const [selectedId, setSelectedId] = React.useState();
+
+  React.useEffect(() => {
+    setFetchStatus("loading");
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    userApi.getUsers(signal).then((data) => {
+      setUserData(data);
+      setFetchStatus("fetched");
+    });
+    return function cleanup() {
+      abortController.abort();
     };
-    const fetchResponse = await fetch(BASE_URL + "user/", requestOptions);
-    const { status } = fetchResponse;
-    const jsonResponse = await fetchResponse.json();
-    if (status === 200) {
-      // console.log(jsonResponse.data);
-      this.setState({ fetchstatus: "fetched", userdata: jsonResponse.data });
-    } else {
-      this.setState({ fetchstatus: "unAuthenticated" });
-    }
-  };
-  async handleCardClick(e, userId){
-    e.preventDefault();
-    this.setState({selectedId: userId})
-    await this.props.onSelect(userId);
-  }
-  render() {
-    return (
-      <React.Fragment>
-        <Paper className="paper-box" variant="elevation" elvation={1}>
-          <Grid container direction="column" wrap="nowrap">
-            {this.state.fetchstatus === "fetched" &&
-              this.state.userdata.map((data) => {
-                return (
-                  <Grid item key={data._id}>
-                    <Card
-                      elevation={(this.state.selectedId===data._id)?2:this.state.cardelevation}
-                      className="list-card-item"
-                      onClick={(e) => {
-                        this.handleCardClick(e, data._id);
-                      }}
-                    >
-                      <CardContent>
-                        <Grid container spacing={1} justify="flex-start">
-                          <Grid item>
-                            <Avatar>
-                              {data.firstname[0] + data.lastname[0]}
-                            </Avatar>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="body1">
-                              {data.firstname}&nbsp;{data.lastname}
-                            </Typography>
-                            <Typography variant="body2">
-                              {data.role.name}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                    <Divider />
-                  </Grid>
-                );
-              })}
-          </Grid>
-        </Paper>
-      </React.Fragment>
-    );
-  }
-}
+  }, []);
 
-export default UserCardList;
+  const handleCardClick = async (userId, e) => {
+    e.preventDefault();
+    setSelectedId(userId);
+    await props.onSelect(userId);
+  };
+  return (
+    <React.Fragment>
+      <Paper className="paper-box" variant="elevation" elvation={1}>
+        <Grid container direction="column" wrap="nowrap">
+          {fetchStatus === "fetched" &&
+            userData.map((data) => {
+              return (
+                <Grid item key={data._id}>
+                  <Card
+                    elevation={
+                      selectedId === data._id
+                        ? 2
+                        : cardElevation
+                    }
+                    className="list-card-item"
+                    onClick={handleCardClick.bind(this, data._id)}
+                  >
+                    <CardContent>
+                      <Grid container spacing={1} justify="flex-start">
+                        <Grid item>
+                          <Avatar>
+                            {data.firstname[0] + data.lastname[0]}
+                          </Avatar>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body1">
+                            {data.firstname}&nbsp;{data.lastname}
+                          </Typography>
+                          <Typography variant="body2">
+                            {data.role.name}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                  <Divider />
+                </Grid>
+              );
+            })}
+        </Grid>
+      </Paper>
+    </React.Fragment>
+  );
+}

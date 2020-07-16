@@ -1,7 +1,5 @@
 import React from 'react'
-
 import Cookies from "js-cookie";
-
 import Grid from '@material-ui/core/Grid'
 import Typography from "@material-ui/core/Typography"
 import TextField from "@material-ui/core/TextField"
@@ -9,10 +7,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
-
 import { useHistory } from "react-router";
+import useAPIFeedback from "../../hooks/useapifeedback";
 //Constants Import
-import { BASE_URL } from "../../constants";
+import AuthApi from "../../api/auth"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginFormComp(props){
   const classes = useStyles();
   const history = useHistory();
+  const authApi = new AuthApi();
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
   const [username, setUsername] = React.useState('');
@@ -41,61 +40,42 @@ export default function LoginFormComp(props){
   const [usernameError, setUsernameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const [submitprogress, setSubmitprogress] = React.useState(false);
+  const { setError, setSuccess } = useAPIFeedback();
 
   //handle username change
-  function handleUsernameChange(event){
+  const handleUsernameChange = (event)=>{
     event.preventDefault();
     setUsernameError(false)
     setUsername(event.target.value)
   }
-  function handlePasswordChange(event) {
-    setPasswordError(false);
+  const handlePasswordChange = (event)=>{
     event.preventDefault();
+    setPasswordError(false);
     setPassword(event.target.value);
   }
   //handle password change
   //handle login form submit
   var handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitprogress(true);
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username, password: password }),
-    };
-    fetch(
-      BASE_URL + "auth/authenticate",
-      requestOptions,
-      {
-        signal: signal,
-      }
-    ).then(async (authResponse)=>{
-      const { status } = authResponse;
-      if (status === 200) {
-        const { token } = await authResponse.json();
-        try {
-          Cookies.set("token", token, { expires: 30 });
-        } catch (error) {
-          console.log("Unable to set cookie");
-        }
-        history && history.push("/home");
-      } else {
-        authResponse.json().then((data) => {
-          const { message } = data;
-          if (message === "Username Error") {
-            setUsernameError(true);
-          } else if (message === "Password Error") {
-            setPasswordError(true);
-          } else {
-            console.log("Something went wrong");
+    const reqBody = { username: username, password: password };
+    authApi.authenticate(signal, reqBody)
+      .then((data) => {
+          try {
+            Cookies.set("token", data, { expires: 30 })
+            if(Cookies.get("token")){
+              setSuccess({ message: "Authenticated" });
+              history && history.push("/home");
+            }
+          } catch (error) {
+            console.log(error)
+            setError({message:"Cookie Setting Failed. Check Console for Errors"});
           }
-        });
-      }
-    }).catch(error=>console.log(error));
-    setSubmitprogress(false);
+      })
+      .catch((error) => setError(error));
+
     return function cleanup() {
       abortController.abort();
     };
@@ -125,7 +105,7 @@ export default function LoginFormComp(props){
             variant="outlined"
             autoComplete="username"
             value={username}
-            onChange={(event) => handleUsernameChange(event)}
+            onChange={handleUsernameChange}
             required
             error={usernameError}
             helperText={usernameError ? "Invalid Username" : ""}
@@ -140,7 +120,7 @@ export default function LoginFormComp(props){
             autoComplete="current-password"
             variant="outlined"
             value={password}
-            onChange={(event) => handlePasswordChange(event)}
+            onChange={handlePasswordChange}
             required
             error={passwordError}
             helperText={passwordError ? "Invalid Password" : ""}

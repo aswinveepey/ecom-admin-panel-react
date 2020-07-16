@@ -1,4 +1,4 @@
-import React from "react"
+import React, {Suspense} from "react"
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,7 +8,8 @@ import TableRow from "@material-ui/core/TableRow";
 import IconButton from "@material-ui/core/IconButton"
 import Button from "@material-ui/core/Button"
 import EditIcon from "@material-ui/icons/Edit";
-import SkuDetailComp from "./skudetail"
+
+const SkuDetailComp = React.lazy(()=>import("./skudetail"))
 
 
 export default function SKUIndeComp(props){
@@ -32,7 +33,7 @@ export default function SKUIndeComp(props){
           color="primary"
           variant="outlined"
           aria-label="add"
-          onClick={openSkuDetail.bind(this, { "product": props.product_id })}
+          onClick={openSkuDetail.bind(this, { product: props.product_id })}
         >
           Add SKU
         </Button>
@@ -71,13 +72,13 @@ export default function SKUIndeComp(props){
           </TableBody>
         </Table>
       </TableContainer>
-      {skuDetailOpen && (
+      <Suspense fallback={<div>Loading...</div>}>
         <SkuDetailComp
           open={skuDetailOpen}
           handleClose={closeSkuDetail}
           data={skuDetailData}
         />
-      )}
+      </Suspense>
     </React.Fragment>
   );
 }

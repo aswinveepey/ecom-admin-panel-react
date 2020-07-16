@@ -7,8 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { BASE_URL } from "../../constants";
-import Cookies from "js-cookie";
+import CustomerAPI from "../../api/customer"
 
 const useStyles = makeStyles((theme) => ({
   selectButton: {
@@ -16,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const customerApi = new CustomerAPI();
+
 export default function AddressSelectComp(props){
   const classes = useStyles();
   const [addresses, setAddresses] = React.useState([])
-
-  const token = Cookies.get("token");
 
   const handleClose = ()=>{
     props.handleClose()
@@ -34,26 +33,16 @@ export default function AddressSelectComp(props){
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    const fetchurl = BASE_URL + "customer/id/" + props.data?._id;
     //fetch data and set data
-    props.data?._id && fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        status === 200 && setAddresses(response.data.address);
-      })
-      .catch((err) => console.log(err));
+    props.data?._id &&
+      customerApi
+        .getOneCustomer(signal, props.data._id)
+        .then((data) => setAddresses(data.address))
+        .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [props, token]);
+  }, [props]);
   return (
     <React.Fragment>
       <Dialog

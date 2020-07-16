@@ -1,5 +1,4 @@
 import React from "react";
-import Cookies from "js-cookie";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -26,11 +25,12 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-//Constants Import
-import { BASE_URL } from "../../../constants";
 //Component import
 import SingleAttributeComp from "../../common/singleattribute";
 import ImageUploadComp from "../../common/imageupload";
+//api import
+import SkuApi from "../../../api/sku"
+import TerritoryApi from "../../../api/territory"
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -56,9 +56,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    // width:"100%",
-    // width: `calc(100% - ${theme.spacing(4)}px)`,
-    // overflow: "scroll",
   },
   cardimage: {
     maxHeight: "100px",
@@ -70,8 +67,6 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
     minHeight: "100px",
     minWidth: "100px",
-    // width: "100px",
-    // flexGrow: 1,
   },
   imagecard: {
     // display:'flex',
@@ -79,7 +74,6 @@ const useStyles = makeStyles((theme) => ({
   },
   colGrid: {
     width: "100%",
-    // overflow: "scroll",
   },
   addimgbase: {
     margin: "auto",
@@ -90,10 +84,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const skuApi = new SkuApi()
+const territoryApi = new TerritoryApi()
+
 export default function SkuDetailComp(props) {
   const classes = useStyles();
-  const token = Cookies.get("token");
-  const [territorySearchString, setTerritorySearchString] = React.useState([]);
+  const [territorySearchString, setTerritorySearchString] = React.useState("");
   const [territories, setTerritories] = React.useState([]);
   const [skuId, setSkuId] = React.useState("");
 
@@ -277,24 +273,15 @@ export default function SkuDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    skuId && fetch(BASE_URL + "sku/id/" + skuId, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        status === 200 && setFormControls(response.data);
-      })
-      .catch((err) => console.log(err));
+    skuId &&
+      skuApi
+        .getOneSku(signal, skuId)
+        .then((data) => setFormControls(data))
+        .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [props, token, skuId]);
+  }, [props, skuId]);
 
   //handle territorys search for inventory
   React.useEffect(() => {
@@ -302,28 +289,14 @@ export default function SkuDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: territorySearchString }),
-    };
-    //fetch data and set data
-    if (territorySearchString.length > 2) {
-      fetch(BASE_URL + "territory/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setTerritories(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
+    territoryApi
+      .searchTerritories(signal, territorySearchString)
+      .then((data) => setTerritories(data))
+      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [territorySearchString, token]);
+  }, [territorySearchString]);
 
   //delegate close behaviour to parent
   const handleClose = () => {
@@ -335,30 +308,17 @@ export default function SkuDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls?._id
-      ? "sku/id/" + formControls?._id
-      : "sku/";
-    //POST category data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200) {
-          handleClose();
-        }
-      })
-      .catch((err) => console.log(err));
+    if (formControls._id){
+      skuApi
+        .updateSku(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      skuApi
+        .createSku(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };
