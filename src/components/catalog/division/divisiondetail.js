@@ -18,9 +18,9 @@ import CardActions from "@material-ui/core/CardActions";
 import ImageUploadComp from "../../common/imageupload";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../../constants";
+//api import
+import DivisionApi from "../../../api/division"
+import CategoryApi from "../../../api/category"
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -63,12 +63,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const divisionApi = new DivisionApi();
+const categoryApi = new CategoryApi();
+
 export default function DivisionDetailComp(props) {
   const classes = useStyles();
 
-  const token = Cookies.get("token");
   const [formControls, setFormControls] = React.useState([]);
-  const [categorySearchString, setCategorySearchString] = React.useState([]);
+  const [categorySearchString, setCategorySearchString] = React.useState("");
   const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
@@ -98,33 +100,17 @@ export default function DivisionDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(formControls),
-    };
-    //differentiate between update & create
-    const SUFFIX_URL = formControls._id
-      ? "division/id/" + formControls._id
-      : "division/";
-    //POST division data and handle
-    fetch(BASE_URL + SUFFIX_URL, requestOptions, {
-      signal: signal,
-    })
-      .then(async (data) => {
-        // const response = await data.json();
-        const { status } = data;
-        if (status === 200 || status === 201) {
-          handleClose();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if(formControls._id){
+      divisionApi
+        .updateDivision(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      divisionApi
+        .createDivision(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
     return function cleanup() {
       abortController.abort();
     };
@@ -138,7 +124,6 @@ export default function DivisionDetailComp(props) {
     controls[name] = value;
     setFormControls(controls);
   };
-
   //change account input handle
   const onchangeCategoryInput = (event, value) => {
     event.preventDefault();
@@ -149,7 +134,8 @@ export default function DivisionDetailComp(props) {
   //Change search term - Account
   const onChangeCategorySearch = (event) => {
     event.preventDefault();
-    setCategorySearchString(event.target.value);
+    const value = event.target.value;
+    setCategorySearchString(value);
   };
   //handle image change
   const handleImageChange = (image) => {
@@ -165,6 +151,7 @@ export default function DivisionDetailComp(props) {
     controls.assets["thumbnail"] = thumbnail;
     setFormControls(controls);
   };
+
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -174,29 +161,14 @@ export default function DivisionDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    //set request options
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ searchString: categorySearchString }),
-    };
-    //fetch data and set data
-    if (categorySearchString.length > 2) {
-      fetch(BASE_URL + "division/search", requestOptions, { signal: signal })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setCategories(response.data);
-        })
-        .catch((err) => console.log(err));
-    }
+    categoryApi
+      .getCategories(signal, categorySearchString)
+      .then((data) => setCategories(data))
+      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [categorySearchString, token]);
+  }, [categorySearchString]);
 
   return (
     <React.Fragment>
@@ -300,13 +272,12 @@ export default function DivisionDetailComp(props) {
                     name="_id"
                     variant="standard"
                     fullWidth
-                    // onChange={(event) => onchangeCategoryInput(event)}
                   />
                 </Grid>
               )}
               <Grid item>
                 <TextField
-                  value={formControls?.name}
+                  value={formControls?.name || ""}
                   label="Division Name"
                   name="name"
                   variant="standard"
@@ -317,10 +288,11 @@ export default function DivisionDetailComp(props) {
               </Grid>
               {/* Category select */}
               <Grid item>
-                {/* <Autocomplete
+                <Autocomplete
+                  freeSolo
                   multiple
-                  options={categories || []}
-                  value={formControls.categories.map((data) => data)}
+                  options={categories}
+                  value={formControls.categories?.map((data) => data) || []}
                   getOptionLabel={(option) =>
                     typeof option === "string" ? option : option.name
                   }
@@ -328,17 +300,20 @@ export default function DivisionDetailComp(props) {
                     option ? option.name === value.name : false
                   }
                   name="categories"
-                  onChange={onchangeCategoryInput}
+                  onChange={(event, value) =>
+                    onchangeCategoryInput(event, value)
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Categories"
                       variant="standard"
+                      name="categories"
                       fullWidth
                       onChange={onChangeCategorySearch}
                     />
                   )}
-                /> */}
+                />
               </Grid>
             </Grid>
           </DialogContent>

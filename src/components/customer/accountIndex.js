@@ -2,8 +2,7 @@ import React from "react";
 //cookie library import
 import DataTableComp from "../common/datatable";
 import AccountDetailComp from "./accountdetail";
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+import AccountApi from "../../api/account";
 
 export default function AccountIndexComp(props) {
   // const [loading, setLoading] = React.useState(true);
@@ -12,7 +11,6 @@ export default function AccountIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const [accountSearch, setAccountSearch] = React.useState("");
 
-  const token = Cookies.get("token");
 
   const gridData = {
     gridOptions: {
@@ -82,45 +80,25 @@ export default function AccountIndexComp(props) {
   }
   //datafetch
   React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
+    const accountApi = new AccountApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
+
     if(accountSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: accountSearch }),
-      };
-      fetchurl = BASE_URL + "account/search"
-    } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "account";
+      accountApi
+        .searchAccounts(signal, accountSearch)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
+    }else{
+      accountApi
+        .getAccounts(signal)
+        .then((data) => setRowData(data))
+        .catch((err) => console.log(err));
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, accountSearch]);
+  }, [accountSearch]);
   //return component
   return (
     <React.Fragment>

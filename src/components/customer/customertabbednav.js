@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { Suspense } from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import CustomerIndexComp from './customerindex'
-import AccountIndexComp from './accountIndex'
-import PaperBox from '../common/paperbox'
+const CustomerIndexComp = React.lazy(() => import("./customerindex"));
+const AccountIndexComp = React.lazy(() => import("./accountIndex"));
 
 export default function CustomerTabbedComp(props){
   const [tabValue, setTabValue] = React.useState(0);
@@ -11,7 +10,7 @@ export default function CustomerTabbedComp(props){
     setTabValue(newTabValue);
   };
   return (
-    <PaperBox>
+    <React.Fragment>
       <Tabs
         value={tabValue}
         onChange={handleChange}
@@ -24,8 +23,10 @@ export default function CustomerTabbedComp(props){
         <Tab label="Customer" />
         <Tab label="Account" />
       </Tabs>
-      {tabValue === 0 && <CustomerIndexComp />}
-      {tabValue === 1 && <AccountIndexComp />}
-    </PaperBox>
+      <Suspense fallback={<div>Loading...</div>}>
+        {tabValue === 0 && <CustomerIndexComp />}
+        {tabValue === 1 && <AccountIndexComp />}
+      </Suspense>
+    </React.Fragment>
   );
 }

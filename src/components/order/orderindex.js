@@ -1,13 +1,15 @@
 import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
-//<aterial UI
+//api feedback hook
+import useAPIFeedback from "../../hooks/useapifeedback";
+
+//import order api class
+import OrderApi from "../../api/order";
+
+//material UI
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
-// import LinearProgress from "@material-ui/core/LinearProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -70,7 +72,7 @@ function ExpandableRow(props) {
   const [orderExpand, setOrderExpand] = React.useState(false);
 
   //open Order Detail
-  const openOrderDetail = (event) => {
+  const openOrderDetail = (row, event) => {
     event.preventDefault();
     props.openOrderDetail(row);
   };
@@ -90,18 +92,18 @@ function ExpandableRow(props) {
           <IconButton
             size="small"
             aria-label="order detail"
-            onClick={openOrderDetail}
+            onClick={openOrderDetail.bind(this,row)}
           >
             <EditIcon />
           </IconButton>
         </TableCell>
         <TableCell>{row._id}</TableCell>
         <TableCell>{row.customer.customer._id}</TableCell>
-        <TableCell>{parseFloat(row.amount.amount).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.discount).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.totalamount).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.installation).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.shipping).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.amount || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.discount || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.totalamount || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.installation || 0).toFixed(2)}</TableCell>
+        <TableCell>{parseFloat(row.amount.shipping || 0).toFixed(2)}</TableCell>
         <TableCell>{row.createdat}</TableCell>
       </TableRow>
       <TableRow>
@@ -128,12 +130,12 @@ export default function OrderIndexComp(props) {
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
-  // const [loading, setLoading] = React.useState(true);
-  const token = Cookies.get("token");
+  const { setError } = useAPIFeedback();
 
   //open Order Detail
-  const openOrderDetail = (data) => {
-    setOrderDetailData(data);
+  const openOrderDetail = (detailData) => {
+    //this step is important in preventing circular json issue & synthetic event issue
+    detailData._id && setOrderDetailData(detailData);
     setOrderDetailOpen(true);
   };
   //close Order Detail
@@ -142,50 +144,35 @@ export default function OrderIndexComp(props) {
   };
   //handle Order Search
   const handleOrderSearch = (event) => {
-    setOrderSearch(event.target.value);
+    event.persist()
+    setOrderSearch(event);
   };
 
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
+    const orderApi = new OrderApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
-    let requestOptions = {}
-    let fetchurl = ""
     if(orderSearch){
-      requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: orderSearch }),
-      };
-      fetchurl = BASE_URL + "order/search"
+      orderApi
+        .searchOrders(signal, orderSearch)
+        .then((response) => setRowData(response))
+        .catch((err) => {
+          setError(err)
+        });
     } else {
-      requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      fetchurl = BASE_URL + "order";
+      orderApi
+        .getOrders(signal, orderSearch)
+        .then((response) => setRowData(response))
+        .catch((err) => {
+          setError(err)
+        });
     }
-    //set request options
-    //fetch data and set data
-    fetch(fetchurl, requestOptions, { signal: signal })
-      .then(async (data) => {
-        const response = await data.json();
-        const { status } = data;
-        // setLoading(false);
-        status === 200 && setRowData(response.data);
-      })
-      .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  }, [token, orderSearch]);
+  }, [orderSearch]);
 
   return (
     <React.Fragment>

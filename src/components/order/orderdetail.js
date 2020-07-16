@@ -1,5 +1,4 @@
-import React from "react";
-import Cookies from "js-cookie";
+import React, { Suspense } from "react";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,21 +9,20 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Table from "@material-ui/core/Table"
-import TableBody from "@material-ui/core/TableBody"
-import TableRow from "@material-ui/core/TableRow"
-import TableCell from "@material-ui/core/TableCell"
-//Constants Import
-import { BASE_URL } from "../../constants";
-//Component import
-import OrderitemDetailComp from "./orderitemdetail";
+//import order api class
+import OrderApi from "../../api/order";
 
+//api feedback hook
+import useAPIFeedback from "../../hooks/useapifeedback";
+
+//lazy import component - enables code splitting. Ensure suspense hoc
+const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
+const CustomerDisplayComp = React.lazy(() => import("./customercomp"));
+const SelectSKU = React.lazy(() => import("./selectsku"));
+const OrdertotalComp = React.lazy(() => import("./ordertotal"));
+
+//styles
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -39,144 +37,173 @@ const useStyles = makeStyles((theme) => ({
     width: `calc(100% - ${theme.spacing(4)}px)`,
     // overflow: "scroll",
   },
+  totaltable:{
+    float:"right"
+  },
+  addSkuButton:{
+    marginTop:10
+  }
 }));
 
+//dialog transition
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CustomerDisplayComp(props){
-  return (
-    <Grid container spacing={1}>
-      <Grid item md={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Customer Details
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {props.data?.customer?.firstname +
-                " " +
-                props.data.customer?.lastname}
-            </Typography>
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>{props.data?.customer?._id}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Contact No</TableCell>
-                  <TableCell>{props.data?.customer?.contactnumber}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Account</TableCell>
-                  <TableCell>{props.data?.customer?.account?.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Primary No</TableCell>
-                  <TableCell>
-                    {props.data?.customer?.auth?.mobilenumber}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item md={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Billing Address
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.address1}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.address2}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.area}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.landmark}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.district},
-              {props.data?.deliveryaddress?.pincode}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.deliveryaddress?.state},
-              {props.data?.deliveryaddress?.country}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Change</Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      <Grid item md={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Billing Address
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.address1}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.address2}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.area}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.landmark}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.district},
-              {props.data?.billingaddress?.pincode}
-            </Typography>
-            <Typography variant="body2" component="p">
-              {props.data?.billingaddress?.state},
-              {props.data?.billingaddress?.country}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Change</Button>
-          </CardActions>
-        </Card>
-      </Grid>
-    </Grid>
-  );
-}
+const orderApi = new OrderApi();
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-  const token = Cookies.get("token");
 
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
-  //delegate close behaviour to parent
-  const handleClose = () => {
-    props.handleClose();
-  };
-  //handle submit
-  const handleSubmit = () => {
-    console.log(formControls)
-  }
-  //handle item quantity changes
-  const onchangeItemQuantity = (index, name, value) => {
-    const controls = { ...formControls };
-    controls.orderitems[index].quantity[name] = value;
-    setFormControls(controls);
-  }
+  const [calculateTotals, setCalculateTotals] = React.useState(false);
+  const [addSkuOpen, setAddSkuOpen] = React.useState(false);
+  const { setError, setSuccess } = useAPIFeedback();
+
   //get open state from props
   React.useEffect(() => {
     setOpen(props.open);
     props.data && setFormControls(props.data);
   }, [props]);
+
+  //delegate close behaviour to parent
+  const handleClose = () => {
+    props.handleClose();
+  };
+  //add sku handling in case of new order
+  const onClickAddSku = () => {
+    setAddSkuOpen(true);
+  };
+  //close sku add dialog handling
+  const closeAddSku = () => {
+    setAddSkuOpen(false);
+  };
+  //Calculate totals based on changes use effect will trigger on form control update
+  React.useEffect(()=>{
+    const controls = { ...formControls };
+    let orderAmount = 0;
+    let orderShipping = 0;
+    let orderInstallation = 0;
+    if(controls.orderitems){
+      controls.orderitems.map((item) => {
+        item.amount = item.amount || {};
+        const currentQty =
+          item.quantity.delivered ||
+          item.quantity.shipped ||
+          item.quantity.confirmed ||
+          item.quantity.booked ||
+          0;
+        item.amount.amount = (item.sku?.price?.sellingprice || 0) * currentQty;
+        item.amount.discount = (item.sku?.price?.discount || 0) * currentQty;
+        item.amount.totalamount = item.amount.amount - item.amount.discount;
+        item.amount.shipping =
+          (item.sku?.price?.shippingcharges || 0) * currentQty;
+        item.amount.installation =
+          (item.sku?.price?.installationcharges || 0) * currentQty;
+        orderAmount += item.amount.totalamount;
+        orderShipping += item.amount.shipping;
+        orderInstallation += item.amount.installation;
+        return null;
+      });
+      controls.amount = controls.amount || {};
+      controls.amount.amount = orderAmount;
+      controls.amount.shippping = controls.amount.shipping || orderShipping;
+      controls.amount.installation =
+        controls.amount.installation || orderInstallation;
+      setFormControls(controls);
+    }
+  },[calculateTotals])
+
+  //handle item quantity changes
+  const onchangeItemQuantity = (index, name, value) => {
+    const controls = { ...formControls };
+    controls.orderitems[index].quantity = controls.orderitems[index].quantity || {};
+    controls.orderitems[index].quantity[name] = value;
+    setFormControls(controls);
+    setCalculateTotals(!calculateTotals);
+  }
+  //handle item status changes
+  const onchangeItem = (index, name, value) => {
+    const controls = { ...formControls };
+    controls.orderitems[index][name] = value;
+    setFormControls(controls);
+  };
+  //handle SKU addition
+  const handleAddSku = (sku)=>{
+    const controls = { ...formControls };
+    controls.orderitems = controls.orderitems || []
+    const newItem = {
+      sku: sku,
+      quantity: {
+        booked: sku.quantityrules.minorderqty,
+      },
+      status: "Booked",
+    };
+    controls.orderitems.push(newItem)
+    setFormControls(controls)
+    setCalculateTotals(!calculateTotals);
+  }
+  //handle SKU deletion
+  const removeOrderItem = (index)=>{
+    const controls = { ...formControls };
+    controls.orderitems.splice(index,1)
+    setFormControls(controls);
+    setCalculateTotals(!calculateTotals);
+  }
+  //handle item amount changes
+  const onchangeAmount = (name, value)=>{
+    const controls = { ...formControls };
+    controls.amount = controls.amount || {};
+    controls.amount[name] = value;
+    controls.amount.totalamount = controls.amount.amount - controls.amount.discount;
+    controls.amount.payable = controls.amount.totalamount +
+                              controls.amount.installation +
+                              controls.amount.shipping;
+    setFormControls(controls);
+  }
+  //on address change set corresponding address to the selected customer address using index
+  const changeAddress = (address, addressType)=>{
+    const controls = { ...formControls };
+    controls.customer[addressType] = address;
+    setFormControls(controls);
+  }
+  //open select customer menu
+  const onSelectCustomer = (customer) => {
+    const controls = { ...formControls };
+    controls.customer = controls.customer || {}
+    controls.customer.customer = customer
+    controls.customer.deliveryaddress = customer.address[0];
+    controls.customer.billingaddress = customer.address[0];
+    setFormControls(controls);
+  };
+  //handle submit
+  const handleSubmit = () => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    
+    if (formControls?._id){
+      orderApi
+        .updateOrder(signal, formControls)
+        .then((data) => {
+          handleClose();
+          setSuccess({message:"Successfully updated the order"})
+        })
+        .catch((err) => setError(err));
+    }else{
+      orderApi
+        .createOrder(signal, formControls)
+        .then((data) => {
+          handleClose();
+          setSuccess({ message: "Successfully created the order" });
+        })
+        .catch((err) => setError(err));
+    }   
+    return function cleanup() {
+      abortController.abort();
+    };
+  }
   //return component
   return (
     <React.Fragment>
@@ -205,11 +232,45 @@ export default function OrderDetailcomp(props){
           </Toolbar>
         </AppBar>
         <Paper className={classes.gridpaper} variant="outlined">
-          <CustomerDisplayComp data={formControls.customer} />
-          <OrderitemDetailComp
-            data={formControls.orderitems}
-            onchangeItemQuantity={onchangeItemQuantity}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <CustomerDisplayComp
+              data={formControls?.customer}
+              changeAddress={changeAddress}
+              onSelectCustomer={onSelectCustomer}
+            />
+          </Suspense>
+          {!props.data?._id && (
+            <Button
+              color="primary"
+              variant="outlined"
+              aria-label="add"
+              className={classes.addSkuButton}
+              onClick={onClickAddSku}
+            >
+              Add SKU
+            </Button>
+          )}
+          <Suspense fallback={<div>Loading...</div>}>
+            <OrderitemDetailComp
+              data={formControls}
+              onchangeItemQuantity={onchangeItemQuantity}
+              onchangeItem={onchangeItem}
+              removeOrderItem={removeOrderItem}
+            />
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            <SelectSKU
+              open={addSkuOpen}
+              handleClose={closeAddSku}
+              selectSku={handleAddSku}
+            />
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            <OrdertotalComp
+              data={formControls?.amount}
+              onchangeAmount={onchangeAmount}
+            />
+          </Suspense>
         </Paper>
       </Dialog>
     </React.Fragment>

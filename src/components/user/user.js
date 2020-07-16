@@ -1,12 +1,9 @@
 //library imports
-import React from 'react'
+import React, { Suspense } from "react";
 // import queryString from "query-string";
 //relative imports
-import AppBarComp from "../common/appbar";
+import Scaffold from "../common/scaffold";
 import UserCardList from './usercardlist'
-import UserDetailComp from './userdetail'
-import UserNewComp from "./usernew";
-import PaperBox from "../common/paperbox"
 //material ui core imports
 // import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
@@ -14,6 +11,9 @@ import Fab from '@material-ui/core/Fab'
 import Tooltip from "@material-ui/core/Tooltip";
 //material ui icon imports
 import AddIcon from '@material-ui/icons/Add'
+
+const UserDetailComp = React.lazy(() => import("./userdetail"));
+const UserNewComp = React.lazy(() => import("./usernew"));
 
 class UserComp extends React.Component {
   constructor(props){
@@ -39,13 +39,8 @@ class UserComp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <AppBarComp title="Users" />
-        <PaperBox>
-          <Grid
-            container
-            direction="row"
-            spacing={2}
-          >
+        <Scaffold title="Users">
+          <Grid container direction="row" spacing={2}>
             <Grid item lg={2}>
               {/* <PaperBox> */}
               <Tooltip title="Add User">
@@ -66,14 +61,20 @@ class UserComp extends React.Component {
             </Grid>
             <Grid item lg={10}>
               {/* <PaperBox> */}
-              {!this.state.newuserflag && (
-                <UserDetailComp userId={this.state.selectedId} />
+              {this.state.newuserflag && (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserNewComp />
+                </Suspense>
               )}
-              {this.state.newuserflag && <UserNewComp />}
+              {this.state.selectedId && (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserDetailComp userId={this.state.selectedId} />
+                </Suspense>
+              )}
               {/* </PaperBox> */}
             </Grid>
           </Grid>
-        </PaperBox>
+        </Scaffold>
       </React.Fragment>
     );
   }
