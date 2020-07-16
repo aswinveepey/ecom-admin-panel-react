@@ -63,13 +63,16 @@ export default function LoginFormComp(props){
     const reqBody = { username: username, password: password };
     authApi.authenticate(signal, reqBody)
       .then((data) => {
-        setSuccess({message:"Authenticated"});
           try {
-            Cookies.set("token", data, { expires: 30 });
+            Cookies.set("token", data, { expires: 30 })
+            if(Cookies.get("token")){
+              setSuccess({ message: "Authenticated" });
+              history && history.push("/home");
+            }
           } catch (error) {
-            setError({message:"Unable to set cookie"});
+            console.log(error)
+            setError({message:"Cookie Setting Failed. Check Console for Errors"});
           }
-          history && history.push("/home");
       })
       .catch((error) => setError(error));
 
