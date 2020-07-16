@@ -2,7 +2,7 @@ import ApiHelper from "./helper";
 
 export default class AuthApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //Create a new Account
   authenticate = async (signal, param) => {

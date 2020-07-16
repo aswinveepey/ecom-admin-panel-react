@@ -2,7 +2,7 @@ import ApiHelper from "./helper";
 
 export default class BrandApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //get all brands
   getBrands = async (signal) => {

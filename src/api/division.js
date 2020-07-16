@@ -2,7 +2,7 @@ import ApiHelper from "./helper";
 
 export default class DivisionApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //get all divisions
   getDivisions = async (signal) => {

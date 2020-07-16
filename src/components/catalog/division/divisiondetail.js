@@ -162,7 +162,7 @@ export default function DivisionDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     categoryApi
-      .getCategories(signal, categorySearchString)
+      .searchCategories(signal, categorySearchString)
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));
     return function cleanup() {
@@ -310,6 +310,7 @@ export default function DivisionDetailComp(props) {
                       variant="standard"
                       name="categories"
                       fullWidth
+                      // value={}
                       onChange={onChangeCategorySearch}
                     />
                   )}

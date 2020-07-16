@@ -1,8 +1,9 @@
 import ApiHelper from "./helper";
+import { get } from "js-cookie";
 
 export default class OrderApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //get all orders
   getOrders = async (signal) => {

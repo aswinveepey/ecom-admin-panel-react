@@ -2,7 +2,7 @@ import ApiHelper from "./helper";
 
 export default class AccountApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //get all accounts
   getAccounts = async (signal) => {

@@ -2,7 +2,7 @@ import ApiHelper from "./helper"
 
 export default class CustomerApi {
   constructor(){
-    this.apiHelper = new ApiHelper()
+    this.apiHelper = ApiHelper()
   }
   //get all customers
   getCustomers= async (signal)=>{

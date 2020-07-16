@@ -172,7 +172,7 @@ export default function OrderIndexComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [orderSearch]);
+  }, [orderSearch,setError]);
 
   return (
     <React.Fragment>
