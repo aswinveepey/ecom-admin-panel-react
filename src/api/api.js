@@ -36,7 +36,6 @@ export default function ApiHelper(){
     const { status } = response;
     const responseData = await response.json();
     if (status === 200) {
-      console.log(responseData.message);
       responseData.message &&
         store.dispatch({
           type: "APISUCCESS",

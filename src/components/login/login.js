@@ -7,7 +7,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import LoginFormComp from './loginform'
-import useAPIError from "../../hooks/useapifeedback";
+import { useSelector } from "react-redux";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,19 +23,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login(props){
   const classes = useStyles();
-  const { error, setError } = useAPIError();
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
+  const state = useSelector((state) => state.apiFeedbackReducer);
+
   const tenantHeroFile = "hero-image-hhys.png";
   const tenantHero =
     "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantHeroFile;
 
   const handleSnackBarClose = () => {
-    setError({});
     setSnackBarOpen(false);
   };
   React.useEffect(() => {
-      error && setSnackBarOpen(true);
-  }, [error]);
+      (state.apisuccess || state.apierror) && setSnackBarOpen(true);
+  }, [state]);
 
   return (
     <Grid container>
@@ -65,7 +65,9 @@ export default function Login(props){
           onClose={handleSnackBarClose}
         >
           <React.Fragment>
-            {error && <Alert severity="error">{error?.message}</Alert>}
+            {state.apierror && (
+              <Alert severity="error">{state.apierror}</Alert>
+            )}
             <IconButton
               size="small"
               aria-label="close"
