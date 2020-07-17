@@ -1,4 +1,4 @@
-import ApiHelper from "./helper";
+import ApiHelper from "./api";
 
 export default class OrderApi {
   constructor() {
