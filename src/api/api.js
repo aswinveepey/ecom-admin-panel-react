@@ -36,10 +36,12 @@ export default function ApiHelper(){
     const { status } = response;
     const responseData = await response.json();
     if (status === 200) {
-      store.dispatch({
-        type: "APISUCCESS",
-        payLoad: "Successful Execution",
-      });
+      console.log(responseData.message);
+      responseData.message &&
+        store.dispatch({
+          type: "APISUCCESS",
+          payLoad: responseData.message,
+        });
       return responseData.data;
     }
     store.dispatch({
