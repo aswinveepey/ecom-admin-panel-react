@@ -12,6 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 //import order api class
 import OrderApi from "../../api/order";
+import {useDispatch} from "react-redux"
+// import {setOrderUpdate} from "../../actions"
 
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
@@ -51,7 +53,7 @@ const orderApi = new OrderApi();
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
   const [calculateTotals, setCalculateTotals] = React.useState(false);
@@ -184,6 +186,9 @@ export default function OrderDetailcomp(props){
         .updateOrder(signal, formControls)
         .then((data) => {
           handleClose();
+          dispatch({
+            type: "ORDER_UPDATED",
+          });
         })
         .catch((err) => console.log(err));
     }else{

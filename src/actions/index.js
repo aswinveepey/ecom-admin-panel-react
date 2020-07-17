@@ -3,3 +3,8 @@ export const setAPIFeedback = ()=>{
     type: "APISUCCESS",
   };
 }
+export const setOrderUpdate = ()=>{
+  return {
+    type: "ORDER_UPDATED",
+  };
+}
