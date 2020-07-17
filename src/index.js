@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { Router } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {ThemeProvider} from "@material-ui/styles";
+import {Provider} from "react-redux"
+import store from "../src/store"
 
 import theme from './theme/muitheme'
 import './index.css';
@@ -10,13 +12,17 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import history from "./history";
 
+// const store = createStore(rootReducer);
+
 ReactDOM.render(
-  <Router history={history}>
-    <CssBaseline />
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </Router>,
+  <Provider store={store}>
+    <Router history={history}>
+      <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 

@@ -1,5 +1,6 @@
 import { BASE_URL } from "../constants";
 import Cookies from "js-cookie";
+import store from "../store"
 
 export default function ApiHelper(){
 
@@ -19,7 +20,10 @@ export default function ApiHelper(){
     if (status === 200) {
       return responseData.data;
     }
-    throw new Error(responseData.message);
+    store.dispatch({
+      type: "APIERROR",
+      payLoad: responseData.message,
+    });
   }
   const post = async (signal, reqUrl, reqBody)=>{
     const requestOptions = {
@@ -32,9 +36,16 @@ export default function ApiHelper(){
     const { status } = response;
     const responseData = await response.json();
     if (status === 200) {
+      store.dispatch({
+        type: "APISUCCESS",
+        payLoad: "Successful Execution",
+      });
       return responseData.data;
     }
-    throw new Error(responseData.message);
+    store.dispatch({
+      type: "APIERROR",
+      payLoad: responseData.message,
+    });
   }
   return{get,post}
 }

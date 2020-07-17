@@ -13,9 +13,6 @@ import Paper from "@material-ui/core/Paper";
 //import order api class
 import OrderApi from "../../api/order";
 
-//api feedback hook
-import useAPIFeedback from "../../hooks/useapifeedback";
-
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
 const CustomerDisplayComp = React.lazy(() => import("./customercomp"));
@@ -59,7 +56,6 @@ export default function OrderDetailcomp(props){
   const [formControls, setFormControls] = React.useState([]);
   const [calculateTotals, setCalculateTotals] = React.useState(false);
   const [addSkuOpen, setAddSkuOpen] = React.useState(false);
-  const { setError, setSuccess } = useAPIFeedback();
 
   //get open state from props
   React.useEffect(() => {
@@ -188,17 +184,15 @@ export default function OrderDetailcomp(props){
         .updateOrder(signal, formControls)
         .then((data) => {
           handleClose();
-          setSuccess({message:"Successfully updated the order"})
         })
-        .catch((err) => setError(err));
+        .catch((err) => console.log(err));
     }else{
       orderApi
         .createOrder(signal, formControls)
         .then((data) => {
           handleClose();
-          setSuccess({ message: "Successfully created the order" });
         })
-        .catch((err) => setError(err));
+        .catch((err) => console.log(err));
     }   
     return function cleanup() {
       abortController.abort();
