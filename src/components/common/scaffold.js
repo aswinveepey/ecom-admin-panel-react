@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 //Material ui core imports
 import AppBar from "@material-ui/core/AppBar";
@@ -15,9 +15,9 @@ import MenuIcon from "@material-ui/icons/Menu";
 //styles import
 import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
-import useAPIFeedback from "../../hooks/useapifeedback";
 import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
+import {useSelector} from "react-redux"
 
 const drawerWidth = 240;
 
@@ -58,24 +58,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Scaffold(props) {
   const classes = useStyles();
-  const { error, setError, success, setSuccess } = useAPIFeedback();
   const [open, setOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
+  const state = useSelector((state) => state.apiFeedbackReducer);
 
   const handleDrawerToggle = ()=>{
     setOpen(!open);
   }
   const handleSnackBarClose = ()=>{
-    setError(null);
-    setSuccess(null)
     setSnackBarOpen(false);
   }
-  React.useEffect(()=>{
-    if(error|| success){
-      setSnackBarOpen(true);
-    }
-  },[error, success])
+  React.useEffect(() => {
+    (state.apisuccess || state.apierror) && setSnackBarOpen(true);
+  }, [state]);
 
   React.useEffect(() => {
     if (props.search === false) {
@@ -125,8 +121,12 @@ export default function Scaffold(props) {
         onClose={handleSnackBarClose}
       >
         <React.Fragment>
-          {error && (<Alert severity="error">{error?.message}</Alert>)}
-          {success && (<Alert severity="success">{success?.message}</Alert>)}
+          {state.apierror && (
+            <Alert severity="error">{state.apierror}</Alert>
+          )}
+          {state.apisuccess && (
+            <Alert severity="success">{state.apisuccess}</Alert>
+          )}
           <IconButton
             size="small"
             aria-label="close"

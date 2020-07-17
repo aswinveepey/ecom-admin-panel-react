@@ -1,8 +1,8 @@
-import ApiHelper from "./helper";
+import ApiHelper from "./api";
 
 export default class SkuApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //get all skus
   getSkus = async (signal) => {

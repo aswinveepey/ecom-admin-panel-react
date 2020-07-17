@@ -1,18 +1,17 @@
 import { BASE_URL } from "../constants";
 import Cookies from "js-cookie";
+import store from "../store"
 
-export default class ApiHelper{
-  constructor(){
-    this.headers = {
-      "Content-Type": "application/json",
-      Authorization: Cookies.get("token"),
-    };
-  }
+export default function ApiHelper(){
 
-  get = async (signal, reqUrl)=>{
+  const headers = {
+                      "Content-Type": "application/json",
+                      Authorization: Cookies.get("token"),
+                    }
+  const get = async (signal, reqUrl)=>{
     const requestOptions = {
       method: "GET",
-      headers: this.headers,
+      headers: headers,
     };
     const fetchurl = BASE_URL + reqUrl;
     const response = await fetch(fetchurl, requestOptions, { signal: signal });
@@ -21,13 +20,15 @@ export default class ApiHelper{
     if (status === 200) {
       return responseData.data;
     }
-    throw new Error(responseData.message);
-    // setError(responseData.message);
+    store.dispatch({
+      type: "APIERROR",
+      payLoad: responseData.message,
+    });
   }
-  post = async (signal, reqUrl, reqBody)=>{
+  const post = async (signal, reqUrl, reqBody)=>{
     const requestOptions = {
       method: "POST",
-      headers: this.headers,
+      headers: headers,
       body: reqBody,
     };
     const fetchurl = BASE_URL + reqUrl;
@@ -35,8 +36,16 @@ export default class ApiHelper{
     const { status } = response;
     const responseData = await response.json();
     if (status === 200) {
+      store.dispatch({
+        type: "APISUCCESS",
+        payLoad: "Successful Execution",
+      });
       return responseData.data;
     }
-    throw new Error(responseData.message);
+    store.dispatch({
+      type: "APIERROR",
+      payLoad: responseData.message,
+    });
   }
+  return{get,post}
 }
