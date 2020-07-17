@@ -1,5 +1,4 @@
 const apiFeedbackReducer = (state, action)=>{
-  console.log(action.type)
   switch (action.type) {
     case "APISUCCESS":
       return {

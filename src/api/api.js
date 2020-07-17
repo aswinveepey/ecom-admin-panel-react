@@ -20,9 +20,13 @@ export default function ApiHelper(){
     if (status === 200) {
       return responseData.data;
     }
+    const payload =
+      typeof responseData.message === "string"
+        ? responseData.message
+        : "Unknown Error Occurred";
     store.dispatch({
       type: "APIERROR",
-      payLoad: responseData.message,
+      payLoad: payload,
     });
   }
   const post = async (signal, reqUrl, reqBody)=>{
@@ -43,9 +47,13 @@ export default function ApiHelper(){
         });
       return responseData.data;
     }
+    const payload =
+      typeof responseData.message === "string"
+        ? responseData.message
+        : "Unknown Error Occurred";
     store.dispatch({
       type: "APIERROR",
-      payLoad: responseData.message,
+      payLoad: payload,
     });
   }
   return{get,post}
