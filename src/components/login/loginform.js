@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
-import useAPIFeedback from "../../hooks/useapifeedback";
 //Constants Import
 import AuthApi from "../../api/auth"
 
@@ -40,7 +39,6 @@ export default function LoginFormComp(props){
   const [usernameError, setUsernameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const [submitprogress, setSubmitprogress] = React.useState(false);
-  const { setError, setSuccess } = useAPIFeedback();
 
   //handle username change
   const handleUsernameChange = (event)=>{
@@ -63,15 +61,16 @@ export default function LoginFormComp(props){
     const reqBody = { username: username, password: password };
     authApi.authenticate(signal, reqBody)
       .then((data) => {
-        setSuccess({message:"Authenticated"});
           try {
-            Cookies.set("token", data, { expires: 30 });
+            Cookies.set("token", data, { expires: 30 })
+            if(Cookies.get("token")){
+              history && history.push("/home");
+            }
           } catch (error) {
-            setError({message:"Unable to set cookie"});
+            console.log(error)
           }
-          history && history.push("/home");
       })
-      .catch((error) => setError(error));
+      .catch((error) => console.log(error));
 
     return function cleanup() {
       abortController.abort();

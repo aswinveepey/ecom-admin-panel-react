@@ -12,9 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 //import order api class
 import OrderApi from "../../api/order";
-
-//api feedback hook
-import useAPIFeedback from "../../hooks/useapifeedback";
+import {useDispatch} from "react-redux"
+// import {setOrderUpdate} from "../../actions"
 
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
@@ -54,12 +53,11 @@ const orderApi = new OrderApi();
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
   const [calculateTotals, setCalculateTotals] = React.useState(false);
   const [addSkuOpen, setAddSkuOpen] = React.useState(false);
-  const { setError, setSuccess } = useAPIFeedback();
 
   //get open state from props
   React.useEffect(() => {
@@ -188,17 +186,18 @@ export default function OrderDetailcomp(props){
         .updateOrder(signal, formControls)
         .then((data) => {
           handleClose();
-          setSuccess({message:"Successfully updated the order"})
+          dispatch({
+            type: "ORDER_UPDATED",
+          });
         })
-        .catch((err) => setError(err));
+        .catch((err) => console.log(err));
     }else{
       orderApi
         .createOrder(signal, formControls)
         .then((data) => {
           handleClose();
-          setSuccess({ message: "Successfully created the order" });
         })
-        .catch((err) => setError(err));
+        .catch((err) => console.log(err));
     }   
     return function cleanup() {
       abortController.abort();

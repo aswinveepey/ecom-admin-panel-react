@@ -292,7 +292,7 @@ export default function DivisionDetailComp(props) {
                   freeSolo
                   multiple
                   options={categories}
-                  value={formControls.categories?.map((data) => data) || []}
+                  value={formControls.categories?.map((data) => data)}
                   getOptionLabel={(option) =>
                     typeof option === "string" ? option : option.name
                   }
@@ -310,6 +310,7 @@ export default function DivisionDetailComp(props) {
                       variant="standard"
                       name="categories"
                       fullWidth
+                      // value={}
                       onChange={onChangeCategorySearch}
                     />
                   )}

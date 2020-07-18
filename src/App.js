@@ -14,7 +14,6 @@ const NotFoundComp = lazy(() => import("./components/404"));
 
 function App() {
   return (
-    <APIFeedbackProvider>
         <Router>
           <Suspense fallback={<LoaderComp />}>
             <Switch>
@@ -30,7 +29,6 @@ function App() {
             </Switch>
           </Suspense>
         </Router>
-    </APIFeedbackProvider>
   );
 }
 export default App;

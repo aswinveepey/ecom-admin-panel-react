@@ -1,8 +1,8 @@
-import ApiHelper from "./helper";
+import ApiHelper from "./api";
 
 export default class UserApi {
   constructor() {
-    this.apiHelper = new ApiHelper();
+    this.apiHelper = ApiHelper();
   }
   //get all users
   getUsers = async (signal) => {

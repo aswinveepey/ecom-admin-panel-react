@@ -1,12 +1,8 @@
 import React from "react";
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
-//api feedback hook
-import useAPIFeedback from "../../hooks/useapifeedback";
-
 //import order api class
 import OrderApi from "../../api/order";
-
 //material UI
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,13 +18,13 @@ import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
-
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import SearchIcon from "@material-ui/icons/Search";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -130,7 +126,7 @@ export default function OrderIndexComp(props) {
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
-  const { setError } = useAPIFeedback();
+  const state = useSelector((state) => state.orderUpdateReducer);
 
   //open Order Detail
   const openOrderDetail = (detailData) => {
@@ -154,25 +150,25 @@ export default function OrderIndexComp(props) {
     const orderApi = new OrderApi();
     const abortController = new AbortController();
     const signal = abortController.signal;
-    if(orderSearch){
+    if (orderSearch) {
       orderApi
         .searchOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
-          setError(err)
+          console.log(err);
         });
     } else {
       orderApi
         .getOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
-          setError(err)
+          console.log(err);
         });
     }
     return function cleanup() {
       abortController.abort();
     };
-  }, [orderSearch]);
+  }, [orderSearch, state]);
 
   return (
     <React.Fragment>
