@@ -110,6 +110,7 @@ function ExpandableRow(props){
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.category.name}</TableCell>
         <TableCell>{row.brand.name}</TableCell>
+        <TableCell>{row.skus.length}</TableCell>
         <TableCell>{row.updatedat}</TableCell>
       </TableRow>
       <TableRow>
@@ -207,6 +208,7 @@ export default function ProductIndexComp(props){
                     Category
                   </TableCell>
                   <TableCell className={classes.tableheader}>Brand</TableCell>
+                  <TableCell className={classes.tableheader}>SKU Count</TableCell>
                   <TableCell className={classes.tableheader}>
                     Last updated at
                   </TableCell>
