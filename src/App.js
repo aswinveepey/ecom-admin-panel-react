@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import './App.css';
 import LoaderComp from "./components/loader"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import APIFeedbackProvider from "../src/providers/apifeedbackprovider";
+// import APIFeedbackProvider from "../src/providers/apifeedbackprovider";
 
 const Login = lazy(() => import("./components/login/login.js"));
 const Home = lazy(() => import("./components/home/home.js"));
