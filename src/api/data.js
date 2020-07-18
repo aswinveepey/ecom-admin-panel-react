@@ -11,4 +11,10 @@ export default class DataApi {
   getCurrentGmv = async (signal) => {
     return await this.apiHelper.get(signal, "data/currentGmv");
   };
+  getQuarterGmv = async (signal) => {
+    return await this.apiHelper.get(signal, "data/quarterGmv");
+  };
+  getMonthlyGmv = async (signal) => {
+    return await this.apiHelper.get(signal, "data/monthlyGmv");
+  };
 }

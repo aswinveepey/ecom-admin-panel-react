@@ -1,10 +1,10 @@
 import React from 'react'
 import { Pie, Line } from "react-chartjs-2";
-import {Paper, Typography, Grid} from '@material-ui/core'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
 
-class DashChartComp extends React.Component {
-  state = {
-    line1: {
+const line1 =  {
       title: "Monthly GMV",
       data: {
         labels: ["January", "February", "March", "April", "May", "June"],
@@ -29,8 +29,9 @@ class DashChartComp extends React.Component {
         legend: { display: true, position: "right" },
         maintainAspectRatio: false,
       },
-    },
-    pie1: {
+    }
+
+const pie1 = {
       title: "Division Wise GMV",
       data: {
         datasets: [
@@ -53,8 +54,9 @@ class DashChartComp extends React.Component {
         legend: { display: true, position: "right" },
         maintainAspectRatio: false,
       },
-    },
-    pie2: {
+    }
+
+const pie2 =  {
       title: "Territory Wise GMV",
       data: {
         datasets: [
@@ -77,19 +79,34 @@ class DashChartComp extends React.Component {
         legend: { display: true, position: "right" },
         maintainAspectRatio: false,
       },
-    },
-  };
-  render() {
+    }
+
+export default function DashChartComp (props){
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  console.log(props.monthlyGmv);
     return (
       <Grid container direction="row" spacing={1}>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Paper className="chart-box">
             <Typography gutterBottom={true} variant="h6">
-              {/* {this.state.pie1.title} */}
+              {/* {pie1.title} */}
             </Typography>
             <Line
-              data={this.state.line1.data}
-              options={this.state.line1.options}
+              data={line1.data}
+              options={line1.options}
               height={200}
             />
           </Paper>
@@ -97,11 +114,11 @@ class DashChartComp extends React.Component {
         <Grid item lg={6} md={12} sm={12} xs={12}>
           <Paper className="chart-box">
             <Typography gutterBottom={true} variant="h6">
-              {/* {this.state.pie1.title} */}
+              {/* {pie1.title} */}
             </Typography>
             <Pie
-              data={this.state.pie1.data}
-              options={this.state.pie1.options}
+              data={pie1.data}
+              options={pie1.options}
               height={200}
             />
           </Paper>
@@ -109,18 +126,15 @@ class DashChartComp extends React.Component {
         <Grid item lg={6} md={12} sm={12} xs={12}>
           <Paper className="chart-box">
             <Typography gutterBottom={true} variant="h6">
-              {/* {this.state.pie2.title} */}
+              {/* {pie2.title} */}
             </Typography>
             <Pie
-              data={this.state.pie2.data}
-              options={this.state.pie2.options}
+              data={pie2.data}
+              options={pie2.options}
               height={200}
             />
           </Paper>
         </Grid>
       </Grid>
     );
-  }
 }
-
-export default DashChartComp;
