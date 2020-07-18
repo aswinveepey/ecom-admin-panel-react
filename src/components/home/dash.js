@@ -28,6 +28,7 @@ class DashComp extends React.Component {
   componentDidMount() {
     // this.fetchDashData();
     this.fetchCustomerData();
+    this.fetchCurrentGmv();
   }
   // fetchDashData = async () => {
   //   let token;
@@ -52,10 +53,13 @@ class DashComp extends React.Component {
   fetchCustomerData = () => {
     dataApi.getCustomerData().then((data) => this.setState({ customerData: data }));
   };
+  fetchCurrentGmv = () => {
+    dataApi.getCurrentGmv().then((data) => this.setState({ currentGmv: data }));
+  };
   render() {
     const infoBoxData = [
       // { id: 1, title: "No of Customers", value: "2340" },
-      { id: 2, title: "Monthly GMV", value: "10 Cr" },
+      // { id: 2, title: "Monthly GMV", value: "10 Cr" },
       { id: 3, title: "Quarterly GMV", value: "20 Cr" },
     ];
     const infoBoxComponent = infoBoxData.map((data) => (
@@ -79,8 +83,16 @@ class DashComp extends React.Component {
           <Grid item>
             <Grid container spacing={1}>
               <Grid item xs={12} sm={12} md={4} lg={4} key={1}>
-                {this.state.customerData && (
-                <InfoBox title="No Of Customers" value={this.state.customerData?.active} />)}
+                  <InfoBox
+                    title="No Of Customers"
+                    value={this.state.customerData?.active}
+                  />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4} key={2}>
+                  <InfoBox
+                    title="Monthly GMV"
+                    value={this.state.currentGmv?.total}
+                  />
               </Grid>
               {infoBoxComponent}
             </Grid>
