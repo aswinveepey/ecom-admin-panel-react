@@ -13,10 +13,10 @@ export default function DashComp(props) {
   const [monthlyGmv, setMonthlyGmv] = React.useState();
 
   React.useEffect(()=>{
-    dataApi.getCustomerData().then((data) => setCustomerData(data[0]));
-    dataApi.getCurrentGmv().then((data) => setCurrentGmv(data[0]));
-    dataApi.getQuarterGmv().then((data) => setQuarterGmv(data[0]));
-    dataApi.getMonthlyGmv().then((data) => setMonthlyGmv(data));
+    dataApi.getCustomerData().then((data) => data && setCustomerData(data[0]));
+    dataApi.getCurrentGmv().then((data) => data && setCurrentGmv(data[0]));
+    dataApi.getQuarterGmv().then((data) => data && setQuarterGmv(data[0]));
+    dataApi.getMonthlyGmv().then((data) => data && setMonthlyGmv(data ));
   },[props])
 
     return (

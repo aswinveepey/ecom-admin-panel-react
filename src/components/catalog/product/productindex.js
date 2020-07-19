@@ -208,7 +208,9 @@ export default function ProductIndexComp(props){
                     Category
                   </TableCell>
                   <TableCell className={classes.tableheader}>Brand</TableCell>
-                  <TableCell className={classes.tableheader}>SKU Count</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    SKU Count
+                  </TableCell>
                   <TableCell className={classes.tableheader}>
                     Last updated at
                   </TableCell>
