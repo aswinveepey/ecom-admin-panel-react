@@ -106,10 +106,12 @@ export default function OrderitemDetailComp(props) {
                   </TextField>
                 </TableCell>
                 <TableCell>
-                  {parseFloat(orderitem.sku?.price?.mrp).toFixed(2)}
+                  {parseFloat(orderitem.sku?.inventory[0]?.mrp).toFixed(2)}
                 </TableCell>
                 <TableCell>
-                  {parseFloat(orderitem.sku?.price?.sellingprice).toFixed(2)}
+                  {parseFloat(
+                    orderitem.sku?.inventory[0]?.sellingprice
+                  ).toFixed(2)}
                 </TableCell>
                 <TableCell>
                   <TextField

@@ -12,6 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 //import order api class
 import OrderApi from "../../api/order";
+import {useDispatch} from "react-redux"
+// import {setOrderUpdate} from "../../actions"
 
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
@@ -51,7 +53,7 @@ const orderApi = new OrderApi();
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [formControls, setFormControls] = React.useState([]);
   const [calculateTotals, setCalculateTotals] = React.useState(false);
@@ -90,13 +92,14 @@ export default function OrderDetailcomp(props){
           item.quantity.confirmed ||
           item.quantity.booked ||
           0;
-        item.amount.amount = (item.sku?.price?.sellingprice || 0) * currentQty;
-        item.amount.discount = (item.sku?.price?.discount || 0) * currentQty;
+        item.amount.amount = (item.sku?.inventory[0]?.sellingprice || 0) * currentQty;
+        item.amount.discount =
+          (item.sku?.inventory[0]?.discount || 0) * currentQty;
         item.amount.totalamount = item.amount.amount - item.amount.discount;
         item.amount.shipping =
-          (item.sku?.price?.shippingcharges || 0) * currentQty;
+          (item.sku?.inventory[0]?.shippingcharges || 0) * currentQty;
         item.amount.installation =
-          (item.sku?.price?.installationcharges || 0) * currentQty;
+          (item.sku?.inventory[0]?.installationcharges || 0) * currentQty;
         orderAmount += item.amount.totalamount;
         orderShipping += item.amount.shipping;
         orderInstallation += item.amount.installation;
@@ -104,6 +107,8 @@ export default function OrderDetailcomp(props){
       });
       controls.amount = controls.amount || {};
       controls.amount.amount = orderAmount;
+      controls.amount.discount = controls.amount.discount || 0;
+      controls.amount.totalamount = controls.amount.amount - controls.amount.discount;
       controls.amount.shippping = controls.amount.shipping || orderShipping;
       controls.amount.installation =
         controls.amount.installation || orderInstallation;
@@ -184,6 +189,9 @@ export default function OrderDetailcomp(props){
         .updateOrder(signal, formControls)
         .then((data) => {
           handleClose();
+          dispatch({
+            type: "ORDER_UPDATED",
+          });
         })
         .catch((err) => console.log(err));
     }else{
@@ -233,7 +241,7 @@ export default function OrderDetailcomp(props){
               onSelectCustomer={onSelectCustomer}
             />
           </Suspense>
-          {!props.data?._id && (
+          {!formControls._id && formControls.customer && (
             <Button
               color="primary"
               variant="outlined"

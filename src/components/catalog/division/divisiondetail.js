@@ -162,7 +162,7 @@ export default function DivisionDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     categoryApi
-      .searchCategories(signal, categorySearchString)
+      .getCategories(signal, categorySearchString)
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));
     return function cleanup() {

@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     padding: "1%",
     minHeight: "70vh",
-    // overflow:"auto"
+    overflow:"auto"
   },
   content: {
     flexGrow: 1,
@@ -113,8 +113,8 @@ export default function Scaffold(props) {
       </main>
       <Snackbar
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
+          vertical: "top",
+          horizontal: "right",
         }}
         open={snackBarOpen}
         autoHideDuration={10000}
