@@ -121,12 +121,18 @@ export default function SkuDetailComp(props) {
     event.preventDefault();
     // const name = event.target.name;
     const value = event.target.value;
+    const name = event.target.name;
     const controls = { ...formControls };
     controls.inventory = controls.inventory || [];
     if (territory){
       controls.inventory[index]["territory"] = territory;
     } else {
-      controls.inventory[index]["quantity"] = value;
+      if (name === "status") {
+        controls[name] = event.target.checked;
+      } else {
+        controls[name] = value;
+      }
+      controls.inventory[index][name] = value;
     }
     setFormControls(controls);
   };
@@ -135,7 +141,14 @@ export default function SkuDetailComp(props) {
     event.preventDefault();
     const controls = { ...formControls };
     !controls.inventory && (controls.inventory = []);
-    controls.inventory.push({});
+    controls.inventory.push({
+      mrp: controls.price.mrp,
+      discount: controls.price.discount,
+      sellingprice: controls.price.sellingprice,
+      purchaseprice: controls.price.purchaseprice,
+      shippingcharges: controls.price.shippingcharges,
+      installationcharges: controls.price.installationcharges,
+    });
     setFormControls(controls);
   };
   //Change sku price
@@ -303,7 +316,8 @@ export default function SkuDetailComp(props) {
     props.handleClose();
   };
   //handle submit
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -345,10 +359,7 @@ export default function SkuDetailComp(props) {
               >
                 <CloseIcon />
               </IconButton>
-              <Typography
-                variant="subtitle1"
-                className={classes.title}
-              >
+              <Typography variant="subtitle1" className={classes.title}>
                 {formControls?.name || "Add SKU"}
               </Typography>
               <Button autoFocus color="inherit" type="submit">
@@ -496,8 +507,137 @@ export default function SkuDetailComp(props) {
                       />
                     </Paper>
                   </Grid>
-                  {/* Inventory Section */}
+                  {/* Business Info section */}
                   <Grid item xs={12} md={6}>
+                    <Paper className={classes.sectionpaper}>
+                      <Typography variant="h6" gutterBottom>
+                        Pricing & Business Rules
+                      </Typography>
+                      {/* SKU MRP */}
+                      <TextField
+                        label="MRP"
+                        variant="standard"
+                        name="mrp"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.mrp || 0}
+                      />
+                      <TextField
+                        label="Discount"
+                        variant="standard"
+                        name="discount"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.discount || 0}
+                      />
+                      <TextField
+                        label="Selling Price"
+                        variant="standard"
+                        name="sellingprice"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.sellingprice || 0}
+                      />
+                      <TextField
+                        label="Purchase Price"
+                        variant="standard"
+                        name="purchaseprice"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.purchaseprice || 0}
+                      />
+                      <TextField
+                        label="Shipping Charges"
+                        variant="standard"
+                        name="shippingcharges"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.shippingcharges || 0}
+                      />
+                      <TextField
+                        label="Installation Charges"
+                        variant="standard"
+                        name="installationcharges"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangePrice}
+                        value={formControls?.price?.installationcharges || 0}
+                      />
+                      <TextField
+                        label="Bulk discount threshold"
+                        variant="standard"
+                        name="threshold"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangeBulkdiscount}
+                        value={formControls?.bulkdiscount?.threshold || 0}
+                      />
+                      <TextField
+                        label="Bulk discount Amount"
+                        variant="standard"
+                        name="discount"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangeBulkdiscount}
+                        value={formControls?.bulkdiscount?.discount || 0}
+                      />
+                      <TextField
+                        label="Minimum Order Quantity"
+                        variant="standard"
+                        name="minorderqty"
+                        fullWidth
+                        required
+                        type="number"
+                        onChange={onChangeQuantityrules}
+                        value={formControls?.quantityrules?.minorderqty || 0}
+                      />
+                      <TextField
+                        label="Maximum Order Quantity"
+                        variant="standard"
+                        name="maxorderqty"
+                        required
+                        fullWidth
+                        type="number"
+                        onChange={onChangeQuantityrules}
+                        value={formControls?.quantityrules?.maxorderqty || 0}
+                      />
+                      {/* Min Order Qty Multiple Flag comes here */}
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            name="minorderqtystep"
+                            size="small"
+                            checked={
+                              formControls?.quantityrules?.minorderqtystep ===
+                              undefined
+                                ? true
+                                : formControls?.quantityrules.minorderqtystep
+                            }
+                            // disabled={!this.state.editTogggle}
+                            onChange={onChangeQuantityrules}
+                            color="primary"
+                          />
+                        }
+                        label="Min Order Qty Multiple"
+                        labelPlacement="end"
+                      />
+                    </Paper>
+                  </Grid>
+                  {/* Inventory Section */}
+                  <Grid item xs={12}>
                     <Paper className={classes.sectionpaper}>
                       <Typography variant="h6" gutterBottom>
                         Manage Inventory
@@ -554,131 +694,107 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.quantity || ""}
+                                  value={data?.quantity || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="MRP"
+                                  variant="standard"
+                                  name="mrp"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.mrp || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="Discount"
+                                  variant="standard"
+                                  name="discount"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.discount || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="Selling"
+                                  variant="standard"
+                                  name="sellingprice"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.sellingprice || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="Purchase"
+                                  variant="standard"
+                                  name="purchaseprice"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.purchaseprice || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="Shipping"
+                                  variant="standard"
+                                  name="shippingcharges"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.shippingcharges || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  label="Installation"
+                                  variant="standard"
+                                  name="installationcharges"
+                                  fullWidth
+                                  type="number"
+                                  required
+                                  onChange={onChangeInventory.bind(this, index)}
+                                  value={data?.installationcharges || 0}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <FormControlLabel
+                                  control={
+                                    <Switch
+                                      name="status"
+                                      size="small"
+                                      checked={
+                                        data?.status === undefined
+                                          ? true
+                                          : data?.status
+                                      }
+                                      onChange={onChangeInventory.bind(
+                                        this,
+                                        index
+                                      )}
+                                      color="primary"
+                                    />
+                                  }
+                                  label="Status"
+                                  labelPlacement="end"
                                 />
                               </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
                       </Table>
-                    </Paper>
-                  </Grid>
-                  {/* Business Info section */}
-                  <Grid item xs={12} md={6}>
-                    <Paper className={classes.sectionpaper}>
-                      <Typography variant="h6" gutterBottom>
-                        Pricing & Business Rules
-                      </Typography>
-                      {/* SKU MRP */}
-                      <TextField
-                        label="MRP"
-                        variant="standard"
-                        name="mrp"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangePrice}
-                        value={formControls?.price?.mrp || ""}
-                      />
-                      <TextField
-                        label="Discount"
-                        variant="standard"
-                        name="discount"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangePrice}
-                        value={formControls?.price?.discount || ""}
-                      />
-                      <TextField
-                        label="Selling Price"
-                        variant="standard"
-                        name="sellingprice"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangePrice}
-                        value={formControls?.price?.sellingprice || ""}
-                      />
-                      <TextField
-                        label="Shipping Charges"
-                        variant="standard"
-                        name="shippingcharges"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangePrice}
-                        value={formControls?.price?.shippingcharges || ""}
-                      />
-                      <TextField
-                        label="Installation Charges"
-                        variant="standard"
-                        name="installationcharges"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangePrice}
-                        value={formControls?.price?.installationcharges || ""}
-                      />
-                      <TextField
-                        label="Bulk discount threshold"
-                        variant="standard"
-                        name="threshold"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangeBulkdiscount}
-                        value={formControls?.bulkdiscount?.threshold || ""}
-                      />
-                      <TextField
-                        label="Bulk discount Amount"
-                        variant="standard"
-                        name="discount"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangeBulkdiscount}
-                        value={formControls?.bulkdiscount?.discount || ""}
-                      />
-                      <TextField
-                        label="Minimum Order Quantity"
-                        variant="standard"
-                        name="minorderqty"
-                        fullWidth
-                        required
-                        type="number"
-                        onChange={onChangeQuantityrules}
-                        value={formControls?.quantityrules?.minorderqty || ""}
-                      />
-                      <TextField
-                        label="Maximum Order Quantity"
-                        variant="standard"
-                        name="maxorderqty"
-                        required
-                        fullWidth
-                        type="number"
-                        onChange={onChangeQuantityrules}
-                        value={formControls?.quantityrules?.maxorderqty || ""}
-                      />
-                      {/* Min Order Qty Multiple Flag comes here */}
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            name="minorderqtystep"
-                            checked={
-                              formControls?.quantityrules?.minorderqtystep ===
-                              undefined
-                                ? true
-                                : formControls?.quantityrules.minorderqtystep
-                            }
-                            // disabled={!this.state.editTogggle}
-                            onChange={onChangeQuantityrules}
-                            color="primary"
-                          />
-                        }
-                        label="Min Order Qty Multiple"
-                        labelPlacement="end"
-                      />
                     </Paper>
                   </Grid>
                   {/* Attribute Section */}

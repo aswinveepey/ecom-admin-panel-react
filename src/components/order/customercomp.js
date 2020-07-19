@@ -92,7 +92,7 @@ export default function CustomerDisplayComp(props) {
             )}
           </Card>
         </Grid>
-        <Grid item md={4}>
+        {props.data && (<Grid item md={4}>
           <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -128,8 +128,8 @@ export default function CustomerDisplayComp(props) {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item md={4}>
+        </Grid>)}
+        {props.data && (<Grid item md={4}>
           <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -165,7 +165,7 @@ export default function CustomerDisplayComp(props) {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
+        </Grid>)}
       </Grid>
       <Suspense fallback={<div>Loading...</div>}>
         <AddressSelectComp
