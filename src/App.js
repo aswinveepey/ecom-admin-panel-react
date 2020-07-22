@@ -10,7 +10,7 @@ const OrderComp = lazy(() => import("./components/order/order.js"));
 const UserComp = lazy(() => import("./components/user/user"));
 const CustomerComp = lazy(() => import("./components/customer/customer"));
 const CatalogComp = lazy(() => import("./components/catalog/catalog"));
-const TerritoryComp = lazy(() => import("./components/territory/territory"));
+const AdminComp = lazy(() => import("./components/admin/admin"));
 const NotFoundComp = lazy(() => import("./components/404"));
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
               <Route exact path="/user/:userid" component={UserComp}></Route>
               <Route exact path="/customer" component={CustomerComp}></Route>
               <Route exact path="/catalog" component={CatalogComp}></Route>
-              <Route exact path="/territory" component={TerritoryComp}></Route>
+              <Route exact path="/admin" component={AdminComp}></Route>
               <Route component={NotFoundComp}></Route>
             </Switch>
           </Suspense>

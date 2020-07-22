@@ -6,17 +6,14 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import ChipInput from "material-ui-chip-input";
 //styles - Material UI
 // import { makeStyles } from "@material-ui/core/styles";
 //api import
-import TerritoryApi from "../../api/territory";
+import RoleApi from "../../../api/role";
 
-const territoryapi = new TerritoryApi();
+const roleapi = new RoleApi();
 
-export default function TerritoryDetailComp(props) {
+export default function RoleDetailComp(props) {
   // const classes = useStyles();
 
   const [formControls, setFormControls] = React.useState([]);
@@ -30,16 +27,16 @@ export default function TerritoryDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (formControls._id) {
-      territoryapi
-        .updateTerritory(signal, formControls)
+      roleapi
+        .updateRole(signal, formControls)
         .then((data) => {
           console.log(data);
           handleClose();
         })
         .catch((err) => console.log(err));
     } else {
-      territoryapi
-        .createTerritory(signal, formControls)
+      roleapi
+        .createRole(signal, formControls)
         .then((data) => {
           console.log(data);
           handleClose();
@@ -51,29 +48,12 @@ export default function TerritoryDetailComp(props) {
     };
   };
   //change territory input handle
-  const onchangeTerritoryInput = (event) => {
+  const onchangeRoleInput = (event) => {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
     const controls = { ...formControls };
-    if (name === "status") {
-      controls[name] = event.target.checked;
-    } else {
-      controls[name] = value;
-    }
-    setFormControls(controls);
-  };
-  // add pincodes manually
-  const onAddPincodes = (chip) => {
-    const controls = { ...formControls };
-    controls.pincodes = controls.pincodes || []
-    controls.pincodes.push(chip)
-    setFormControls(controls);
-  };
-  // delete pincodes
-  const onDeletePincodes = (chip, index) => {
-    const controls = { ...formControls };
-    controls.pincodes.splice(index, 1);
+    controls[name] = value;
     setFormControls(controls);
   };
 
@@ -89,7 +69,7 @@ export default function TerritoryDetailComp(props) {
         onClose={handleClose}
         fullWidth={true}
         maxWidth={"sm"}
-        aria-labelledby="territory-dialog"
+        aria-labelledby="role-dialog"
       >
         {/* <DialogTitle id="territory-dialog-title">
           {formControls.name}
@@ -101,37 +81,11 @@ export default function TerritoryDetailComp(props) {
               <Grid item>
                 <TextField
                   value={formControls?.name}
-                  label="Territory Name"
+                  label="Role Name"
                   name="name"
                   variant="standard"
-                  disabled={
-                    formControls?.name?.toLowerCase() === "default"
-                      ? true
-                      : false
-                  }
                   fullWidth
-                  onChange={onchangeTerritoryInput}
-                />
-              </Grid>
-              <Grid item>
-                <ChipInput
-                  label="Pincodes"
-                  value={formControls?.pincodes}
-                  onDelete={onDeletePincodes}
-                  onAdd={onAddPincodes}
-                />
-              </Grid>
-              <Grid item>
-                <FormControlLabel
-                  label={formControls?.status ? "Active" : "Inactive"}
-                  control={
-                    <Switch
-                      checked={formControls?.status}
-                      color="primary"
-                      name="status"
-                      onChange={onchangeTerritoryInput}
-                    />
-                  }
+                  onChange={onchangeRoleInput}
                 />
               </Grid>
             </Grid>

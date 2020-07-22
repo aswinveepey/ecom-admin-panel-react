@@ -1,16 +1,16 @@
 import React from "react";
 // import CustomerDetailComp from "./customerdetail";
-import DataTableComp from "../common/datatable";
-import TerritoryDetailComp from "./territorydetail";
-import TerritoryApi from "../../api/territory";
+import DataTableComp from "../../common/datatable";
+import RoleDetailComp from "./roledetail";
+import RoleApi from "../../../api/role";
 
-const territoryapi = new TerritoryApi();
+const roleapi = new RoleApi();
 
-export default function TerritoryIndexComp(props) {
+export default function RoleIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
-  const [territorySearch, setTerritorySearch] = React.useState("");
+  const [roleSearch, setRoleSearch] = React.useState("");
 
   const gridData = {
     gridOptions: {
@@ -28,10 +28,10 @@ export default function TerritoryIndexComp(props) {
         headerName: "Name",
         valueGetter: (params) => params.data?.name,
       },
-      {
-        headerName: "Status",
-        valueGetter: (params) => params.data?.status?"Active":"Inactive",
-      },
+      // {
+      //   headerName: "Status",
+      //   valueGetter: (params) => (params.data?.status ? "Active" : "Inactive"),
+      // },
       // {
       //   headerName: "PincodeCount",
       //   valueGetter: (params) => params.data?.pincodes.length,
@@ -56,37 +56,37 @@ export default function TerritoryIndexComp(props) {
   }
   //handle search input
   function onchangeSearchInput(event) {
-    setTerritorySearch(event.target.value);
+    setRoleSearch(event.target.value);
   }
   //datafetch
   React.useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-    if (territorySearch) {
-      territoryapi
-        .searchTerritories(signal, territorySearch)
+    if (roleSearch) {
+      roleapi
+        .searchRole(signal, roleSearch)
         .then((response) => setRowData(response));
     } else {
-      territoryapi
-        .getTerritories(signal)
+    roleapi
+        .getRoles(signal)
         .then((response) => setRowData(response));
     }
     return function cleanup() {
       abortController.abort();
     };
-  }, [territorySearch]);
+  }, [roleSearch]);
   //return component
   return (
     <React.Fragment>
       <DataTableComp
-        title="Territories"
+        title="Roles"
         handleRowDoubleClick={handleRowDoubleClick}
         handleNewClick={handleNewClick}
         gridData={gridData}
         rowData={rowData}
         onchangeSearchInput={onchangeSearchInput}
       />
-      <TerritoryDetailComp
+      <RoleDetailComp
         handleDialogClose={handleDialogClose}
         open={openDialog}
         data={dialogData}
