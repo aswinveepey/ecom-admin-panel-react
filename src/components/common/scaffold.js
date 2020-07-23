@@ -105,7 +105,7 @@ export default function Scaffold(props) {
           anchor="left"
           onClose={handleDrawerToggle}
         >
-          <DrawerComp handleDrawerToggle={handleDrawerToggle} />
+            <DrawerComp handleDrawerToggle={handleDrawerToggle} />
         </Drawer>
       </nav>
       <main className={classes.content}>
@@ -121,9 +121,7 @@ export default function Scaffold(props) {
         onClose={handleSnackBarClose}
       >
         <React.Fragment>
-          {state.apierror && (
-            <Alert severity="error">{state.apierror}</Alert>
-          )}
+          {state.apierror && <Alert severity="error">{state.apierror}</Alert>}
           {state.apisuccess && (
             <Alert severity="success">{state.apisuccess}</Alert>
           )}

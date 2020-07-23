@@ -35,7 +35,7 @@ export default function UserDetailComp(props) {
   const [divisions, setDivisions] = React.useState([])
   const [formControls, setFormControls] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -43,22 +43,25 @@ export default function UserDetailComp(props) {
       .getOneUser(signal, props.userId)
       .then((data) => setFormControls(data))
       .catch((err) => console.log(err));
-    roleApi
-      .getRoles(signal)
-      .then((data) => setRoles(data))
-      .catch((err) => console.log(err));
-    territoryApi
-      .getTerritories(signal)
-      .then((data) => setTerritories(data))
-      .catch((err) => console.log(err));
-    divisionApi
-      .getDivisions(signal)
-      .then((data) => setDivisions(data))
-      .catch((err) => console.log(err));
+    editTogggle &&
+      roleApi
+        .getRoles(signal)
+        .then((data) => data && setRoles(data))
+        .catch((err) => console.log(err));
+    editTogggle &&
+      territoryApi
+        .getTerritories(signal)
+        .then((data) => data && setTerritories(data))
+        .catch((err) => console.log(err));
+    editTogggle &&
+      divisionApi
+        .getDivisions(signal)
+        .then((data) => data && setDivisions(data))
+        .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  },[props])
+  }, [props, editTogggle]);
 
   //get data from territories
   const handlesubmit = (event) => {
@@ -137,7 +140,7 @@ export default function UserDetailComp(props) {
                       </IconButton>
                     )}
                     {/* If editing, show submit and cancel options */}
-                    {editTogggle && (
+                    { editTogggle && (
                       <div>
                         <IconButton onClick={() => setEditToggle(false)}>
                           <CloseIcon color="secondary" />
@@ -276,9 +279,7 @@ export default function UserDetailComp(props) {
                       getOptionLabel={(option) =>
                         typeof option === "string" ? option : option.name
                       }
-                      value={
-                        formControls?.divisions?.map((data) => data) || []
-                      }
+                      value={formControls?.divisions?.map((data) => data) || []}
                       filterSelectedOptions
                       name="name"
                       onChange={(event, value) =>
