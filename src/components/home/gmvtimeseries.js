@@ -4,13 +4,13 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 
-export default function DashChartComp (props){
-  const [monthlyGmv, setMonthlyGmv] = React.useState([])
+export default function GmvTimeSeriesComp (props){
+  const [gmvTimeSeries, setGmvTimeSeries] = React.useState([]);
 
   const line1 = {
-    title: "Monthly GMV",
+    title: "GMV TimerSeries",
     data: {
-      labels: monthlyGmv.map((item) => item._id),
+      labels: gmvTimeSeries.map((item) => item._id),
       datasets: [
         {
           label: "GMV",
@@ -19,14 +19,14 @@ export default function DashChartComp (props){
           backgroundColor: "#13424C",
           borderColor: "rgba(0,0,0,1)",
           borderWidth: 2,
-          data: monthlyGmv.map((item) => item.total),
+          data: gmvTimeSeries.map((item) => item.total),
         },
       ],
     },
     options: {
       title: {
         display: true,
-        text: "Monthly GMV",
+        text: "GMV TimerSeries",
         fontSize: 20,
       },
       legend: { display: true, position: "right" },
@@ -34,14 +34,13 @@ export default function DashChartComp (props){
     },
   };
   React.useEffect(()=>{
-    props.monthlyGmv && setMonthlyGmv(props.monthlyGmv)
+    props.gmvTimeSeries && setGmvTimeSeries(props.gmvTimeSeries);
   },[props])
     return (
       <Grid container direction="row" spacing={1}>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Paper className="chart-box">
             <Typography gutterBottom={true} variant="h6">
-              {/* {pie1.title} */}
             </Typography>
             <Line
               data={line1.data}

@@ -8,3 +8,13 @@ export const setOrderUpdate = ()=>{
     type: "ORDER_UPDATED",
   };
 }
+export const setUser = ()=>{
+  return {
+    type: "SETUSER",
+  };
+}
+export const unSetUser = ()=>{
+  return {
+    type: "UNSETUSER",
+  };
+}

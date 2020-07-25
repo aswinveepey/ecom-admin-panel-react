@@ -63,7 +63,7 @@ export default function CustomerDetailComp(props){
       customerapi
         .updateCustomer(signal, formControls)
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           handleClose();
         })
         .catch((err) => console.log(err));
@@ -214,6 +214,27 @@ export default function CustomerDetailComp(props){
               </Grid>
               <Grid item>
                 <TextField
+                  value={formControls?.birthday?.substring(0, 10)}
+                  label="Date of Birth"
+                  name="birthday"
+                  variant="standard"
+                  type="date"
+                  fullWidth
+                  onChange={(event) => onchangeCustomerInput(event)}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  value={formControls?.contactnumber}
+                  label="Contact Mobile"
+                  name="contactnumber"
+                  variant="standard"
+                  fullWidth
+                  onChange={(event) => onchangeCustomerInput(event)}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
                   select
                   value={formControls?.type || ""}
                   label="type"
@@ -269,7 +290,7 @@ export default function CustomerDetailComp(props){
               <Grid item>
                 <TextField
                   value={formControls?.auth?.email}
-                  label="Email"
+                  label="Registered Email"
                   name="email"
                   variant="standard"
                   fullWidth
@@ -279,7 +300,7 @@ export default function CustomerDetailComp(props){
               <Grid item>
                 <TextField
                   value={formControls?.auth?.mobilenumber}
-                  label="Mobile"
+                  label="Registered Mobile"
                   name="mobilenumber"
                   variant="standard"
                   fullWidth

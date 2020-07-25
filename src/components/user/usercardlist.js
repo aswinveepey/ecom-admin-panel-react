@@ -42,7 +42,7 @@ export default function UserCardList(props) {
       <Paper className="paper-box" variant="elevation" elvation={1}>
         <Grid container direction="column" wrap="nowrap">
           {fetchStatus === "fetched" &&
-            userData.map((data) => {
+            userData?.map((data) => {
               return (
                 <Grid item key={data._id}>
                   <Card
