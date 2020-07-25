@@ -6,7 +6,7 @@ import Avatar from "@material-ui/core/Avatar";
 import ButtonBase from "@material-ui/core/ButtonBase"
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-import UserApi from "../../api/user";
+import UserApi from "../../../api/user";
 
 //define styles
 const useStyles = makeStyles((theme) => ({
@@ -56,17 +56,6 @@ export default function UserCardList(props) {
                   onClick={handleCardClick.bind(this, data._id)}
                 >
                   <Grid item>
-                    {/* <Card
-                    elevation={
-                      selectedId === data._id
-                        ? 2
-                        : cardElevation
-                    }
-                    className="list-card-item"
-                    onClick={handleCardClick.bind(this, data._id)}
-                  > */}
-                    {/* <CardContent> */}
-                    <Divider />
                     <Grid
                       container
                       spacing={1}
@@ -85,8 +74,7 @@ export default function UserCardList(props) {
                         </Typography>
                       </Grid>
                     </Grid>
-                    {/* </CardContent>
-                  </Card> */}
+                    <Divider />
                   </Grid>
                 </ButtonBase>
               );

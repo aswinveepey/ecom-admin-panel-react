@@ -22,7 +22,6 @@ export default function App() {
               <Route exact path="/login" component={Login}></Route>
               <Route exact path="/home" component={Home}></Route>
               <Route exact path="/order" component={OrderComp}></Route>
-              <Route exact path="/user" component={UserComp}></Route>
               <Route exact path="/user/:userid" component={UserComp}></Route>
               <Route exact path="/customer" component={CustomerComp}></Route>
               <Route exact path="/catalog" component={CatalogComp}></Route>

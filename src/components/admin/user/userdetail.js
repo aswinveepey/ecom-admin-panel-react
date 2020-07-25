@@ -17,10 +17,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 //api import
-import UserApi from "../../api/user"
-import RoleApi from "../../api/role"
-import TerritoryApi from "../../api/territory"
-import DivisionApi from "../../api/division"
+import UserApi from "../../../api/user"
+import RoleApi from "../../../api/role"
+import TerritoryApi from "../../../api/territory"
+import DivisionApi from "../../../api/division"
 
 const userApi = new UserApi();
 const roleApi = new RoleApi();
@@ -119,24 +119,16 @@ export default function UserDetailComp(props) {
   };
     return (
       <React.Fragment>
-        {/* Initial conditions - ask user to select a user */}
-        {
-          !formControls?._id && (
-            <Typography variant="h6">
-              Select a User to see the details
-            </Typography>
-          )
-        }
         <Paper style={{ padding: "10px" }} elevation={editTogggle ? 2 : 0}>
           <form onSubmit={handlesubmit}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
                 <Grid container direction="row" alignContent="center">
                   <Grid item style={{ paddingTop: "10px" }}>
-                    <Typography variant="h6">
+                    {formControls?._id && (<Typography variant="h6">
                       {formControls?.firstname + " " + formControls?.lastname}
                       &nbsp;
-                    </Typography>
+                    </Typography>)}
                     {/* Default state - show user option to edit fields */}
                   </Grid>
                   <Grid item>
