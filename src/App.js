@@ -13,7 +13,7 @@ const CatalogComp = lazy(() => import("./components/catalog/catalog"));
 const AdminComp = lazy(() => import("./components/admin/admin"));
 const NotFoundComp = lazy(() => import("./components/404"));
 
-function App() {
+export default function App() {
   return (
         <Router>
           <Suspense fallback={<LoaderComp />}>
@@ -33,4 +33,3 @@ function App() {
         </Router>
   );
 }
-export default App;

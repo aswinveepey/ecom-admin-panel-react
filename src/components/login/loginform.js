@@ -8,8 +8,10 @@ import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
+import { useDispatch } from "react-redux";
 //Constants Import
 import AuthApi from "../../api/auth"
+import UserApi from "../../api/user"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,13 +34,17 @@ export default function LoginFormComp(props){
   const classes = useStyles();
   const history = useHistory();
   const authApi = new AuthApi();
+  const userApi = new UserApi();
+  const dispatch = useDispatch();
+
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
+  
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [usernameError, setUsernameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
-  const [submitprogress, setSubmitprogress] = React.useState(false);
+  const [loginState, setLoginState] = React.useState();
 
   //handle username change
   const handleUsernameChange = (event)=>{
@@ -64,7 +70,7 @@ export default function LoginFormComp(props){
           try {
             Cookies.set("token", data, { expires: 30 })
             if(Cookies.get("token")){
-              history && history.push("/home");
+              setLoginState("Authenticated");
             }
           } catch (error) {
             console.log(error)
@@ -76,6 +82,25 @@ export default function LoginFormComp(props){
       abortController.abort();
     };
   };
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    if (loginState === "Authenticated") {
+      userApi
+        .getSelf(signal)
+        .then((data) => {
+          dispatch({
+            type: "SETUSER",
+            payLoad: data,
+          });
+          history && history.push("/home");
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [loginState, dispatch, history]);
   return (
     <Grid
       container
@@ -123,18 +148,14 @@ export default function LoginFormComp(props){
           />
         </Grid>
         <Grid item className={classes.griditem}>
-          {submitprogress ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              className="button-block"
-            >
-              Submit
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            className="button-block"
+          >
+            Submit
+          </Button>
         </Grid>
         <Grid item className={classes.griditem}>
           <Link href="#" variant="body2">

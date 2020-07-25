@@ -17,7 +17,7 @@ export default function CatalogComp(props) {
   };
   return (
     <React.Fragment>
-      <Scaffold title="Dashboard">
+      <Scaffold title="Catalog">
         <Tabs
           value={tabValue}
           onChange={handleChange}
