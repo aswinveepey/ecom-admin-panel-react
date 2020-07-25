@@ -7,77 +7,62 @@ import UserCardList from './usercardlist'
 //material ui core imports
 // import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
-import Fab from '@material-ui/core/Fab'
-import Tooltip from "@material-ui/core/Tooltip";
-//material ui icon imports
-import AddIcon from '@material-ui/icons/Add'
+import Button from '@material-ui/core/Button'
 
 const UserDetailComp = React.lazy(() => import("./userdetail"));
 const UserNewComp = React.lazy(() => import("./usernew"));
 
-class UserComp extends React.Component {
-  constructor(props){
-    super(props);
-    this.selectUser = this.selectUser.bind(this);
+export default function UserComp(props) {
+  
+  const [selectedUserId, setSelectedUserId] = React.useState();
+  const [newUser, setNewUser] = React.useState(false);
+
+  const selectUser = (userId)=>{
+    setNewUser(false)
+    setSelectedUserId(userId)
   }
-  //declare initial states
-  state = {
-    fetchstatus: "fetched",
-    selectedId: null,
-    newuserflag: false
+
+  const newUserClick = (event) => {
+    event.preventDefault()
+    setNewUser(true);
+    setSelectedUserId(null);
   };
-  selectUser(userId){
-    this.setState({ selectedId: userId, newuserflag: false });
-  }
-  componentDidMount(){
-    const { userid } = this.props.match.params;
-    // const values = queryString.parse(this.props.location.search);
-    // values && this.setState({ selectedId: values.userId });
-    userid && this.setState({ selectedId: userid });
-  }
+
+  React.useEffect(()=>{
+    props?.match?.params?.userId && setSelectedUserId(props.match.params.userId)
+  },[props])
+
   //render
-  render() {
     return (
       <React.Fragment>
         <Scaffold title="Users">
           <Grid container direction="row" spacing={2}>
             <Grid item lg={2}>
-              {/* <PaperBox> */}
-              <Tooltip title="Add User">
-                <Fab
-                  size="small"
-                  color="secondary"
-                  aria-label="add"
-                  className="adduserfab"
-                  onClick={() => {
-                    this.setState({ newuserflag: true });
-                  }}
-                >
-                  <AddIcon />
-                </Fab>
-              </Tooltip>
-              <UserCardList onSelect={this.selectUser} />
-              {/* </PaperBox> */}
+              <Button
+                fullWidth
+                color="primary"
+                variant="contained"
+                aria-label="Add"
+                onClick={newUserClick}
+              >
+                {"New User"}
+              </Button>
+              <UserCardList onSelect={selectUser} />
             </Grid>
             <Grid item lg={10}>
-              {/* <PaperBox> */}
-              {this.state.newuserflag && (
+              {newUser && (
                 <Suspense fallback={<div>Loading...</div>}>
                   <UserNewComp />
                 </Suspense>
               )}
-              {this.state.selectedId && (
+              {selectedUserId && (
                 <Suspense fallback={<div>Loading...</div>}>
-                  <UserDetailComp userId={this.state.selectedId} />
+                  <UserDetailComp userId={selectedUserId} />
                 </Suspense>
               )}
-              {/* </PaperBox> */}
             </Grid>
           </Grid>
         </Scaffold>
       </React.Fragment>
     );
   }
-}
-
-export default UserComp;

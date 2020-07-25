@@ -120,7 +120,13 @@ export default function UserDetailComp(props) {
     return (
       <React.Fragment>
         {/* Initial conditions - ask user to select a user */}
-        <Typography variant="h6">Select a User to see the details</Typography>
+        {
+          !formControls?._id && (
+            <Typography variant="h6">
+              Select a User to see the details
+            </Typography>
+          )
+        }
         <Paper style={{ padding: "10px" }} elevation={editTogggle ? 2 : 0}>
           <form onSubmit={handlesubmit}>
             <Grid container direction="column" spacing={2}>
@@ -140,7 +146,7 @@ export default function UserDetailComp(props) {
                       </IconButton>
                     )}
                     {/* If editing, show submit and cancel options */}
-                    { editTogggle && (
+                    {editTogggle && (
                       <div>
                         <IconButton onClick={() => setEditToggle(false)}>
                           <CloseIcon color="secondary" />
