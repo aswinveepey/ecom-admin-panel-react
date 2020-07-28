@@ -20,6 +20,9 @@ export default function ApiHelper(){
     if (status === 200) {
       return responseData.data;
     }
+    if (status===401){
+      throw new Error(responseData.message);
+    }
     const payload =
       typeof responseData.message === "string"
         ? responseData.message
@@ -46,6 +49,9 @@ export default function ApiHelper(){
           payLoad: responseData.message,
         });
       return responseData.data;
+    }
+    if (status === 401) {
+      throw new Error(responseData.message);
     }
     const payload =
       typeof responseData.message === "string"
