@@ -17,7 +17,9 @@ import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
 import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
-import {useSelector} from "react-redux"
+import { useHistory } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import UserApi from "../../api/user";
 
 const drawerWidth = 240;
 
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     padding: "1%",
     minHeight: "70vh",
-    // overflow:"auto"
+    overflow:"auto"
   },
   content: {
     flexGrow: 1,
@@ -58,26 +60,63 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Scaffold(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const userApi = new UserApi();
+  const history = useHistory();
+
   const [open, setOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
-  const state = useSelector((state) => state.apiFeedbackReducer);
+
+  const apifeedbackState = useSelector((state) => state.apiFeedbackReducer);
+  const userState = useSelector((state) => state.userStateReducer);
 
   const handleDrawerToggle = ()=>{
     setOpen(!open);
   }
   const handleSnackBarClose = ()=>{
     setSnackBarOpen(false);
+    dispatch({
+      type: "APIERROR",
+      payLoad: null,
+    });
+    dispatch({
+      type: "APISUCCESS",
+      payLoad: null,
+    });
   }
   React.useEffect(() => {
-    (state.apisuccess || state.apierror) && setSnackBarOpen(true);
-  }, [state]);
+    (apifeedbackState.apisuccess || apifeedbackState.apierror) &&
+      setSnackBarOpen(true);
+  }, [apifeedbackState]);
 
   React.useEffect(() => {
     if (props.search === false) {
       setSearch(false);
     }
   }, [props]);
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    if (!userState.firstname) {
+      userApi
+        .getSelf(signal)
+        .then((data) => {
+          data && dispatch({
+            type: "SETUSER",
+            payLoad: data,
+          });
+          !data && history && history.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [userState.firstname]);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -113,19 +152,19 @@ export default function Scaffold(props) {
       </main>
       <Snackbar
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
+          vertical: "top",
+          horizontal: "right",
         }}
         open={snackBarOpen}
-        autoHideDuration={10000}
+        autoHideDuration={5000}
         onClose={handleSnackBarClose}
       >
         <React.Fragment>
-          {state.apierror && (
-            <Alert severity="error">{state.apierror}</Alert>
+          {apifeedbackState.apierror && (
+            <Alert severity="error">{apifeedbackState.apierror}</Alert>
           )}
-          {state.apisuccess && (
-            <Alert severity="success">{state.apisuccess}</Alert>
+          {apifeedbackState.apisuccess && (
+            <Alert severity="success">{apifeedbackState.apisuccess}</Alert>
           )}
           <IconButton
             size="small"

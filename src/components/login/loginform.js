@@ -8,8 +8,10 @@ import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 //Constants Import
 import AuthApi from "../../api/auth"
+import UserApi from "../../api/user"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,50 +34,83 @@ export default function LoginFormComp(props){
   const classes = useStyles();
   const history = useHistory();
   const authApi = new AuthApi();
+  const userApi = new UserApi();
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.apiFeedbackReducer);
+
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
+  
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [usernameError, setUsernameError] = React.useState(false);
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [submitprogress, setSubmitprogress] = React.useState(false);
+  const [errorState, setErrorState] = React.useState(false);
+  const [loginState, setLoginState] = React.useState("Init");
 
   //handle username change
   const handleUsernameChange = (event)=>{
     event.preventDefault();
-    setUsernameError(false)
     setUsername(event.target.value)
   }
+  //handle password change
   const handlePasswordChange = (event)=>{
     event.preventDefault();
-    setPasswordError(false);
     setPassword(event.target.value);
   }
-  //handle password change
   //handle login form submit
   var handleSubmit = async (event) => {
+    setLoginState("Loading");
     event.preventDefault();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
     const reqBody = { username: username, password: password };
-    authApi.authenticate(signal, reqBody)
+    authApi
+      .authenticate(signal, reqBody)
       .then((data) => {
-          try {
-            Cookies.set("token", data, { expires: 30 })
-            if(Cookies.get("token")){
-              history && history.push("/home");
-            }
-          } catch (error) {
-            console.log(error)
+        try {
+          Cookies.set("token", data, { expires: 30 });
+          if (Cookies.get("token")) {
+            setLoginState("Authenticated");
           }
+        } catch (error) {
+          console.log(error.message);
+          setLoginState("Init");
+        }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setLoginState("Init");
+      });
 
     return function cleanup() {
       abortController.abort();
     };
   };
+
+  //Error handling through redux
+  React.useEffect(()=>{
+    state.apierror && setErrorState(state.apierror);
+  },[state])
+
+  //check auth and set user Redux state
+  React.useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    if (loginState === "Authenticated") {
+      userApi
+        .getSelf(signal)
+        .then((data) => {
+          dispatch({
+            type: "SETUSER",
+            payLoad: data,
+          });
+          history && history.push("/home");
+        })
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [loginState, dispatch, history]);
   return (
     <Grid
       container
@@ -103,8 +138,10 @@ export default function LoginFormComp(props){
             value={username}
             onChange={handleUsernameChange}
             required
-            error={usernameError}
-            helperText={usernameError ? "Invalid Username" : ""}
+            error={errorState === "Username Error"}
+            helperText={
+              errorState === "Username Error" ? "Invalid Username" : ""
+            }
           />
         </Grid>
         <Grid item className={classes.griditem}>
@@ -118,12 +155,14 @@ export default function LoginFormComp(props){
             value={password}
             onChange={handlePasswordChange}
             required
-            error={passwordError}
-            helperText={passwordError ? "Invalid Password" : ""}
+            error={errorState === "Password Error"}
+            helperText={
+              errorState === "Password Error" ? "Invalid Password" : ""
+            }
           />
         </Grid>
         <Grid item className={classes.griditem}>
-          {submitprogress ? (
+          {loginState === "Loading" ? (
             <CircularProgress />
           ) : (
             <Button

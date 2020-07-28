@@ -17,10 +17,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 //api import
-import UserApi from "../../api/user"
-import RoleApi from "../../api/role"
-import TerritoryApi from "../../api/territory"
-import DivisionApi from "../../api/division"
+import UserApi from "../../../api/user"
+import RoleApi from "../../../api/role"
+import TerritoryApi from "../../../api/territory"
+import DivisionApi from "../../../api/division"
 
 const userApi = new UserApi();
 const roleApi = new RoleApi();
@@ -35,7 +35,7 @@ export default function UserDetailComp(props) {
   const [divisions, setDivisions] = React.useState([])
   const [formControls, setFormControls] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -43,22 +43,25 @@ export default function UserDetailComp(props) {
       .getOneUser(signal, props.userId)
       .then((data) => setFormControls(data))
       .catch((err) => console.log(err));
-    roleApi
-      .getRoles(signal)
-      .then((data) => setRoles(data))
-      .catch((err) => console.log(err));
-    territoryApi
-      .getTerritories(signal)
-      .then((data) => setTerritories(data))
-      .catch((err) => console.log(err));
-    divisionApi
-      .getDivisions(signal)
-      .then((data) => setDivisions(data))
-      .catch((err) => console.log(err));
+    editTogggle &&
+      roleApi
+        .getRoles(signal)
+        .then((data) => data && setRoles(data))
+        .catch((err) => console.log(err));
+    editTogggle &&
+      territoryApi
+        .getTerritories(signal)
+        .then((data) => data && setTerritories(data))
+        .catch((err) => console.log(err));
+    editTogggle &&
+      divisionApi
+        .getDivisions(signal)
+        .then((data) => data && setDivisions(data))
+        .catch((err) => console.log(err));
     return function cleanup() {
       abortController.abort();
     };
-  },[props])
+  }, [props, editTogggle]);
 
   //get data from territories
   const handlesubmit = (event) => {
@@ -116,18 +119,16 @@ export default function UserDetailComp(props) {
   };
     return (
       <React.Fragment>
-        {/* Initial conditions - ask user to select a user */}
-        <Typography variant="h6">Select a User to see the details</Typography>
         <Paper style={{ padding: "10px" }} elevation={editTogggle ? 2 : 0}>
           <form onSubmit={handlesubmit}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
                 <Grid container direction="row" alignContent="center">
                   <Grid item style={{ paddingTop: "10px" }}>
-                    <Typography variant="h6">
+                    {formControls?._id && (<Typography variant="h6">
                       {formControls?.firstname + " " + formControls?.lastname}
                       &nbsp;
-                    </Typography>
+                    </Typography>)}
                     {/* Default state - show user option to edit fields */}
                   </Grid>
                   <Grid item>
@@ -276,9 +277,7 @@ export default function UserDetailComp(props) {
                       getOptionLabel={(option) =>
                         typeof option === "string" ? option : option.name
                       }
-                      value={
-                        formControls?.divisions?.map((data) => data) || []
-                      }
+                      value={formControls?.divisions?.map((data) => data) || []}
                       filterSelectedOptions
                       name="name"
                       onChange={(event, value) =>

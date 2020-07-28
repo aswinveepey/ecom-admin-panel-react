@@ -28,8 +28,11 @@ export default function ApiHelper(){
       type: "APIERROR",
       payLoad: payload,
     });
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
   }
-  const post = async (signal, reqUrl, reqBody)=>{
+  const post = async (signal, reqUrl, reqBody) => {
     const requestOptions = {
       method: "POST",
       headers: headers,
@@ -55,6 +58,9 @@ export default function ApiHelper(){
       type: "APIERROR",
       payLoad: payload,
     });
-  }
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+  };
   return{get,post}
 }

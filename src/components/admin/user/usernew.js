@@ -14,7 +14,7 @@ import Button from "@material-ui/core/Button";
 //material ui lab imports
 import Autocomplete from "@material-ui/lab/Autocomplete";
 //constants relative import
-import { BASE_URL } from "../../constants";
+import { BASE_URL } from "../../../constants";
 
 class UserNewComp extends React.Component {
   state = {
