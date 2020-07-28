@@ -659,7 +659,7 @@ export default function SkuDetailComp(props) {
                         <TableBody>
                           {formControls?.inventory?.map((data, index) => (
                             <TableRow key={index}>
-                              <TableCell>
+                              <TableCell width="20%">
                                 <Autocomplete
                                   options={territories}
                                   freeSolo

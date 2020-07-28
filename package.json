@@ -27,11 +27,13 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
+    "source-map-explorer": "^2.4.2",
     "styled-components": "^4.3.2"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": " env-cmd -f .env react-scripts start",
-    "build": "react-scripts build",
+    "build": "env-cmd -f .env react-scripts build",
     "build-ci": "react-scripts build",
     "build-dev": "env-cmd -f .env.development react-scripts build",
     "build-prod": "env-cmd -f .env.production react-scripts build",
