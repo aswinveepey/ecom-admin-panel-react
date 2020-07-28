@@ -7,8 +7,8 @@ import Grid from '@material-ui/core/Grid'
 export default function GmvTimeSeriesComp (props){
   const [gmvTimeSeries, setGmvTimeSeries] = React.useState([]);
 
-  const line1 = {
-    title: "GMV TimerSeries",
+  const line = {
+    title: "GMV Time Series",
     data: {
       labels: gmvTimeSeries.map((item) => item._id),
       datasets: [
@@ -26,7 +26,7 @@ export default function GmvTimeSeriesComp (props){
     options: {
       title: {
         display: true,
-        text: "GMV TimerSeries",
+        text: "GMV Time Series",
         fontSize: 20,
       },
       legend: { display: true, position: "right" },
@@ -34,7 +34,7 @@ export default function GmvTimeSeriesComp (props){
     },
   };
   React.useEffect(()=>{
-    props.gmvTimeSeries && setGmvTimeSeries(props.gmvTimeSeries);
+    props.data && setGmvTimeSeries(props.data);
   },[props])
     return (
       <Grid container direction="row" spacing={1}>
@@ -43,8 +43,8 @@ export default function GmvTimeSeriesComp (props){
             <Typography gutterBottom={true} variant="h6">
             </Typography>
             <Line
-              data={line1.data}
-              options={line1.options}
+              data={line.data}
+              options={line.options}
               height={200}
             />
           </Paper>
