@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 //Constants Import
 import AuthApi from "../../api/auth"
 import UserApi from "../../api/user"
@@ -36,6 +36,7 @@ export default function LoginFormComp(props){
   const authApi = new AuthApi();
   const userApi = new UserApi();
   const dispatch = useDispatch();
+  const state = useSelector((state) => state.apiFeedbackReducer);
 
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
@@ -50,11 +51,11 @@ export default function LoginFormComp(props){
     event.preventDefault();
     setUsername(event.target.value)
   }
+  //handle password change
   const handlePasswordChange = (event)=>{
     event.preventDefault();
     setPassword(event.target.value);
   }
-  //handle password change
   //handle login form submit
   var handleSubmit = async (event) => {
     setLoginState("Loading");
@@ -78,13 +79,19 @@ export default function LoginFormComp(props){
       })
       .catch((error) => {
         setLoginState("Init");
-        setErrorState(error.message);
       });
 
     return function cleanup() {
       abortController.abort();
     };
   };
+
+  //Error handling through redux
+  React.useEffect(()=>{
+    state.apierror && setErrorState(state.apierror);
+  },[state])
+
+  //check auth and set user Redux state
   React.useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
