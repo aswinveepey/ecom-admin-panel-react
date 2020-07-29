@@ -16,11 +16,11 @@ export default function DashComp(props) {
   const [gmvTimeSeries, setGmvTimeSeries] = React.useState();
 
   React.useEffect(()=>{
-    dataApi.getCustomerData().then((data) => data && setCustomerData(data));
-    dataApi.getTodayGmv().then((data) => data && setTodayGmv(data[0]));
-    dataApi.getMonthGmv().then((data) => data && setMonthGmv(data[0]));
-    dataApi.getQuarterGmv().then((data) => data && setQuarterGmv(data[0]));
-    dataApi.getGmvTimeSeries().then((data) => data && setGmvTimeSeries(data));
+    dataApi.getCustomerData().then((data) => data && setCustomerData(data)).catch(err=>console.log(err));
+    dataApi.getTodayGmv().then((data) => data && setTodayGmv(data[0])).catch(err=>console.log(err));
+    dataApi.getMonthGmv().then((data) => data && setMonthGmv(data[0])).catch(err=>console.log(err));
+    dataApi.getQuarterGmv().then((data) => data && setQuarterGmv(data[0])).catch(err=>console.log(err));
+    dataApi.getGmvTimeSeries().then((data) => data && setGmvTimeSeries(data)).catch(err=>console.log(err));
   },[props])
 
     return (

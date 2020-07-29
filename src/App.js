@@ -18,12 +18,12 @@ const NotFoundComp = lazy(() => import("./components/404"));
 export default function App() {
   const state = useSelector((state) => state.userStateReducer);
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Login}></Route>
-        <Route exact path="/login" component={Login}></Route>
-        <Scaffold title={"Hi, " + (state.user?.firstname || "")}>
-          <Suspense fallback={<LoaderComp />}>
+    <Suspense fallback={<LoaderComp />}>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Login}></Route>
+          <Route exact path="/login" component={Login}></Route>
+          <Scaffold title={"Hi, " + (state.user?.firstname || "")}>
             <Switch>
               <Route exact path="/home" component={Home}></Route>
               <Route exact path="/order" component={OrderComp}></Route>
@@ -33,9 +33,9 @@ export default function App() {
               <Route exact path="/admin" component={AdminComp}></Route>
               <Route component={NotFoundComp}></Route>
             </Switch>
-          </Suspense>
-        </Scaffold>
-      </Switch>
-    </Router>
+          </Scaffold>
+        </Switch>
+      </Router>
+    </Suspense>
   );
 }
