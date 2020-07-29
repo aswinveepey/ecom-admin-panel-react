@@ -20,11 +20,11 @@ export default function InfoBox(props) {
         <Typography variant="h6" gutterBottom>
           {props.title}
         </Typography>
-        <Typography variant="h2">{props.value?.total || 0}</Typography>
+        <Typography variant="h3">{props.value?.total || 0}</Typography>
         <Typography variant="caption" gutterBottom>
           GMV
         </Typography>
-        <Typography variant="h2">{props.value?.customers || 0}</Typography>
+        <Typography variant="h3">{props.value?.customers || 0}</Typography>
         <Typography variant="caption" gutterBottom>
           Customers
         </Typography>

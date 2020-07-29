@@ -106,6 +106,10 @@ export default function Scaffold(props) {
   //close profile menu
   const handleLogout = (e) => {
     e.preventDefault();
+    dispatch({
+      type: "UNSETUSER",
+    });
+    history && history.push("/");
     setAnchorEl(null);
   };
   //watch redux api feedback state
