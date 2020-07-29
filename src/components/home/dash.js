@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import Grid from "@material-ui/core/Grid";
-import InfoBox from '../common/infobox'
+import InfoBox from './infobox'
 import GmvTimeSeriesComp from "./gmvtimeseries";
 
 import DataApi from "../../api/data";
@@ -29,13 +29,13 @@ export default function DashComp(props) {
           <Grid item>
             <Grid container spacing={1}>
               <Grid item xs={12} sm={12} md={4} lg={4}>
-                <InfoBox title="Daily GMV" value={todayGmv?.total || 0} />
+                <InfoBox title="Daily" value={todayGmv} />
               </Grid>
               <Grid item xs={12} sm={12} md={4} lg={4}>
-                <InfoBox title="MTD GMV" value={monthGmv?.total || 0} />
+                <InfoBox title="MTD" value={monthGmv} />
               </Grid>
               <Grid item xs={12} sm={12} md={4} lg={4}>
-                <InfoBox title="QTD GMV" value={quarterGmv?.total || 0} />
+                <InfoBox title="QTD" value={quarterGmv} />
               </Grid>
               <Grid item xs={12} sm={12} md={4} lg={4}>
                 <Suspense fallback={<div>Loading...</div>}>
@@ -44,7 +44,7 @@ export default function DashComp(props) {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <GmvTimeSeriesComp data={gmvTimeSeries} />
           </Grid>
         </Grid>

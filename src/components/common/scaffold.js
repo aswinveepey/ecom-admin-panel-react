@@ -10,6 +10,7 @@ import Drawer from "@material-ui/core/Drawer"
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import CloseIcon from "@material-ui/icons/Close";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 //Material Icon Imports
 import MenuIcon from "@material-ui/icons/Menu";
 //styles import
@@ -131,9 +132,12 @@ export default function Scaffold(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap className={classes.title}>
-            {props.title}
-          </Typography>
+          <div className={classes.title}>
+            <Typography variant="h6" noWrap>
+              {props.title}
+            </Typography>
+            <ArrowDropDownIcon />
+          </div>
           {search && <AppSearchComp />}
         </Toolbar>
       </AppBar>
