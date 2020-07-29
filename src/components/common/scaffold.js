@@ -22,7 +22,7 @@ import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import UserApi from "../../api/user";
+import UserService from "../../services/user";
 
 const drawerWidth = 240;
 
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Scaffold(props) {
   const classes = useStyles(); //use styles
   const dispatch = useDispatch(); //send redux actions
-  const userApi = new UserApi(); //get user data
+  const userApi = new UserService(); //get user data
   const history = useHistory(); //react router
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -100,6 +100,11 @@ export default function Scaffold(props) {
   }
   //close profile menu
   const handleProfileMenuClose = (e) => {
+    e.preventDefault();
+    setAnchorEl(null);
+  };
+  //close profile menu
+  const handleLogout = (e) => {
     e.preventDefault();
     setAnchorEl(null);
   };
@@ -182,7 +187,7 @@ export default function Scaffold(props) {
               onClose={handleProfileMenuClose}
             >
               <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
-              <MenuItem onClick={handleProfileMenuClose}>Logout</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </div>
           {search && <AppSearchComp />}

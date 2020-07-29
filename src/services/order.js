@@ -1,6 +1,6 @@
 import ApiHelper from "./api";
 
-export default class OrderApi {
+export default class OrderService {
   constructor() {
     this.apiHelper = ApiHelper();
   }

@@ -1,6 +1,6 @@
 import ApiHelper from "./api";
 
-export default class AuthApi {
+export default class AuthService {
   constructor() {
     this.apiHelper = ApiHelper();
   }
