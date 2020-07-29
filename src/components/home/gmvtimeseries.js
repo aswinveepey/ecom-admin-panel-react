@@ -37,18 +37,9 @@ export default function GmvTimeSeriesComp (props){
     props.data && setGmvTimeSeries(props.data);
   },[props])
     return (
-      <Grid container direction="row" spacing={1}>
-        <Grid item lg={12} md={12} sm={12} xs={12}>
-          <Paper className="chart-box">
-            <Typography gutterBottom={true} variant="h6">
-            </Typography>
-            <Line
-              data={line.data}
-              options={line.options}
-              height={200}
-            />
-          </Paper>
-        </Grid>
-      </Grid>
+      <Paper className="chart-box">
+        <Typography gutterBottom={true} variant="h6"></Typography>
+        <Line data={line.data} options={line.options} height={200} />
+      </Paper>
     );
 }

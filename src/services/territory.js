@@ -1,6 +1,6 @@
 import ApiHelper from "./api";
 
-export default class TerritoryApi {
+export default class TerritoryService {
   constructor() {
     this.apiHelper = ApiHelper();
   }

@@ -10,6 +10,9 @@ import Drawer from "@material-ui/core/Drawer"
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import CloseIcon from "@material-ui/icons/Close";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 //Material Icon Imports
 import MenuIcon from "@material-ui/icons/Menu";
 //styles import
@@ -19,7 +22,7 @@ import DrawerComp from "./drawer"; //sidebar drawer
 import AppSearchComp from './appsearch'
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import UserApi from "../../api/user";
+import UserService from "../../services/user";
 
 const drawerWidth = 240;
 
@@ -53,27 +56,32 @@ const useStyles = makeStyles((theme) => ({
   appbar: {
     height: "30vh !important",
   },
-  apptoolbar: {
-    top: "2vh !important",
-  },
+  // apptoolbar: {
+  //   top: "2vh !important",
+  // },
 }));
 
 export default function Scaffold(props) {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const userApi = new UserApi();
-  const history = useHistory();
+  const classes = useStyles(); //use styles
+  const dispatch = useDispatch(); //send redux actions
+  const userApi = new UserService(); //get user data
+  const history = useHistory(); //react router
 
-  const [open, setOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
   const [search, setSearch] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState();
 
+  //consume redux events
   const apifeedbackState = useSelector((state) => state.apiFeedbackReducer);
   const userState = useSelector((state) => state.userStateReducer);
 
+  // sidebar open
   const handleDrawerToggle = ()=>{
-    setOpen(!open);
+    setDrawerOpen(!drawerOpen);
   }
+
+  //close snackbar - manual & clear redux api states
   const handleSnackBarClose = ()=>{
     setSnackBarOpen(false);
     dispatch({
@@ -85,16 +93,32 @@ export default function Scaffold(props) {
       payLoad: null,
     });
   }
+  //open profile menu
+  const handleProfileMenuClick = (e)=>{
+    e.preventDefault()
+    setAnchorEl(e.currentTarget);  
+  }
+  //close profile menu
+  const handleProfileMenuClose = (e) => {
+    e.preventDefault();
+    setAnchorEl(null);
+  };
+  //close profile menu
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch({
+      type: "UNSETUSER",
+    });
+    history && history.push("/");
+    setAnchorEl(null);
+  };
+  //watch redux api feedback state
   React.useEffect(() => {
     (apifeedbackState.apisuccess || apifeedbackState.apierror) &&
       setSnackBarOpen(true);
   }, [apifeedbackState]);
-
-  React.useEffect(() => {
-    if (props.search === false) {
-      setSearch(false);
-    }
-  }, [props]);
+  
+  //get & set user state
   React.useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -120,6 +144,18 @@ export default function Scaffold(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      {/* Drawer comp */}
+      <nav className={classes.drawer}>
+        <Drawer
+          variant="persistent"
+          open={drawerOpen}
+          anchor="left"
+          onClose={handleDrawerToggle}
+        >
+          <DrawerComp handleDrawerToggle={handleDrawerToggle} />
+        </Drawer>
+      </nav>
+      {/* App Bar comp */}
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.apptoolbar}>
           <IconButton
@@ -131,25 +167,41 @@ export default function Scaffold(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap className={classes.title}>
-            {props.title}
-          </Typography>
+          <div className={classes.title}>
+            <IconButton
+              color="inherit"
+              aria-label="profile-menu-open"
+              onClick={handleProfileMenuClick}
+            >
+              <Typography variant="h6" noWrap>
+                {props.title}
+              </Typography>
+              <ArrowDropDownIcon />
+            </IconButton>
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              getContentAnchorEl={null}
+              onClose={handleProfileMenuClose}
+            >
+              <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
           {search && <AppSearchComp />}
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer}>
-        <Drawer
-          variant="persistent"
-          open={open}
-          anchor="left"
-          onClose={handleDrawerToggle}
-        >
-          <DrawerComp handleDrawerToggle={handleDrawerToggle} />
-        </Drawer>
-      </nav>
+      {/* Main Component - handle children */}
       <main className={classes.content}>
         <Paper className={classes.raisedpaper}>{props.children}</Paper>
       </main>
+      {/* SnackBar */}
       <Snackbar
         anchorOrigin={{
           vertical: "top",
