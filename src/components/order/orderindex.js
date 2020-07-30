@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment"
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
 //import order api class
@@ -88,7 +89,7 @@ function ExpandableRow(props) {
           <IconButton
             size="small"
             aria-label="order detail"
-            onClick={openOrderDetail.bind(this,row)}
+            onClick={openOrderDetail.bind(this, row)}
           >
             <EditIcon />
           </IconButton>
@@ -97,10 +98,14 @@ function ExpandableRow(props) {
         <TableCell>{row.customer.customer._id}</TableCell>
         <TableCell>{parseFloat(row.amount.amount || 0).toFixed(2)}</TableCell>
         <TableCell>{parseFloat(row.amount.discount || 0).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.totalamount || 0).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.installation || 0).toFixed(2)}</TableCell>
+        <TableCell>
+          {parseFloat(row.amount.totalamount || 0).toFixed(2)}
+        </TableCell>
+        <TableCell>
+          {parseFloat(row.amount.installation || 0).toFixed(2)}
+        </TableCell>
         <TableCell>{parseFloat(row.amount.shipping || 0).toFixed(2)}</TableCell>
-        <TableCell>{row.createdat}</TableCell>
+        <TableCell>{moment(row.createdat).format("LLLL")}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
