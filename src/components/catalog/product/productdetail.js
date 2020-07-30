@@ -20,9 +20,9 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
 //api import
-import ProductApi from "../../../api/product"
-import CategoryApi from "../../../api/category"
-import BrandApi from "../../../api/brand"
+import ProductService from "../../../services/product"
+import CategoryService from "../../../services/category"
+import BrandService from "../../../services/brand"
 //Component import
 const SkuIndexComp = React.lazy(() => import("./skuindex"));
 const SingleAttributeComp = React.lazy(() => import("../../common/singleattribute"));
@@ -88,9 +88,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const productApi = new ProductApi();
-const categoryApi = new CategoryApi();
-const brandApi = new BrandApi();
+const productService = new ProductService();
+const categoryService = new CategoryService();
+const brandService = new BrandService();
 
 export default function ProductDetailComp(props) {
   const classes = useStyles();
@@ -296,12 +296,12 @@ export default function ProductDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(formControls._id){
-      productApi
+      productService
         .updateProduct(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
     } else {
-      productApi
+      productService
         .createProduct(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
@@ -316,7 +316,7 @@ export default function ProductDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    categoryApi
+    categoryService
       .searchCategories(signal, categorySearchString)
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));
@@ -330,7 +330,7 @@ export default function ProductDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    brandApi
+    brandService
       .searchBrands(signal, brandSearchString)
       .then((data) => setBrands(data))
       .catch((err) => console.log(err));

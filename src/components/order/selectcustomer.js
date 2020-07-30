@@ -9,7 +9,7 @@ import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import CustomerApi from "../../api/customer";
+import CustomerService from "../../services/customer";
 
 const useStyles = makeStyles((theme) => ({
   selectButton: {
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const customerapi = new CustomerApi();
+const customerService = new CustomerService();
 
 export default function SelectCustomer(props){
   const classes = useStyles();
@@ -54,7 +54,7 @@ export default function SelectCustomer(props){
   React.useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-    customerapi
+    customerService
       .searchCustomers(signal, customerSearch)
       .then((data) => setCustomers(data))
       .catch((err) => console.log(err));

@@ -17,15 +17,15 @@ import EditIcon from "@material-ui/icons/Edit";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 //api import
-import UserApi from "../../../api/user"
-import RoleApi from "../../../api/role"
-import TerritoryApi from "../../../api/territory"
-import DivisionApi from "../../../api/division"
+import UserService from "../../../services/user"
+import RoleService from "../../../services/role"
+import TerritoryService from "../../../services/territory"
+import DivisionService from "../../../services/division"
 
-const userApi = new UserApi();
-const roleApi = new RoleApi();
-const territoryApi = new TerritoryApi();
-const divisionApi = new DivisionApi();
+const userApi = new UserService();
+const roleApi = new RoleService();
+const territoryApi = new TerritoryService();
+const divisionApi = new DivisionService();
 
 export default function UserDetailComp(props) {
 

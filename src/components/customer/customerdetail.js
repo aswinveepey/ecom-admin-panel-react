@@ -20,8 +20,8 @@ import AddIcon from "@material-ui/icons/Add";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 
-import CustomerApi from "../../api/customer";
-import AccountApi from "../../api/account";
+import CustomerService from "../../services/customer";
+import AccountService from "../../services/account";
 
 const AddressFormComp = React.lazy(() => import("./addressform"));
 //define styles
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const customerapi = new CustomerApi();
-const accountapi = new AccountApi();
+const customerService = new CustomerService();
+const accountService = new AccountService();
 
 export default function CustomerDetailComp(props){
   const classes = useStyles();
@@ -60,7 +60,7 @@ export default function CustomerDetailComp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(formControls._id){
-      customerapi
+      customerService
         .updateCustomer(signal, formControls)
         .then((data) => {
           // console.log(data);
@@ -68,7 +68,7 @@ export default function CustomerDetailComp(props){
         })
         .catch((err) => console.log(err));
     } else {
-      customerapi
+      customerService
         .createCustomer(signal, formControls)
         .then((data) => {
           console.log(data);
@@ -149,7 +149,7 @@ export default function CustomerDetailComp(props){
   React.useEffect(()=>{
     const abortController = new AbortController();
     const signal = abortController.signal;
-    accountapi
+    accountService
       .searchAccounts(signal, accountSearchString)
       .then((data) => setAccounts(data))
       .catch((err) => console.log(err));

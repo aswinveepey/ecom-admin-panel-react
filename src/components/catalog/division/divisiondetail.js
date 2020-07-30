@@ -19,8 +19,8 @@ import ImageUploadComp from "../../common/imageupload";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //api import
-import DivisionApi from "../../../api/division"
-import CategoryApi from "../../../api/category"
+import DivisionService from "../../../services/division"
+import CategoryService from "../../../services/category"
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -63,8 +63,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const divisionApi = new DivisionApi();
-const categoryApi = new CategoryApi();
+const divisionService = new DivisionService();
+const categoryService = new CategoryService();
 
 export default function DivisionDetailComp(props) {
   const classes = useStyles();
@@ -101,12 +101,12 @@ export default function DivisionDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(formControls._id){
-      divisionApi
+      divisionService
         .updateDivision(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
     } else {
-      divisionApi
+      divisionService
         .createDivision(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
@@ -161,7 +161,7 @@ export default function DivisionDetailComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    categoryApi
+    categoryService
       .getCategories(signal, categorySearchString)
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));

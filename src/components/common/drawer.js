@@ -16,7 +16,6 @@ import Receipt from "@material-ui/icons/Receipt";
 import Queue from "@material-ui/icons/Queue";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 import { NavLink } from "react-router-dom";
 

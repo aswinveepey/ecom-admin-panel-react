@@ -12,9 +12,9 @@ import ChipInput from "material-ui-chip-input";
 //styles - Material UI
 // import { makeStyles } from "@material-ui/core/styles";
 //api import
-import TerritoryApi from "../../../api/territory";
+import TerritoryService from "../../../services/territory";
 
-const territoryapi = new TerritoryApi();
+const territoryService = new TerritoryService();
 
 export default function TerritoryDetailComp(props) {
   // const classes = useStyles();
@@ -30,14 +30,14 @@ export default function TerritoryDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (formControls._id) {
-      territoryapi
+      territoryService
         .updateTerritory(signal, formControls)
         .then((data) => {
           handleClose();
         })
         .catch((err) => console.log(err));
     } else {
-      territoryapi
+      territoryService
         .createTerritory(signal, formControls)
         .then((data) => {
           handleClose();

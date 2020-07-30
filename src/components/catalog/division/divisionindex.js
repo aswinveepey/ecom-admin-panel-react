@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 //api import
-import DivisionApi from "../../../api/division"
+import DivisionServices from "../../../services/division"
 
 const DataTableComp = React.lazy(() => import("../../common/datatable"));
 const DivisionDetailComp = React.lazy(()=>import("./divisiondetail"))
@@ -62,17 +62,17 @@ export default function DivisionIndexComp(params) {
   }
   //datafetch
   React.useEffect(() => {
-    const divisionApi = new DivisionApi();
+    const divisionService = new DivisionServices();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(divisionSearch){
-      divisionApi
+      divisionService
         .searchDivisions(signal, divisionSearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     } else {
-      divisionApi
+      divisionService
         .getDivisions(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));

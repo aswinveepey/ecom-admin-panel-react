@@ -2,9 +2,9 @@ import React from "react";
 // import CustomerDetailComp from "./customerdetail";
 import DataTableComp from "../../common/datatable";
 import TerritoryDetailComp from "./territorydetail";
-import TerritoryApi from "../../../api/territory";
+import TerritoryService from "../../../services/territory";
 
-const territoryapi = new TerritoryApi();
+const territoryService = new TerritoryService();
 
 export default function TerritoryIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
@@ -63,11 +63,11 @@ export default function TerritoryIndexComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (territorySearch) {
-      territoryapi
+      territoryService
         .searchTerritories(signal, territorySearch)
         .then((response) => setRowData(response));
     } else {
-      territoryapi
+      territoryService
         .getTerritories(signal)
         .then((response) => setRowData(response));
     }

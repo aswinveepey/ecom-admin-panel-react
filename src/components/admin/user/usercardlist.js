@@ -6,7 +6,7 @@ import Avatar from "@material-ui/core/Avatar";
 import ButtonBase from "@material-ui/core/ButtonBase"
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-import UserApi from "../../../api/user";
+import UserService from "../../../services/user";
 
 //define styles
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserCardList(props) {
   const classes = useStyles();
-  const userApi = new UserApi();
+  const userService = new UserService();
 
   const [userData, setUserData] = React.useState([]);
   const [fetchStatus, setFetchStatus] = React.useState("loading");
@@ -30,7 +30,7 @@ export default function UserCardList(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    userApi.getUsers(signal).then((data) => {
+    userService.getUsers(signal).then((data) => {
       setUserData(data);
       setFetchStatus("fetched");
     });

@@ -9,9 +9,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 //styles - Material UI
 // import { makeStyles } from "@material-ui/core/styles";
 //api import
-import RoleApi from "../../../api/role";
+import RoleService from "../../../services/role";
 
-const roleapi = new RoleApi();
+const roleService = new RoleService();
 
 export default function RoleDetailComp(props) {
   // const classes = useStyles();
@@ -27,7 +27,7 @@ export default function RoleDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (formControls._id) {
-      roleapi
+      roleService
         .updateRole(signal, formControls)
         .then((data) => {
           console.log(data);
@@ -35,7 +35,7 @@ export default function RoleDetailComp(props) {
         })
         .catch((err) => console.log(err));
     } else {
-      roleapi
+      roleService
         .createRole(signal, formControls)
         .then((data) => {
           console.log(data);

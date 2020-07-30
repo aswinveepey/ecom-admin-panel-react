@@ -3,12 +3,12 @@ import Grid from "@material-ui/core/Grid";
 import InfoBox from './infobox'
 import GmvTimeSeriesComp from "./gmvtimeseries";
 
-import DataApi from "../../api/data";
+import DataService from "../../services/data";
 
 const CustomerDoughnut = lazy(() => import("./customerdoughnut"));
 
 export default function DashComp(props) {
-  const dataApi = new DataApi();
+  const dataService = new DataService();
   const [customerData, setCustomerData] = React.useState()
   const [todayGmv, setTodayGmv] = React.useState();
   const [monthGmv, setMonthGmv] = React.useState();
@@ -16,11 +16,11 @@ export default function DashComp(props) {
   const [gmvTimeSeries, setGmvTimeSeries] = React.useState();
 
   React.useEffect(()=>{
-    dataApi.getCustomerData().then((data) => data && setCustomerData(data)).catch(err=>console.log(err));
-    dataApi.getTodayGmv().then((data) => data && setTodayGmv(data[0])).catch(err=>console.log(err));
-    dataApi.getMonthGmv().then((data) => data && setMonthGmv(data[0])).catch(err=>console.log(err));
-    dataApi.getQuarterGmv().then((data) => data && setQuarterGmv(data[0])).catch(err=>console.log(err));
-    dataApi.getGmvTimeSeries().then((data) => data && setGmvTimeSeries(data)).catch(err=>console.log(err));
+    dataService.getCustomerData().then((data) => data && setCustomerData(data)).catch(err=>console.log(err));
+    dataService.getTodayGmv().then((data) => data && setTodayGmv(data[0])).catch(err=>console.log(err));
+    dataService.getMonthGmv().then((data) => data && setMonthGmv(data[0])).catch(err=>console.log(err));
+    dataService.getQuarterGmv().then((data) => data && setQuarterGmv(data[0])).catch(err=>console.log(err));
+    dataService.getGmvTimeSeries().then((data) => data && setGmvTimeSeries(data)).catch(err=>console.log(err));
   },[props])
 
     return (
