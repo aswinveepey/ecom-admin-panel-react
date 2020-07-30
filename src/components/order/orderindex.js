@@ -177,7 +177,11 @@ export default function OrderIndexComp(props) {
         });
     } else {
       orderService
-        .getOrders(signal, orderFilterStartDate, orderFilterEndDate)
+        .getOrders(
+          signal,
+          moment.utc(orderFilterStartDate).format(),
+          moment.utc(orderFilterEndDate).format()
+        )
         .then((response) => setRowData(response))
         .catch((err) => {
           console.log(err);
