@@ -23,6 +23,7 @@ import MomentUtils from "@date-io/moment";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import SearchIcon from "@material-ui/icons/Search";
+import PublishIcon from "@material-ui/icons/Publish";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
@@ -203,10 +204,19 @@ export default function OrderIndexComp(props) {
       >
         Add Order
       </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.button}
+        startIcon={<PublishIcon />}
+      >
+        Export
+      </Button>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DateTimePicker
           inputVariant="outlined"
           variant="inline"
+          label="Start Date"
           value={orderFilterStartDate}
           onChange={setOrderFilterStartDate}
           className={classes.button}
@@ -214,6 +224,7 @@ export default function OrderIndexComp(props) {
         <DateTimePicker
           inputVariant="outlined"
           variant="inline"
+          label="End Date"
           value={orderFilterEndDate}
           onChange={setOrderFilterEndDate}
           className={classes.button}
