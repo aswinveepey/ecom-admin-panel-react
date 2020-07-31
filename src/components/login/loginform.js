@@ -10,8 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 //Constants Import
-import AuthApi from "../../api/auth"
-import UserApi from "../../api/user"
+import AuthService from "../../services/auth"
+import UserService from "../../services/user"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginFormComp(props){
   const classes = useStyles();
   const history = useHistory();
-  const authApi = new AuthApi();
-  const userApi = new UserApi();
+  const authService = new AuthService();
+  const userService = new UserService();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.apiFeedbackReducer);
 
@@ -64,7 +64,7 @@ export default function LoginFormComp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     const reqBody = { username: username, password: password };
-    authApi
+    authService
       .authenticate(signal, reqBody)
       .then((data) => {
         try {
@@ -96,7 +96,7 @@ export default function LoginFormComp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (loginState === "Authenticated") {
-      userApi
+      userService
         .getSelf(signal)
         .then((data) => {
           dispatch({

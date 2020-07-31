@@ -1,6 +1,6 @@
 import ApiHelper from "./api";
 
-export default class SkuApi {
+export default class SkuService {
   constructor() {
     this.apiHelper = ApiHelper();
   }

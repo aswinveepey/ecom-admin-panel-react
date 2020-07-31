@@ -1,8 +1,5 @@
 import React from "react";
-import OrderitemIndexComp from "./orderitemindex";
-import OrderDetailComp from "./orderdetail";
-//import order api class
-import OrderApi from "../../api/order";
+import moment from "moment"
 //material UI
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,13 +15,23 @@ import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
+//picker import
+// import DateTimePicker from "@material-ui/pickers/DateTimePicker";
+import {MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import SearchIcon from "@material-ui/icons/Search";
+import PublishIcon from "@material-ui/icons/Publish";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
+
+import OrderitemIndexComp from "./orderitemindex";
+import OrderDetailComp from "./orderdetail";
+//import order api class
+import OrderService from "../../services/order";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -88,19 +95,30 @@ function ExpandableRow(props) {
           <IconButton
             size="small"
             aria-label="order detail"
-            onClick={openOrderDetail.bind(this,row)}
+            onClick={openOrderDetail.bind(this, row)}
           >
             <EditIcon />
           </IconButton>
         </TableCell>
         <TableCell>{row._id}</TableCell>
-        <TableCell>{row.customer.customer._id}</TableCell>
+        <TableCell>
+          {row.customer.customer._id}
+          <br/>
+          {[
+            row.customer.customer.firstname,
+            row.customer.customer.lastname,
+          ].join(" ")}
+        </TableCell>
         <TableCell>{parseFloat(row.amount.amount || 0).toFixed(2)}</TableCell>
         <TableCell>{parseFloat(row.amount.discount || 0).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.totalamount || 0).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.installation || 0).toFixed(2)}</TableCell>
+        <TableCell>
+          {parseFloat(row.amount.totalamount || 0).toFixed(2)}
+        </TableCell>
+        <TableCell>
+          {parseFloat(row.amount.installation || 0).toFixed(2)}
+        </TableCell>
         <TableCell>{parseFloat(row.amount.shipping || 0).toFixed(2)}</TableCell>
-        <TableCell>{row.createdat}</TableCell>
+        <TableCell>{moment(row.createdat).format("LLLL")}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -126,6 +144,8 @@ export default function OrderIndexComp(props) {
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
+  const [orderFilterStartDate, setOrderFilterStartDate] = React.useState(moment().subtract(5, "days"))
+  const [orderFilterEndDate, setOrderFilterEndDate] = React.useState(moment())
   const state = useSelector((state) => state.orderUpdateReducer);
 
   //open Order Detail
@@ -140,26 +160,29 @@ export default function OrderIndexComp(props) {
   };
   //handle Order Search
   const handleOrderSearch = (event) => {
-    event.persist()
-    setOrderSearch(event);
+    setOrderSearch(event.target.value);
   };
 
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
-    const orderApi = new OrderApi();
+    const orderService = new OrderService();
     const abortController = new AbortController();
     const signal = abortController.signal;
-    if (orderSearch) {
-      orderApi
+    if (orderSearch.length > 3) {
+      orderService
         .searchOrders(signal, orderSearch)
         .then((response) => setRowData(response))
         .catch((err) => {
           console.log(err);
         });
     } else {
-      orderApi
-        .getOrders(signal, orderSearch)
+      orderService
+        .getOrders(
+          signal,
+          moment.utc(orderFilterStartDate).format(),
+          moment.utc(orderFilterEndDate).format()
+        )
         .then((response) => setRowData(response))
         .catch((err) => {
           console.log(err);
@@ -168,7 +191,7 @@ export default function OrderIndexComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [orderSearch, state]);
+  }, [orderSearch, state, orderFilterStartDate, orderFilterEndDate]);
 
   return (
     <React.Fragment>
@@ -181,6 +204,32 @@ export default function OrderIndexComp(props) {
       >
         Add Order
       </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.button}
+        startIcon={<PublishIcon />}
+      >
+        Export
+      </Button>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DateTimePicker
+          inputVariant="outlined"
+          variant="inline"
+          label="Start Date"
+          value={orderFilterStartDate}
+          onChange={setOrderFilterStartDate}
+          className={classes.button}
+        />
+        <DateTimePicker
+          inputVariant="outlined"
+          variant="inline"
+          label="End Date"
+          value={orderFilterEndDate}
+          onChange={setOrderFilterEndDate}
+          className={classes.button}
+        />
+      </MuiPickersUtilsProvider>
       <div className={classes.container}>
         <Paper component="form" className={classes.searchbar}>
           <InputBase
@@ -200,13 +249,23 @@ export default function OrderIndexComp(props) {
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                   <TableCell className={classes.tableheader}>Id</TableCell>
-                  <TableCell className={classes.tableheader}>Customer ID</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Customer
+                  </TableCell>
                   <TableCell className={classes.tableheader}>Amount</TableCell>
-                  <TableCell className={classes.tableheader}>Discount</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Discount
+                  </TableCell>
                   <TableCell className={classes.tableheader}>Total</TableCell>
-                  <TableCell className={classes.tableheader}>Installation</TableCell>
-                  <TableCell className={classes.tableheader}>Shipping</TableCell>
-                  <TableCell className={classes.tableheader}>Created At</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Installation
+                  </TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Shipping
+                  </TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Created At
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

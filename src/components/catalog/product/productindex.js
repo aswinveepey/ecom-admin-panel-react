@@ -23,7 +23,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import SearchIcon from "@material-ui/icons/Search";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
-import ProductApi from "../../../api/product"
+import ProductService from "../../../services/product"
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -153,16 +153,16 @@ export default function ProductIndexComp(props){
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
-    const productApi = new ProductApi();
+    const productService = new ProductService();
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(productSearch){
-      productApi
+      productService
         .searchProducts(signal, productSearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     } else {
-      productApi
+      productService
         .getProducts(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));

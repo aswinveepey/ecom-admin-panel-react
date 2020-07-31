@@ -1,11 +1,11 @@
 import React, {Suspense} from "react";
 //api import
-import BrandApi from "../../../api/brand"
+import BrandService from "../../../services/brand"
 
 const DataTableComp = React.lazy(() => import("../../common/datatable"));
 const BrandDetailComp = React.lazy(() => import("./branddetail"));
 
-const brandApi = new BrandApi();
+const brandService = new BrandService();
 
 export default function BrandIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
@@ -72,12 +72,12 @@ export default function BrandIndexComp(params) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(brandSearch){
-      brandApi
+      brandService
         .searchBrands(signal, brandSearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     } else {
-      brandApi
+      brandService
         .getBrands(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));

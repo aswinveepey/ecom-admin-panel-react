@@ -1,6 +1,6 @@
 import ApiHelper from "./api";
 
-export default class DivisionApi {
+export default class DivisionService {
   constructor() {
     this.apiHelper = ApiHelper();
   }

@@ -18,7 +18,7 @@ import CardActions from "@material-ui/core/CardActions";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //api import
-import CategoryApi from "../../../api/category"
+import CategoryService from "../../../services/category"
 
 const MultiAttributeComp = React.lazy(()=>import("../../common/multiattribute"))
 const ImageUploadComp = React.lazy(() => import("../../common/imageupload"));
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const categoryApi = new CategoryApi();
+const categoryService = new CategoryService();
 
 export default function CategoryDetailComp(props) {
   const classes = useStyles();
@@ -101,12 +101,12 @@ export default function CategoryDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(formControls._id){
-      categoryApi
+      categoryService
         .updateCategory(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
     } else {
-      categoryApi
+      categoryService
         .createCategory(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
@@ -198,7 +198,7 @@ export default function CategoryDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     parentSearchString &&
-      categoryApi
+      categoryService
         .searchCategories(signal, parentSearchString)
         .then((data) => setCategories(data))
         .catch((err) => console.log(err));

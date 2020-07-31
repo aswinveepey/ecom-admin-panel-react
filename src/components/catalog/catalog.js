@@ -17,7 +17,6 @@ export default function CatalogComp(props) {
   };
   return (
     <React.Fragment>
-      <Scaffold title="Catalog">
         <Tabs
           value={tabValue}
           onChange={handleChange}
@@ -38,7 +37,6 @@ export default function CatalogComp(props) {
           {tabValue === 2 && <BrandIndexComp />}
           {tabValue === 3 && <DivisionIndexComp />}
         </Suspense>
-      </Scaffold>
     </React.Fragment>
   );
 }

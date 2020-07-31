@@ -9,7 +9,7 @@ import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import SkuApi from "../../api/sku"
+import SkuService from "../../services/sku"
 
 const useStyles = makeStyles((theme) => ({
   selectButton: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "1%",
   },
 }));
-const skuApi = new SkuApi();
+const skuService = new SkuService();
 
 export default function SelectSKU(props) {
   const classes = useStyles();
@@ -53,7 +53,7 @@ export default function SelectSKU(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    skuApi
+    skuService
       .searchSkus(signal, skuSearch)
       .then((data) => setSkus(data))
       .catch((err) => console.log(err));

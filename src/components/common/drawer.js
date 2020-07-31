@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react";
 //cookie library import
 import Cookies from "js-cookie";
 
 // import Hidden from '@material-ui/core/Hidden'
-import Divider from '@material-ui/core/Divider'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 
 import Dashboard from "@material-ui/icons/Dashboard";
 import Contacts from "@material-ui/icons/Contacts";
@@ -17,29 +17,31 @@ import Queue from "@material-ui/icons/Queue";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
 
-import {NavLink} from 'react-router-dom'
+import { NavLink } from "react-router-dom";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 
 //realtive imports
 // import { BRAND_NAME } from "../../constants";
 import { BASE_URL } from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
-  drawerdiv:{
-    width:'240px'
+  drawerdiv: {
+    width: "240px",
   },
-  logoImg:{
-    width:'40%'
-  }
-}))
+  logoImg: {
+    width: "40%",
+  },
+}));
 
-export default function DrawerComp(props){
+export default function DrawerComp(props) {
   // const drawerInitState = props.open;
   const classes = useStyles();
   const token = Cookies.get("token");
   const tenantLogoFile = "logo-hhys.png";
-  const tenantLogo = "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +tenantLogoFile;
+  const tenantLogo =
+    "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +
+    tenantLogoFile;
 
   const [navData, setNavData] = React.useState([]);
 
@@ -75,7 +77,7 @@ export default function DrawerComp(props){
     var SwitchComp;
     switch (param) {
       case "home":
-        SwitchComp = <Dashboard />
+        SwitchComp = <Dashboard />;
         break;
       case "users":
         SwitchComp = <Contacts />;
@@ -90,11 +92,10 @@ export default function DrawerComp(props){
         SwitchComp = <Queue />;
         break;
       default:
-        SwitchComp = <Dashboard />
+        SwitchComp = <Dashboard />;
     }
     return SwitchComp;
   }
-
 
   return (
     <div className={classes.drawerdiv}>
@@ -102,34 +103,28 @@ export default function DrawerComp(props){
         <ChevronLeftIcon />
       </IconButton>
       <Divider />
-      <div>
-        <List>
-          <ListItem>
-            <img
-              src={tenantLogo}
-              alt="brand logo"
-              className={classes.logoImg}
-            />
+      <List>
+        <ListItem>
+          <img src={tenantLogo} alt="brand logo" className={classes.logoImg} />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        {navData.map((item) => (
+          <ListItem
+            button
+            key={item.name}
+            component={NavLink}
+            to={item.nav}
+            activeClassName="Mui-selected"
+          >
+            <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
+            <ListItemText primary={item.label} />
           </ListItem>
-        </List>
-        <Divider />
-        <List>
-          {navData.map((item) => (
-            <ListItem
-              button
-              key={item.name}
-              component={NavLink}
-              to={item.nav}
-              activeClassName="Mui-selected"
-            >
-              <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
-              <ListItemText primary={item.label} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <Divider />
-      </div>
+        ))}
+      </List>
+      <Divider />
+      <Divider />
     </div>
   );
 }

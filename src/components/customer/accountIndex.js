@@ -2,7 +2,7 @@ import React from "react";
 //cookie library import
 import DataTableComp from "../common/datatable";
 import AccountDetailComp from "./accountdetail";
-import AccountApi from "../../api/account";
+import AccountServies from "../../services/account";
 
 export default function AccountIndexComp(props) {
   // const [loading, setLoading] = React.useState(true);
@@ -80,17 +80,17 @@ export default function AccountIndexComp(props) {
   }
   //datafetch
   React.useEffect(() => {
-    const accountApi = new AccountApi();
+    const accountService = new AccountServies();
     const abortController = new AbortController();
     const signal = abortController.signal;
 
     if(accountSearch){
-      accountApi
+      accountService
         .searchAccounts(signal, accountSearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     }else{
-      accountApi
+      accountService
         .getAccounts(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));

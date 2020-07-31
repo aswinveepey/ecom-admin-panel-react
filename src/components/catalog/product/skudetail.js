@@ -29,8 +29,8 @@ import TableCell from "@material-ui/core/TableCell";
 import SingleAttributeComp from "../../common/singleattribute";
 import ImageUploadComp from "../../common/imageupload";
 //api import
-import SkuApi from "../../../api/sku"
-import TerritoryApi from "../../../api/territory"
+import SkuService from "../../../services/sku"
+import TerritoryService from "../../../services/territory"
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -84,8 +84,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const skuApi = new SkuApi()
-const territoryApi = new TerritoryApi()
+const skuService = new SkuService()
+const territoryService = new TerritoryService()
 
 export default function SkuDetailComp(props) {
   const classes = useStyles();
@@ -128,7 +128,7 @@ export default function SkuDetailComp(props) {
       controls.inventory[index]["territory"] = territory;
     } else {
       if (name === "status") {
-        controls[name] = event.target.checked;
+        controls.inventory[index][name] = event.target.checked;
       } else {
         controls[name] = value;
       }
@@ -287,7 +287,7 @@ export default function SkuDetailComp(props) {
     const signal = abortController.signal;
     //set request options
     skuId &&
-      skuApi
+      skuService
         .getOneSku(signal, skuId)
         .then((data) => setFormControls(data))
         .catch((err) => console.log(err));
@@ -302,7 +302,7 @@ export default function SkuDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    territoryApi
+    territoryService
       .searchTerritories(signal, territorySearchString)
       .then((data) => setTerritories(data))
       .catch((err) => console.log(err));
@@ -323,12 +323,12 @@ export default function SkuDetailComp(props) {
     const signal = abortController.signal;
     //set request options
     if (formControls._id){
-      skuApi
+      skuService
         .updateSku(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
     } else {
-      skuApi
+      skuService
         .createSku(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
@@ -659,7 +659,7 @@ export default function SkuDetailComp(props) {
                         <TableBody>
                           {formControls?.inventory?.map((data, index) => (
                             <TableRow key={index}>
-                              <TableCell>
+                              <TableCell width="20%">
                                 <Autocomplete
                                   options={territories}
                                   freeSolo

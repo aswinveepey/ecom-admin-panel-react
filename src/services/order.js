@@ -1,12 +1,15 @@
 import ApiHelper from "./api";
 
-export default class OrderApi {
+export default class OrderService {
   constructor() {
     this.apiHelper = ApiHelper();
   }
   //get all orders
-  getOrders = async (signal) => {
-    return await this.apiHelper.get(signal, "order");
+  getOrders = async (signal, orderFilterStartDate, orderFilterEndDate) => {
+    return await this.apiHelper.get(
+      signal,
+      `order?startDate=${orderFilterStartDate}&endDate=${orderFilterEndDate}`
+    );
   };
   //serach all orders
   searchOrders = async (signal, param) => {

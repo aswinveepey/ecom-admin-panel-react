@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Scaffold from "../common/scaffold";
 const TerritoryComp = React.lazy(() => import("./territory/territory"));
 const RoleComp = React.lazy(() => import("./role/role"));
 const UserComp = React.lazy(() => import("./user/user"));
@@ -12,7 +11,7 @@ export default function AdminComp(props) {
     setTabValue(newTabValue);
   };
   return (
-    <Scaffold title="Admin">
+    <React.Fragment>
       <Tabs
         value={tabValue}
         onChange={handleChange}
@@ -31,6 +30,6 @@ export default function AdminComp(props) {
         {tabValue === 1 && <TerritoryComp />}
         {tabValue === 2 && <RoleComp />}
       </Suspense>
-    </Scaffold>
+    </React.Fragment>
   );
 }
