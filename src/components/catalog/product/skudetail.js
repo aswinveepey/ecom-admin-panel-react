@@ -128,7 +128,7 @@ export default function SkuDetailComp(props) {
       controls.inventory[index]["territory"] = territory;
     } else {
       if (name === "status") {
-        controls[name] = event.target.checked;
+        controls.inventory[index][name] = event.target.checked;
       } else {
         controls[name] = value;
       }

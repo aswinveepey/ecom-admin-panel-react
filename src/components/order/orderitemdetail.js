@@ -70,7 +70,7 @@ export default function OrderitemDetailComp(props) {
           </TableHead>
           <TableBody>
             {props.data?.orderitems?.map((orderitem, index) => (
-              <TableRow key={orderitem.sku._id}>
+              <TableRow key={orderitem._id}>
                 {!props.data?._id && (
                   <TableCell>
                     <IconButton
