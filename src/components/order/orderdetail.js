@@ -18,7 +18,7 @@ import {useDispatch} from "react-redux"
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
 const CustomerDisplayComp = React.lazy(() => import("./customercomp"));
-const SelectSKU = React.lazy(() => import("./selectsku"));
+const SelectSKU = React.lazy(() => import("../common/selectsku"));
 const OrdertotalComp = React.lazy(() => import("./ordertotal"));
 
 //styles
