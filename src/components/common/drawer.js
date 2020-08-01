@@ -117,6 +117,7 @@ export default function DrawerComp(props) {
             component={NavLink}
             to={item.nav}
             activeClassName="Mui-selected"
+            onClick={props.handleDrawerToggle}
           >
             <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
             <ListItemText primary={item.label} />
