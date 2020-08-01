@@ -135,6 +135,7 @@ export default function ProductIndexComp(props){
   const [productDetailOpen, setProductDetailOpen] = React.useState(false);
   const [productDetailData, setProductDetailData] = React.useState([])
   const [productSearch, setProductSearch] = React.useState("");
+  const [fetchStatus, setFetchStatus] = React.useState();
 
   //open Product Detail
   const openProductDetail = (data) => {
@@ -153,6 +154,7 @@ export default function ProductIndexComp(props){
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
+    setFetchStatus("Loading");
     const productService = new ProductService();
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -167,6 +169,7 @@ export default function ProductIndexComp(props){
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     }
+    setFetchStatus("Fetched");
     return function cleanup() {
       abortController.abort();
     };
@@ -228,6 +231,7 @@ export default function ProductIndexComp(props){
             </Table>
           )}
         </TableContainer>
+        {(fetchStatus==="Loading") && (<div>Loading...</div>)}
       </div>
       {productDetailOpen && (
         <ProductDetailComp
