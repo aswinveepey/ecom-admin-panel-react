@@ -11,27 +11,17 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
-//picker import
-// import DateTimePicker from "@material-ui/pickers/DateTimePicker";
-import {MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import SearchIcon from "@material-ui/icons/Search";
-import PublishIcon from "@material-ui/icons/Publish";
+
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
 
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
-//import order api class
-import OrderService from "../../services/order";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -143,9 +133,6 @@ export default function OrderIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
-  const [orderSearch, setOrderSearch] = React.useState("");
-  const [orderFilterStartDate, setOrderFilterStartDate] = React.useState(moment().subtract(5, "days"))
-  const [orderFilterEndDate, setOrderFilterEndDate] = React.useState(moment())
   const state = useSelector((state) => state.orderUpdateReducer);
 
   //open Order Detail
@@ -158,89 +145,14 @@ export default function OrderIndexComp(props) {
   const closeOrderDetail = () => {
     setOrderDetailOpen(false);
   };
-  //handle Order Search
-  const handleOrderSearch = (event) => {
-    setOrderSearch(event.target.value);
-  };
-
-  //datafetch
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const orderService = new OrderService();
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    if (orderSearch.length > 3) {
-      orderService
-        .searchOrders(signal, orderSearch)
-        .then((response) => setRowData(response))
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      orderService
-        .getOrders(
-          signal,
-          moment.utc(orderFilterStartDate).format(),
-          moment.utc(orderFilterEndDate).format()
-        )
-        .then((response) => setRowData(response))
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [orderSearch, state, orderFilterStartDate, orderFilterEndDate]);
+  //get data from props
+  React.useEffect(()=>{
+    props.data && setRowData(props.data)
+    props.newOrder && setOrderDetailOpen(props.newOrder);
+  },[props])
 
   return (
     <React.Fragment>
-      <Button
-        color="primary"
-        variant="outlined"
-        aria-label="add"
-        className={classes.button}
-        onClick={openOrderDetail}
-      >
-        Add Order
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        className={classes.button}
-        startIcon={<PublishIcon />}
-      >
-        Export
-      </Button>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <DateTimePicker
-          inputVariant="outlined"
-          variant="inline"
-          label="Start Date"
-          value={orderFilterStartDate}
-          onChange={setOrderFilterStartDate}
-          className={classes.button}
-        />
-        <DateTimePicker
-          inputVariant="outlined"
-          variant="inline"
-          label="End Date"
-          value={orderFilterEndDate}
-          onChange={setOrderFilterEndDate}
-          className={classes.button}
-        />
-      </MuiPickersUtilsProvider>
-      <div className={classes.container}>
-        <Paper component="form" className={classes.searchbar}>
-          <InputBase
-            placeholder="Search Orders"
-            className={classes.searchinput}
-            onChange={handleOrderSearch}
-          />
-          <IconButton type="submit" aria-label="search orders">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
         <TableContainer>
           {rowData && (
             <Table aria-label="order table" className={classes.table}>
@@ -280,7 +192,6 @@ export default function OrderIndexComp(props) {
             </Table>
           )}
         </TableContainer>
-      </div>
       {orderDetailOpen && (
         <OrderDetailComp
           open={orderDetailOpen}

@@ -17,6 +17,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ImageUploadComp from "../../common/imageupload";
+import MenuItem from "@material-ui/core/MenuItem";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 // date picker
@@ -79,6 +80,10 @@ export default function DivisionDetailComp(props) {
   // const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
+  const [typeOptions, setTypeOptions] = React.useState([
+    { value: "Category", label: "Category" },
+    { value: "Sku", label: "Sku" },
+  ]);
   //handle dialog close - call div index comp
   const handleClose = () => {
     props.handleDialogClose();
@@ -304,6 +309,23 @@ export default function DivisionDetailComp(props) {
                   fullWidth
                   onChange={(event) => onchangeCollectionInput(event)}
                 />
+              </Grid>
+              <Grid item>
+                <TextField
+                  select
+                  value={formControls?.type || ""}
+                  label="Type"
+                  name="type"
+                  variant="standard"
+                  fullWidth
+                  onChange={(event) => onchangeCollectionInput(event)}
+                >
+                  {typeOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <Grid item>
