@@ -18,6 +18,7 @@ import MomentUtils from "@date-io/moment";
 import OrderService from "../../services/order";
 
 const OrderIndexComp = React.lazy(() => import("./orderindex"));
+const OrderItemIndexComp = React.lazy(() => import("./orderitemindex"));
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -42,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
 export default function OrderComp(props) {
   const classes = useStyles();
   const [orderData, setOrderData] = React.useState([]);
+  const [bookedData, setBookedData] = React.useState([]);
+  const [confirmedData, setConfirmedData] = React.useState([]);
+  const [shippedData, setShippedData] = React.useState([]);
+  const [processedData, setProcessedData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderFilterStartDate, setOrderFilterStartDate] = React.useState(moment().subtract(5, "days"))
@@ -89,6 +94,17 @@ export default function OrderComp(props) {
     };
   }, [orderSearch, orderFilterStartDate, orderFilterEndDate]);
 
+  React.useEffect(() => {
+    let orderdetailArray = []
+    orderData.map((order) => orderdetailArray.push(...order.orderitems));
+    setBookedData(orderdetailArray.filter(item=>item.status==="Booked"))
+    setConfirmedData(orderdetailArray.filter(item=>item.status==="Confirmed"))
+    setShippedData(orderdetailArray.filter(item=>item.status==="Shipped"))
+    // setBookedData(orderdetailArray.filter(item=>item.status==="Booked"))
+    //set booked data
+    //set confirmed data
+    //set shipped data
+  }, [orderData]);
   return (
     <React.Fragment>
       <Button
@@ -148,12 +164,18 @@ export default function OrderComp(props) {
         >
           <Tab label="Orders" />
           <Tab label="Booked" />
+          <Tab label="Confirmed" />
+          <Tab label="Shipped" />
+          {/* <Tab label="Processed" /> */}
         </Tabs>
         <Suspense fallback={<div>Loading...</div>}>
           {tabValue === 0 && (
             <OrderIndexComp data={orderData} newOrder={orderDetailOpen} />
           )}
-          {tabValue === 1 && <div>Booked Orders Come Here</div>}
+          {tabValue === 1 && <OrderItemIndexComp data={bookedData} />}
+          {tabValue === 2 && <OrderItemIndexComp data={confirmedData} />}
+          {tabValue === 3 && <OrderItemIndexComp data={shippedData} />}
+          {/* {tabValue === 4 && <OrderItemIndexComp data={processedData} />} */}
         </Suspense>
       </div>
     </React.Fragment>

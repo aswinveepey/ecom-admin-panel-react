@@ -90,10 +90,10 @@ function ExpandableRow(props) {
             <EditIcon />
           </IconButton>
         </TableCell>
-        <TableCell>{row._id}</TableCell>
+        <TableCell>{row.shortid}</TableCell>
         <TableCell>
-          {row.customer.customer._id}
-          <br/>
+          {row.customer.customer.shortid}
+          <br />
           {[
             row.customer.customer.firstname,
             row.customer.customer.lastname,
