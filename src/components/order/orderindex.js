@@ -9,7 +9,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 //icon imports - Material UI
@@ -111,17 +110,17 @@ function ExpandableRow(props) {
         <TableCell>{moment(row.createdat).format("LLLL")}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={orderExpand} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="subtitle2" gutterBottom component="div">
-                Order items
-              </Typography>
-              {row.orderitems && (
-                <OrderitemIndexComp data={row.orderitems} order_id={row._id} />
-              )}
-              {/* Order item Component */}
-            </Box>
+            {/* <Box margin={1}> */}
+            <Typography variant="subtitle2" gutterBottom component="div">
+              Order items
+            </Typography>
+            {row.orderitems && (
+              <OrderitemIndexComp data={row.orderitems} order_id={row._id} />
+            )}
+            {/* Order item Component */}
+            {/* </Box> */}
           </Collapse>
         </TableCell>
       </TableRow>
