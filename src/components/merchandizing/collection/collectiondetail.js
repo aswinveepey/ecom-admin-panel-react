@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 //Core Elements - Material UI
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -16,8 +16,8 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import ImageUploadComp from "../../common/imageupload";
 import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 // date picker
@@ -28,6 +28,8 @@ import CollectionService from "../../../services/collection";
 // import CategoryService from "../../../services/category";
 // import SKUService from "../../../services/sku";
 
+const SelectSKU = React.lazy(() => import("../../common/selectsku"));
+const ImageUploadComp = React.lazy(() => import("../../common/imageupload"));
 // define styles
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -72,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 const collectionService = new CollectionService();
 // const categoryService = new CategoryService();
 
-export default function DivisionDetailComp(props) {
+export default function CollectionDetailComp(props) {
   const classes = useStyles();
 
   const [formControls, setFormControls] = React.useState([]);
@@ -80,50 +82,25 @@ export default function DivisionDetailComp(props) {
   // const [categories, setCategories] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
-  const [typeOptions, setTypeOptions] = React.useState([
-    { value: "Category", label: "Category" },
-    { value: "Sku", label: "Sku" },
-  ]);
+  const [addSkuOpen, setAddSkuOpen] = React.useState(false);
+  const [typeOptions, setTypeOptions] = React.useState([]);
   //handle dialog close - call div index comp
   const handleClose = () => {
     props.handleDialogClose();
   };
   //handle image upload close
-  const handleImageUploadClose = () => {
-    setOpenImageUpload(false);
+  const handleImageUploadToggle = () => {
+    setOpenImageUpload(!openImageUpload);
   };
-  //new image upload
-  function handleImageUploadClick() {
-    setOpenImageUpload(true);
-  }
+
   //handle image upload close
-  const handleThumbnailUploadClose = () => {
-    setOpenThumbnailUpload(false);
+  const handleThumbnailUploadToggle = () => {
+    setOpenThumbnailUpload(!openThumbnailUpload);
   };
-  //new image upload
-  function handleThumbnailUploadClick() {
-    setOpenThumbnailUpload(true);
-  }
-  // handle division form submit
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    //clean up subscriptions using abortcontroller & signals
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    if (formControls._id) {
-      collectionService
-        .updateCollection(signal, formControls)
-        .then((data) => handleClose())
-        .catch((err) => console.log(err));
-    } else {
-      collectionService
-        .createCollection(signal, formControls)
-        .then((data) => handleClose())
-        .catch((err) => console.log(err));
-    }
-    return function cleanup() {
-      abortController.abort();
-    };
+
+  //add sku handling in case of new order
+  const toggleAddSku = () => {
+    setAddSkuOpen(!addSkuOpen);
   };
   //change division input handle
   const onchangeCollectionInput = (event) => {
@@ -136,6 +113,17 @@ export default function DivisionDetailComp(props) {
     } else {
       controls[name] = value;
     }
+    setFormControls(controls);
+  };
+  const handleAddItem = (item)=>{
+    const controls = { ...formControls };
+    controls.items = controls.items || [];
+    controls.items.push(item._id);
+    setFormControls(controls);
+  }
+  const handleRemoveitem = (index) => {
+    const controls = { ...formControls };
+    controls.items.splice(index, 1);
     setFormControls(controls);
   };
   const setCollectionStartDate = (date) => {
@@ -176,9 +164,35 @@ export default function DivisionDetailComp(props) {
     setFormControls(controls);
   };
 
+  // handle division form submit
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    if (formControls._id) {
+      collectionService
+        .updateCollection(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    } else {
+      collectionService
+        .createCollection(signal, formControls)
+        .then((data) => handleClose())
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  };
+
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
+    setTypeOptions([
+      { value: "Category", label: "Category" },
+      { value: "Sku", label: "Sku" },
+    ]);
   }, [props]);
   //get category from search string
   // React.useEffect(() => {
@@ -226,7 +240,7 @@ export default function DivisionDetailComp(props) {
                           <Button
                             size="small"
                             color="secondary"
-                            onClick={handleImageUploadClick}
+                            onClick={handleImageUploadToggle}
                           >
                             Replace
                           </Button>
@@ -237,7 +251,7 @@ export default function DivisionDetailComp(props) {
                         {/* Button base covers card content to make whole card clickable */}
                         <ButtonBase
                           className={classes.addimgbase}
-                          onClick={handleImageUploadClick}
+                          onClick={handleImageUploadToggle}
                         >
                           <CardContent className={classes.imagecardcontent}>
                             <PhotoCamera />
@@ -263,7 +277,7 @@ export default function DivisionDetailComp(props) {
                           <Button
                             size="small"
                             color="secondary"
-                            onClick={handleThumbnailUploadClick}
+                            onClick={handleThumbnailUploadToggle}
                           >
                             Replace
                           </Button>
@@ -274,7 +288,7 @@ export default function DivisionDetailComp(props) {
                         {/* Button base covers card content to make whole card clickable */}
                         <ButtonBase
                           className={classes.addthumbnailbase}
-                          onClick={handleThumbnailUploadClick}
+                          onClick={handleThumbnailUploadToggle}
                         >
                           <CardContent className={classes.thumbnailcardcontent}>
                             <PhotoCamera />
@@ -370,6 +384,26 @@ export default function DivisionDetailComp(props) {
                   labelPlacement="end"
                 />
               </Grid>
+              <Grid item>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  aria-label="add"
+                  className={classes.button}
+                  onClick={toggleAddSku}
+                >
+                  Add Items
+                </Button>
+              </Grid>
+              <Grid item>
+                {formControls.items?.map((item, index) => (
+                  <Chip
+                    key={index}
+                    label={item}
+                    onDelete={handleRemoveitem.bind(this, index)}
+                  />
+                ))}
+              </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -382,18 +416,29 @@ export default function DivisionDetailComp(props) {
           </DialogActions>
         </form>
       </Dialog>
-      <ImageUploadComp
-        open={openImageUpload}
-        handleDialogClose={handleImageUploadClose}
-        handleImageChange={handleImageChange}
-        keyPath="division/"
-      />
-      <ImageUploadComp
-        open={openThumbnailUpload}
-        handleDialogClose={handleThumbnailUploadClose}
-        handleImageChange={handleThumbnailChange}
-        keyPath="division/thumbnail/"
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SelectSKU
+          open={addSkuOpen}
+          handleClose={toggleAddSku}
+          selectSku={handleAddItem}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
+          open={openImageUpload}
+          handleDialogClose={handleImageUploadToggle}
+          handleImageChange={handleImageChange}
+          keyPath="collection/"
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImageUploadComp
+          open={openThumbnailUpload}
+          handleDialogClose={handleThumbnailUploadToggle}
+          handleImageChange={handleThumbnailChange}
+          keyPath="collection/thumbnail/"
+        />
+      </Suspense>
     </React.Fragment>
   );
 }
