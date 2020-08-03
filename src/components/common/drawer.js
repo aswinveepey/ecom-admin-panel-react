@@ -16,7 +16,6 @@ import Receipt from "@material-ui/icons/Receipt";
 import Queue from "@material-ui/icons/Queue";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 import { NavLink } from "react-router-dom";
 
@@ -118,6 +117,7 @@ export default function DrawerComp(props) {
             component={NavLink}
             to={item.nav}
             activeClassName="Mui-selected"
+            onClick={props.handleDrawerToggle}
           >
             <ListItemIcon>{renderIcon(item.name)}</ListItemIcon>
             <ListItemText primary={item.label} />

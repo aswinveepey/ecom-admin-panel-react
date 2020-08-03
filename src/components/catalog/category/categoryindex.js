@@ -1,11 +1,11 @@
 import React, {Suspense} from "react";
 //api import
-import CategoryApi from "../../../api/category"
+import CategoryService from "../../../services/category"
 
 const DataTableComp = React.lazy(() => import("../../common/datatable"));
 const CategoryDetailComp = React.lazy(() => import("./categorydetail"));
 
-const categoryApi = new CategoryApi();
+const categoryService = new CategoryService();
 
 export default function CategoryIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
@@ -69,12 +69,12 @@ export default function CategoryIndexComp(params) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(categorySearch){
-      categoryApi
+      categoryService
         .searchCategories(signal, categorySearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     } else {
-      categoryApi
+      categoryService
         .getCategories(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));

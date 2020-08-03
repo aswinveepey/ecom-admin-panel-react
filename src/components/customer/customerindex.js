@@ -1,9 +1,9 @@
 import React from "react";
 import CustomerDetailComp from "./customerdetail";
 import DataTableComp from '../common/datatable'
-import CustomerApi from "../../api/customer";
+import CustomerService from "../../services/customer";
 
-const customerapi = new CustomerApi();
+const customerService = new CustomerService();
 
 export default function CustomerIndexComp(props){
   const [rowData, setRowData] = React.useState([]);
@@ -23,6 +23,11 @@ export default function CustomerIndexComp(props){
       },
     },
     columnDefs: [
+      {
+        headerName: "ID",
+        valueGetter: (params) =>
+          params.data?.shortid,
+      },
       {
         headerName: "Name",
         valueGetter: (params) =>
@@ -86,11 +91,11 @@ export default function CustomerIndexComp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (customerSearch) {
-      customerapi
+      customerService
         .searchCustomers(signal, customerSearch)
         .then((response) => setRowData(response));
     } else {
-      customerapi.getCustomers(signal).then((response) => setRowData(response));
+      customerService.getCustomers(signal).then((response) => setRowData(response));
     }
     return function cleanup() {
       abortController.abort();

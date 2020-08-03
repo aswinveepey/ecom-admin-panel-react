@@ -1,8 +1,5 @@
 import React from "react";
-import OrderitemIndexComp from "./orderitemindex";
-import OrderDetailComp from "./orderdetail";
-//import order api class
-import OrderApi from "../../api/order";
+import moment from "moment"
 //material UI
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,19 +9,18 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 //icon imports - Material UI
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import SearchIcon from "@material-ui/icons/Search";
+
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
+
+import OrderitemIndexComp from "./orderitemindex";
+import OrderDetailComp from "./orderdetail";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -88,32 +84,43 @@ function ExpandableRow(props) {
           <IconButton
             size="small"
             aria-label="order detail"
-            onClick={openOrderDetail.bind(this,row)}
+            onClick={openOrderDetail.bind(this, row)}
           >
             <EditIcon />
           </IconButton>
         </TableCell>
-        <TableCell>{row._id}</TableCell>
-        <TableCell>{row.customer.customer._id}</TableCell>
+        <TableCell>{row.shortid}</TableCell>
+        <TableCell>
+          {row.customer.customer.shortid}
+          <br />
+          {[
+            row.customer.customer.firstname,
+            row.customer.customer.lastname,
+          ].join(" ")}
+        </TableCell>
         <TableCell>{parseFloat(row.amount.amount || 0).toFixed(2)}</TableCell>
         <TableCell>{parseFloat(row.amount.discount || 0).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.totalamount || 0).toFixed(2)}</TableCell>
-        <TableCell>{parseFloat(row.amount.installation || 0).toFixed(2)}</TableCell>
+        <TableCell>
+          {parseFloat(row.amount.totalamount || 0).toFixed(2)}
+        </TableCell>
+        <TableCell>
+          {parseFloat(row.amount.installation || 0).toFixed(2)}
+        </TableCell>
         <TableCell>{parseFloat(row.amount.shipping || 0).toFixed(2)}</TableCell>
-        <TableCell>{row.createdat}</TableCell>
+        <TableCell>{moment(row.createdat).format("LLLL")}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={orderExpand} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="subtitle2" gutterBottom component="div">
-                Order items
-              </Typography>
-              {row.orderitems && (
-                <OrderitemIndexComp data={row.orderitems} order_id={row._id} />
-              )}
-              {/* Order item Component */}
-            </Box>
+            {/* <Box margin={1}> */}
+            <Typography variant="subtitle2" gutterBottom component="div">
+              Order items
+            </Typography>
+            {row.orderitems && (
+              <OrderitemIndexComp data={row.orderitems} order_id={row._id} />
+            )}
+            {/* Order item Component */}
+            {/* </Box> */}
           </Collapse>
         </TableCell>
       </TableRow>
@@ -125,7 +132,6 @@ export default function OrderIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
-  const [orderSearch, setOrderSearch] = React.useState("");
   const state = useSelector((state) => state.orderUpdateReducer);
 
   //open Order Detail
@@ -138,60 +144,14 @@ export default function OrderIndexComp(props) {
   const closeOrderDetail = () => {
     setOrderDetailOpen(false);
   };
-  //handle Order Search
-  const handleOrderSearch = (event) => {
-    event.persist()
-    setOrderSearch(event);
-  };
-
-  //datafetch
-  React.useEffect(() => {
-    //clean up subscriptions using abortcontroller & signals
-    const orderApi = new OrderApi();
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    if (orderSearch) {
-      orderApi
-        .searchOrders(signal, orderSearch)
-        .then((response) => setRowData(response))
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      orderApi
-        .getOrders(signal, orderSearch)
-        .then((response) => setRowData(response))
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [orderSearch, state]);
+  //get data from props
+  React.useEffect(()=>{
+    props.data && setRowData(props.data)
+    props.newOrder && setOrderDetailOpen(props.newOrder);
+  },[props])
 
   return (
     <React.Fragment>
-      <Button
-        color="primary"
-        variant="outlined"
-        aria-label="add"
-        className={classes.button}
-        onClick={openOrderDetail}
-      >
-        Add Order
-      </Button>
-      <div className={classes.container}>
-        <Paper component="form" className={classes.searchbar}>
-          <InputBase
-            placeholder="Search Orders"
-            className={classes.searchinput}
-            onChange={handleOrderSearch}
-          />
-          <IconButton type="submit" aria-label="search orders">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
         <TableContainer>
           {rowData && (
             <Table aria-label="order table" className={classes.table}>
@@ -200,13 +160,23 @@ export default function OrderIndexComp(props) {
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                   <TableCell className={classes.tableheader}>Id</TableCell>
-                  <TableCell className={classes.tableheader}>Customer ID</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Customer
+                  </TableCell>
                   <TableCell className={classes.tableheader}>Amount</TableCell>
-                  <TableCell className={classes.tableheader}>Discount</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Discount
+                  </TableCell>
                   <TableCell className={classes.tableheader}>Total</TableCell>
-                  <TableCell className={classes.tableheader}>Installation</TableCell>
-                  <TableCell className={classes.tableheader}>Shipping</TableCell>
-                  <TableCell className={classes.tableheader}>Created At</TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Installation
+                  </TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Shipping
+                  </TableCell>
+                  <TableCell className={classes.tableheader}>
+                    Created At
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -221,7 +191,6 @@ export default function OrderIndexComp(props) {
             </Table>
           )}
         </TableContainer>
-      </div>
       {orderDetailOpen && (
         <OrderDetailComp
           open={orderDetailOpen}

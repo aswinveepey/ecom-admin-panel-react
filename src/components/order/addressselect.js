@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import CustomerAPI from "../../api/customer"
+import CustomerService from "../../services/customer"
 
 const useStyles = makeStyles((theme) => ({
   selectButton: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const customerApi = new CustomerAPI();
+const customerService = new CustomerService();
 
 export default function AddressSelectComp(props){
   const classes = useStyles();
@@ -35,7 +35,7 @@ export default function AddressSelectComp(props){
     const signal = abortController.signal;
     //fetch data and set data
     props.data?._id &&
-      customerApi
+      customerService
         .getOneCustomer(signal, props.data._id)
         .then((data) => setAddresses(data.address))
         .catch((err) => console.log(err));

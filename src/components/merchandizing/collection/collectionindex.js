@@ -1,15 +1,15 @@
 import React, { Suspense } from "react";
 //api import
-import DivisionServices from "../../../services/division"
+import CollectionServices from "../../../services/collection";
 
 const DataTableComp = React.lazy(() => import("../../common/datatable"));
-const DivisionDetailComp = React.lazy(()=>import("./divisiondetail"))
+const CollectionDetailComp = React.lazy(() => import("./collectiondetail"));
 
-export default function DivisionIndexComp(params) {
+export default function CollectionIndexComp(params) {
   const [rowData, setRowData] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState([]);
-  const [divisionSearch, setDivisionSearch] = React.useState("");
+  const [collectionSearch, setCollectionSearch] = React.useState("");
 
   const gridData = {
     gridOptions: {
@@ -57,36 +57,36 @@ export default function DivisionIndexComp(params) {
     setOpenDialog(false);
   }
   //handle search input
-  function onchangeSearchInput(event){
-    setDivisionSearch(event.target.value)
+  function onchangeSearchInput(event) {
+    setCollectionSearch(event.target.value);
   }
   //datafetch
   React.useEffect(() => {
-    const divisionService = new DivisionServices();
+    const collectionService = new CollectionServices();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    if(divisionSearch){
-      divisionService
-        .searchDivisions(signal, divisionSearch)
+    if (collectionSearch) {
+      collectionService
+        .searchCollections(signal, collectionSearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     } else {
-      divisionService
-        .getDivisions(signal)
+      collectionService
+        .getCollections(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     }
     return function cleanup() {
       abortController.abort();
     };
-  }, [divisionSearch]);
+  }, [collectionSearch]);
   //return component
   return (
     <React.Fragment>
       <Suspense fallback={<div>Loading...</div>}>
         <DataTableComp
-          title="Division"
+          title="Collection"
           handleRowDoubleClick={handleRowDoubleClick}
           handleNewClick={handleNewClick}
           gridData={gridData}
@@ -95,7 +95,7 @@ export default function DivisionIndexComp(params) {
         />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
-        <DivisionDetailComp
+        <CollectionDetailComp
           handleDialogClose={handleDialogClose}
           open={openDialog}
           data={dialogData}

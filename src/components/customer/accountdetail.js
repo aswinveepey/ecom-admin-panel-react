@@ -16,7 +16,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AddIcon from "@material-ui/icons/Add";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
-import AccountApi from "../../api/account";
+import AccountService from "../../services/account";
 
 
 //define styles
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AccountDetailComp(props) {
 
   const classes = useStyles();
-  const accountApi = new AccountApi();
+  const accountApi = new AccountService();
 
   const [formControls, setFormControls] = React.useState([]);
   const accountTypes = [

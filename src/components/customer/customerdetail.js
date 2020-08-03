@@ -19,9 +19,12 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AddIcon from "@material-ui/icons/Add";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
+// date picker
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 
-import CustomerApi from "../../api/customer";
-import AccountApi from "../../api/account";
+import CustomerService from "../../services/customer";
+import AccountService from "../../services/account";
 
 const AddressFormComp = React.lazy(() => import("./addressform"));
 //define styles
@@ -31,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const customerapi = new CustomerApi();
-const accountapi = new AccountApi();
+const customerService = new CustomerService();
+const accountService = new AccountService();
 
 export default function CustomerDetailComp(props){
   const classes = useStyles();
@@ -60,7 +63,7 @@ export default function CustomerDetailComp(props){
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(formControls._id){
-      customerapi
+      customerService
         .updateCustomer(signal, formControls)
         .then((data) => {
           // console.log(data);
@@ -68,7 +71,7 @@ export default function CustomerDetailComp(props){
         })
         .catch((err) => console.log(err));
     } else {
-      customerapi
+      customerService
         .createCustomer(signal, formControls)
         .then((data) => {
           console.log(data);
@@ -141,6 +144,11 @@ export default function CustomerDetailComp(props){
     event.preventDefault();
     setAccountSearchString(event.target.value);
   };
+  const changeCustomerBirthday = (date) => {
+    const controls = { ...formControls };
+    controls["birthday"] = date;
+    setFormControls(controls);
+  };
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
@@ -149,7 +157,7 @@ export default function CustomerDetailComp(props){
   React.useEffect(()=>{
     const abortController = new AbortController();
     const signal = abortController.signal;
-    accountapi
+    accountService
       .searchAccounts(signal, accountSearchString)
       .then((data) => setAccounts(data))
       .catch((err) => console.log(err));
@@ -212,20 +220,22 @@ export default function CustomerDetailComp(props){
                   ))}
                 </TextField>
               </Grid>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <Grid item>
+                  <DatePicker
+                    inputVariant="standard"
+                    variant="inline"
+                    label="Date of Birth"
+                    name="startdate"
+                    fullWidth
+                    value={formControls?.birthday || ""}
+                    onChange={changeCustomerBirthday}
+                  />
+                </Grid>
+              </MuiPickersUtilsProvider>
               <Grid item>
                 <TextField
-                  value={formControls?.birthday?.substring(0, 10)}
-                  label="Date of Birth"
-                  name="birthday"
-                  variant="standard"
-                  type="date"
-                  fullWidth
-                  onChange={(event) => onchangeCustomerInput(event)}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  value={formControls?.contactnumber}
+                  value={formControls?.contactnumber || ""}
                   label="Contact Mobile"
                   name="contactnumber"
                   variant="standard"

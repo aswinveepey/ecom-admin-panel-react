@@ -12,7 +12,7 @@ import Fab from "@material-ui/core/Fab";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 //api import
-import BrandApi from "../../../api/brand"
+import BrandService from "../../../services/brand"
 
 const ImageUploadComp = React.lazy(()=>import("../../common/imageupload"))
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BrandDetailComp(props) {
   const classes = useStyles();
-  const brandApi = new BrandApi()
+  const brandService = new BrandService()
   
   const [formControls, setFormControls] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
@@ -74,12 +74,12 @@ export default function BrandDetailComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(formControls._id){
-      brandApi
+      brandService
         .updateBrand(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));
     } else {
-      brandApi
+      brandService
         .createBrand(signal, formControls)
         .then((data) => handleClose())
         .catch((err) => console.log(err));

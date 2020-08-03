@@ -2,9 +2,9 @@ import React from "react";
 // import CustomerDetailComp from "./customerdetail";
 import DataTableComp from "../../common/datatable";
 import RoleDetailComp from "./roledetail";
-import RoleApi from "../../../api/role";
+import RoleService from "../../../services/role";
 
-const roleapi = new RoleApi();
+const roleService = new RoleService();
 
 export default function RoleIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
@@ -63,11 +63,11 @@ export default function RoleIndexComp(props) {
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (roleSearch) {
-      roleapi
+      roleService
         .searchRole(signal, roleSearch)
         .then((response) => setRowData(response));
     } else {
-    roleapi
+    roleService
         .getRoles(signal)
         .then((response) => setRowData(response));
     }

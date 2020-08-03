@@ -11,14 +11,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 //import order api class
-import OrderApi from "../../api/order";
+import OrderService from "../../services/order";
 import {useDispatch} from "react-redux"
 // import {setOrderUpdate} from "../../actions"
 
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
 const CustomerDisplayComp = React.lazy(() => import("./customercomp"));
-const SelectSKU = React.lazy(() => import("./selectsku"));
+const SelectSKU = React.lazy(() => import("../common/selectsku"));
 const OrdertotalComp = React.lazy(() => import("./ordertotal"));
 
 //styles
@@ -49,7 +49,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const orderApi = new OrderApi();
+const orderService = new OrderService();
 
 export default function OrderDetailcomp(props){
   const classes = useStyles();
@@ -185,7 +185,7 @@ export default function OrderDetailcomp(props){
     const signal = abortController.signal;
     
     if (formControls?._id){
-      orderApi
+      orderService
         .updateOrder(signal, formControls)
         .then((data) => {
           handleClose();
@@ -195,7 +195,7 @@ export default function OrderDetailcomp(props){
         })
         .catch((err) => console.log(err));
     }else{
-      orderApi
+      orderService
         .createOrder(signal, formControls)
         .then((data) => {
           handleClose();

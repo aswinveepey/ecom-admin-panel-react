@@ -23,7 +23,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import SearchIcon from "@material-ui/icons/Search";
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
-import ProductApi from "../../../api/product"
+import ProductService from "../../../services/product"
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -135,6 +135,7 @@ export default function ProductIndexComp(props){
   const [productDetailOpen, setProductDetailOpen] = React.useState(false);
   const [productDetailData, setProductDetailData] = React.useState([])
   const [productSearch, setProductSearch] = React.useState("");
+  const [fetchStatus, setFetchStatus] = React.useState();
 
   //open Product Detail
   const openProductDetail = (data) => {
@@ -153,20 +154,22 @@ export default function ProductIndexComp(props){
   //datafetch
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
-    const productApi = new ProductApi();
+    setFetchStatus("Loading");
+    const productService = new ProductService();
     const abortController = new AbortController();
     const signal = abortController.signal;
     if(productSearch){
-      productApi
+      productService
         .searchProducts(signal, productSearch)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     } else {
-      productApi
+      productService
         .getProducts(signal)
         .then((data) => setRowData(data))
         .catch((err) => console.log(err));
     }
+    setFetchStatus("Fetched");
     return function cleanup() {
       abortController.abort();
     };
@@ -228,6 +231,7 @@ export default function ProductIndexComp(props){
             </Table>
           )}
         </TableContainer>
+        {(fetchStatus==="Loading") && (<div>Loading...</div>)}
       </div>
       {productDetailOpen && (
         <ProductDetailComp
