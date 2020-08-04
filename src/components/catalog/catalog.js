@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import Scaffold from "../common/scaffold";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
