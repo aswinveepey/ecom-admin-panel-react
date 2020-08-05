@@ -37,7 +37,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": " env-cmd -f .env react-scripts start",
-    "build": "env-cmd -f .env react-scripts build",
+    "build": "react-scripts build",
     "build-ci": "react-scripts build",
     "build-dev": "env-cmd -f .env.development react-scripts build",
     "build-prod": "env-cmd -f .env.production react-scripts build",

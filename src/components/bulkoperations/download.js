@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
+import GetAppIcon from "@material-ui/icons/GetApp";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -22,7 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const dataSetOptions = [{ value: "orderitemdump", label: "Order Item Dump" }];
+const dataSetOptions = [
+  { value: "orderitemdump", label: "Order Item Dump" },
+  { value: "customerdump", label: "Customer Dump" },
+];
 const OrderDumpHeaders = [
   { label: "Order ID", key: "orderid" },
   { label: "Order Item ID", key: "orderitemid" },
@@ -30,6 +34,8 @@ const OrderDumpHeaders = [
   { label: "Customer Name", key: "customername" },
   { label: "SKU ID", key: "skuid" },
   { label: "SKU Name", key: "skuname" },
+  { label: "Category ID", key: "categoryid" },
+  { label: "Brand ID", key: "brandid" },
   { label: "MRP", key: "mrp" },
   { label: "Discount", key: "discount" },
   { label: "Selling Price", key: "sellingprice" },
@@ -46,12 +52,14 @@ const OrderDumpHeaders = [
   { label: "Shipped Qty", key: "quantityshipped" },
   { label: "Delivered Qty", key: "quantitydelivered" },
   { label: "Returned Qty", key: "quantityreturned" },
+  { label: "Territory ID", key: "territoryid" },
   { label: "Amount", key: "amount" },
   { label: "Discount", key: "discount" },
   { label: "Total Amount", key: "totalamount" },
   { label: "Status", key: "status" },
   { label: "Order Date", key: "orderdate" },
 ];
+const headers = { orderitemdump: OrderDumpHeaders };
 
 export default function DownloadComp(props){
   const classes = useStyles();
@@ -63,7 +71,6 @@ export default function DownloadComp(props){
   const csvRef = React.useRef()
 
   const downloadData = ()=>{
-    console.log("Called");
     setFetching(true);
     dataService
       .getOrderItemDump()
@@ -115,13 +122,14 @@ export default function DownloadComp(props){
                 className={classes.button}
                 onClick={downloadData}
                 disabled={fetching}
+                startIcon={<GetAppIcon/>}
               >
                 Download
               </Button>
               <CSVLink
                 ref={csvRef}
                 data={dataSet}
-                headers={OrderDumpHeaders}
+                headers={headers[dataSetType]}
                 filename={dataSetType + ".csv"}
                 target="_blank"
               />
