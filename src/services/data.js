@@ -20,4 +20,7 @@ export default class DataService {
   getGmvTimeSeries = async (signal) => {
     return await this.apiHelper.get(signal, "data/gmvTimeSeries");
   };
+  getOrderItemDump = async (signal) => {
+    return await this.apiHelper.get(signal, "data/getOrderItemDump");
+  };
 }
