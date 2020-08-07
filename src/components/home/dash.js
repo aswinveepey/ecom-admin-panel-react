@@ -21,7 +21,7 @@ export default function DashComp(props) {
     dataService.getMonthGmv().then((data) => data && setMonthGmv(data[0])).catch(err=>console.log(err));
     dataService.getQuarterGmv().then((data) => data && setQuarterGmv(data[0])).catch(err=>console.log(err));
     dataService.getGmvTimeSeries().then((data) => data && setGmvTimeSeries(data)).catch(err=>console.log(err));
-  },[props])
+  },[])
 
     return (
       <React.Fragment>
