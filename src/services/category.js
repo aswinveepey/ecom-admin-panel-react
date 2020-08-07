@@ -6,25 +6,33 @@ export default class CategoryService {
   }
   //get all Categories
   getCategories = async (signal) => {
-    return await this.apiHelper.get(signal, "category");
+    return await this.apiHelper.get({signal:signal, reqUrl:"category"});
   };
   //serach all Categories
   searchCategories = async (signal, param) => {
     const reqBody = JSON.stringify({ searchString: param });
-    return await this.apiHelper.post(signal, "category/search", reqBody);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "category/search",
+      reqBody: reqBody,
+    });
   };
   //Create a new Category
   createCategory = async (signal, param) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.post(signal, "category/", reqBody);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "category/",
+      reqBody: reqBody,
+    });
   };
   //Update a Category
   updateCategory = async (signal, param) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.post(
-      signal,
-      "category/id/" + param._id,
-      reqBody
-    );
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "category/id/" + param._id,
+      reqBody: reqBody,
+    });
   };
 }

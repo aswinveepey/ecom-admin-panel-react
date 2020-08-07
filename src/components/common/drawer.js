@@ -1,6 +1,4 @@
 import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
 
 // import Hidden from '@material-ui/core/Hidden'
 import Divider from "@material-ui/core/Divider";
@@ -23,7 +21,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 //realtive imports
 // import { BRAND_NAME } from "../../constants";
-import { BASE_URL } from "../../constants";
+import UserService from "../../services/user";
 
 const useStyles = makeStyles((theme) => ({
   drawerdiv: {
@@ -37,12 +35,11 @@ const useStyles = makeStyles((theme) => ({
 export default function DrawerComp(props) {
   // const drawerInitState = props.open;
   const classes = useStyles();
-  const token = Cookies.get("token");
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo =
     "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +
     tenantLogoFile;
-
+  const userApi = new UserService(); //get user data
   const [navData, setNavData] = React.useState([]);
 
   //fetch drawer data
@@ -50,28 +47,18 @@ export default function DrawerComp(props) {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
     try {
-      fetch(BASE_URL + "user/nav/", requestOptions, {
-        signal: signal,
-      })
+      userApi
+        .getNav(signal)
         .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setNavData(response.data);
+          setNavData(data);
         })
         .catch((err) => console.log(err));
     } catch (error) {}
     return function cleanup() {
       abortController.abort();
     };
-  }, [token]);
+  }, [props]);
 
   function renderIcon(param) {
     var SwitchComp;

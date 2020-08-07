@@ -6,25 +6,33 @@ export default class ProductService {
   }
   //get all products
   getProducts = async (signal) => {
-    return await this.apiHelper.get(signal, "product");
+    return await this.apiHelper.get({signal: signal, reqUrl: "product"});
   };
   //serach all products
   searchProducts = async (signal, param) => {
     const reqBody = JSON.stringify({ searchString: param });
-    return await this.apiHelper.post(signal, "product/search", reqBody);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "product/search",
+      reqBody: reqBody,
+    });
   };
   //Create a new Product
   createProduct = async (signal, param) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.post(signal, "product/", reqBody);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "product/",
+      reqBody: reqBody,
+    });
   };
   //Update a Product
   updateProduct = async (signal, param) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.post(
-      signal,
-      "product/id/" + param._id,
-      reqBody
-    );
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "product/id/" + param._id,
+      reqBody: reqBody,
+    });
   };
 }
