@@ -1,4 +1,6 @@
 import React, {Suspense} from "react";
+import { useSelector } from "react-redux";
+
 import moment from "moment";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -42,6 +44,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function OrderComp(props) {
   const classes = useStyles();
+  const orderUpdateState = useSelector((state) => state.orderUpdateReducer);
+
   const [orderData, setOrderData] = React.useState([]);
   const [bookedData, setBookedData] = React.useState([]);
   const [confirmedData, setConfirmedData] = React.useState([]);
@@ -92,7 +96,7 @@ export default function OrderComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [orderSearch, orderFilterStartDate, orderFilterEndDate]);
+  }, [orderSearch, orderFilterStartDate, orderFilterEndDate, orderUpdateState]);
 
   React.useEffect(() => {
     let orderdetailArray = []

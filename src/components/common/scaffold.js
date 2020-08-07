@@ -120,7 +120,6 @@ export default function Scaffold(props) {
       setSnackBarOpen(true);
       setLoading(false);
     }
-    console.log(apifeedbackState);
     apifeedbackState.apiloading && setLoading(true);
   }, [apifeedbackState]);
 

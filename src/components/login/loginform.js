@@ -36,7 +36,7 @@ export default function LoginFormComp(props){
   const authService = new AuthService();
   const userService = new UserService();
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.apiFeedbackReducer);
+  const apifeedbackstate = useSelector((state) => state.apiFeedbackReducer);
 
   const tenantLogoFile = "logo-hhys.png";
   const tenantLogo ="https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantLogoFile;
@@ -87,9 +87,9 @@ export default function LoginFormComp(props){
   };
 
   //Error handling through redux
-  React.useEffect(()=>{
-    state.apierror && setErrorState(state.apierror);
-  },[state])
+  React.useEffect(() => {
+    apifeedbackstate.apierror && setErrorState(apifeedbackstate.apierror);
+  }, [apifeedbackstate]);
 
   //check auth and set user Redux state
   React.useEffect(() => {

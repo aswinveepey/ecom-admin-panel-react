@@ -40,7 +40,7 @@ export default function UserComp(props) {
 
   React.useEffect(()=>{
     props?.match?.params?.userId && setSelectedUserId(props.match.params.userId)
-  },[props])
+  },[])
 
   //render
     return (
