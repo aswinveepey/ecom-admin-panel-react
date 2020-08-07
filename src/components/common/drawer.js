@@ -58,7 +58,7 @@ export default function DrawerComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [props]);
+  }, []);
 
   function renderIcon(param) {
     var SwitchComp;

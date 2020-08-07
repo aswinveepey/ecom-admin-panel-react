@@ -42,7 +42,7 @@ export default function AddressSelectComp(props){
     return function cleanup() {
       abortController.abort();
     };
-  }, [props]);
+  }, []);
   return (
     <React.Fragment>
       <Dialog

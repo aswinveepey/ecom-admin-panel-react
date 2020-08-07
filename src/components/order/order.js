@@ -96,7 +96,6 @@ export default function OrderComp(props) {
 
   React.useEffect(() => {
     let orderdetailArray = []
-    console.log(orderData[0])
     orderData.map((order) =>
       orderdetailArray.push(...order.orderitems)
     );
