@@ -96,7 +96,10 @@ export default function OrderComp(props) {
 
   React.useEffect(() => {
     let orderdetailArray = []
-    orderData.map((order) => orderdetailArray.push(...order.orderitems));
+    console.log(orderData[0])
+    orderData.map((order) =>
+      orderdetailArray.push(...order.orderitems)
+    );
     setBookedData(orderdetailArray.filter(item=>item.status==="Booked"))
     setConfirmedData(orderdetailArray.filter(item=>item.status==="Confirmed"))
     setShippedData(orderdetailArray.filter(item=>item.status==="Shipped"))

@@ -1,4 +1,4 @@
-import { BASE_URL } from "../constants";
+import { BASE_URL, TENANT_ID } from "../constants";
 import Cookies from "js-cookie";
 import store from "../store"
 
@@ -8,12 +8,13 @@ export default function ApiHelper(){
                       "Content-Type": "application/json",
                       Authorization: Cookies.get("token"),
                     }
-  const get = async (signal, reqUrl)=>{
+  const get = async ({signal, reqUrl, reqParams=""})=>{
     const requestOptions = {
       method: "GET",
       headers: headers,
     };
-    const fetchurl = BASE_URL + reqUrl;
+    const fetchurl =
+      BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" + reqParams;
     const response = await fetch(fetchurl, requestOptions, { signal: signal });
     const { status } = response;
     const responseData = await response.json();
@@ -21,24 +22,24 @@ export default function ApiHelper(){
       return responseData.data;
     }
     const payload =
-      typeof responseData.message === "string"
-        ? responseData.message
+      typeof responseData.error === "string"
+        ? responseData.error
         : "Unknown Error Occurred";
     store.dispatch({
       type: "APIERROR",
       payLoad: payload,
     });
-    if (responseData.message) {
-      throw new Error(responseData.message);
+    if (responseData.error) {
+      throw new Error(responseData.error);
     }
   }
-  const post = async (signal, reqUrl, reqBody) => {
+  const post = async ({signal, reqUrl, reqParams="", reqBody={}}) => {
     const requestOptions = {
       method: "POST",
       headers: headers,
       body: reqBody,
     };
-    const fetchurl = BASE_URL + reqUrl;
+    const fetchurl = BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" +reqParams;
     const response = await fetch(fetchurl, requestOptions, { signal: signal });
     const { status } = response;
     const responseData = await response.json();
@@ -51,15 +52,15 @@ export default function ApiHelper(){
       return responseData.data;
     }
     const payload =
-      typeof responseData.message === "string"
-        ? responseData.message
+      typeof responseData.error === "string"
+        ? responseData.error
         : "Unknown Error Occurred";
     store.dispatch({
       type: "APIERROR",
       payLoad: payload,
     });
-    if (responseData.message) {
-      throw new Error(responseData.message);
+    if (responseData.error) {
+      throw new Error(responseData.error);
     }
   };
   return{get,post}

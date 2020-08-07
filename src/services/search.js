@@ -1,15 +1,17 @@
 import ApiHelper from "./api";
 
-export default class AuthService {
+export default class SearchService {
   constructor() {
     this.apiHelper = ApiHelper();
   }
-  //Create a new Account
-  authenticate = async (signal, param) => {
-    const reqBody = JSON.stringify(param);
+  
+  //serach
+  search = async (signal, param) => {
+    const reqBody = JSON.stringify({ searchString: param });
+
     return await this.apiHelper.post({
       signal: signal,
-      reqUrl: "auth/authenticate",
+      reqUrl: "search",
       reqBody: reqBody,
     });
   };
