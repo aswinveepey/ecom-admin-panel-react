@@ -288,7 +288,7 @@ export default function SkuDetailComp(props) {
       // for new creation set product & create
       setFormControls(props.data);
     }
-  }, [props]);
+  }, [props.data, props.open]);
 
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
@@ -787,7 +787,11 @@ export default function SkuDetailComp(props) {
                                     <Switch
                                       name="status"
                                       size="small"
-                                      checked={data.status ? true : data.status}
+                                      checked={
+                                        data?.status === undefined
+                                          ? true
+                                          : data?.status
+                                      }
                                       onChange={onChangeInventory.bind(
                                         this,
                                         index
