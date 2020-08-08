@@ -28,6 +28,7 @@ const dataSetOptions = [
   { value: "customerdump", label: "Customer Dump" },
 ];
 const OrderDumpHeaders = [
+  { label: "Order Date", key: "orderdate" },
   { label: "Order ID", key: "orderid" },
   { label: "Order Item ID", key: "orderitemid" },
   { label: "Customer ID", key: "customerid" },
@@ -57,7 +58,6 @@ const OrderDumpHeaders = [
   { label: "Discount", key: "discount" },
   { label: "Total Amount", key: "totalamount" },
   { label: "Status", key: "status" },
-  { label: "Order Date", key: "orderdate" },
 ];
 const headers = { orderitemdump: OrderDumpHeaders };
 
