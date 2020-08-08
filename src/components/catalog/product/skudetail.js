@@ -29,8 +29,8 @@ import TableCell from "@material-ui/core/TableCell";
 import SingleAttributeComp from "../../common/singleattribute";
 import ImageUploadComp from "../../common/imageupload";
 //api import
-import SkuService from "../../../services/sku"
-import TerritoryService from "../../../services/territory"
+import SkuService from "../../../services/sku";
+import TerritoryService from "../../../services/territory";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -84,8 +84,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const skuService = new SkuService()
-const territoryService = new TerritoryService()
+const skuService = new SkuService();
+const territoryService = new TerritoryService();
 
 export default function SkuDetailComp(props) {
   const classes = useStyles();
@@ -117,25 +117,31 @@ export default function SkuDetailComp(props) {
     setTerritorySearchString(event.target.value);
   };
   //Change SKU Inventory
-  const onChangeInventory = (index, event, territory) => {
+  const onChangeInventory = (index, event) => {
     event.preventDefault();
-    // const name = event.target.name;
+
     const value = event.target.value;
     const name = event.target.name;
     const controls = { ...formControls };
     controls.inventory = controls.inventory || [];
-    if (territory){
-      controls.inventory[index]["territory"] = territory;
+
+    if (name === "status") {
+      controls.inventory[index]["status"] = event.target.checked;
     } else {
-      if (name === "status") {
-        controls.inventory[index][name] = event.target.checked;
-      } else {
-        controls[name] = value;
-      }
       controls.inventory[index][name] = value;
     }
     setFormControls(controls);
   };
+
+  const changeInventoryTerritory = (index, event, territory )=> {
+    
+    event.preventDefault();
+    const controls = { ...formControls };
+    controls.inventory = controls.inventory || [];
+    controls.inventory[index]["territory"] = territory;
+    setFormControls(controls);
+
+  }
   //Add new SKU Inentory
   const onAddInventory = (event) => {
     event.preventDefault();
@@ -275,13 +281,16 @@ export default function SkuDetailComp(props) {
 
   React.useEffect(() => {
     setOpen(props.open);
-    if(props.data._id){
+    if (props.data._id) {
       // for edit option set sku id and retrieve data
       setSkuId(props.data._id);
     } else {
-      // for new creation set product & create 
-      setFormControls(props.data)
+      // for new creation set product & create
+      setFormControls(props.data);
     }
+  }, [props]);
+
+  React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -294,7 +303,7 @@ export default function SkuDetailComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [props, skuId]);
+  }, [skuId]);
 
   //handle territorys search for inventory
   React.useEffect(() => {
@@ -317,12 +326,12 @@ export default function SkuDetailComp(props) {
   };
   //handle submit
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    if (formControls._id){
+    if (formControls._id) {
       skuService
         .updateSku(signal, formControls)
         .then((data) => handleClose())
@@ -670,9 +679,12 @@ export default function SkuDetailComp(props) {
                                       : option.name
                                   }
                                   getOptionSelected={(option, value) =>
-                                    option ? option.name === value.name : false
+                                    option ? option._id === value._id : false
                                   }
-                                  onChange={onChangeInventory.bind(this, index)}
+                                  onChange={changeInventoryTerritory.bind(
+                                    this,
+                                    index
+                                  )}
                                   renderInput={(params) => (
                                     <TextField
                                       {...params}
@@ -775,11 +787,7 @@ export default function SkuDetailComp(props) {
                                     <Switch
                                       name="status"
                                       size="small"
-                                      checked={
-                                        data?.status === undefined
-                                          ? true
-                                          : data?.status
-                                      }
+                                      checked={data.status ? true : data.status}
                                       onChange={onChangeInventory.bind(
                                         this,
                                         index
