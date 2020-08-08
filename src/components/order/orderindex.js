@@ -17,7 +17,6 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 //Styles
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
 
 import OrderitemIndexComp from "./orderitemindex";
 import OrderDetailComp from "./orderdetail";
@@ -132,7 +131,6 @@ export default function OrderIndexComp(props) {
   const [rowData, setRowData] = React.useState([]);
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderDetailData, setOrderDetailData] = React.useState([]);
-  const state = useSelector((state) => state.orderUpdateReducer);
 
   //open Order Detail
   const openOrderDetail = (detailData) => {

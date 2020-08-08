@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 const Login = lazy(() => import("./components/login/login.js"));
 const Home = lazy(() => import("./components/home/home.js"));
 const OrderComp = lazy(() => import("./components/order/order.js"));
-const UserComp = lazy(() => import("./components/admin/user/user"));
+// const UserComp = lazy(() => import("./components/admin/user/user"));
 const CustomerComp = lazy(() => import("./components/customer/customer"));
 const CatalogComp = lazy(() => import("./components/catalog/catalog"));
 const Merchandizingomp = lazy(() => import("./components/merchandizing/merchandizing"));

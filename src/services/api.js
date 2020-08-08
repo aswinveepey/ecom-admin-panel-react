@@ -1,23 +1,33 @@
 import { BASE_URL, TENANT_ID } from "../constants";
 import Cookies from "js-cookie";
-import store from "../store"
+import store from "../store";
 
-export default function ApiHelper(){
-
+export default function ApiHelper() {
   const headers = {
-                      "Content-Type": "application/json",
-                      Authorization: Cookies.get("token"),
-                    }
-  const get = async ({signal, reqUrl, reqParams=""})=>{
+    "Content-Type": "application/json",
+    Authorization: Cookies.get("token"),
+  };
+  const get = async ({ signal, reqUrl, reqParams = "" }) => {
     const requestOptions = {
       method: "GET",
       headers: headers,
     };
     const fetchurl =
       BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" + reqParams;
+
+    store.dispatch({
+      type: "APILOADING",
+    });
+
     const response = await fetch(fetchurl, requestOptions, { signal: signal });
+
+    store.dispatch({
+      type: "APICALLEND",
+    });
+
     const { status } = response;
     const responseData = await response.json();
+
     if (status === 200) {
       return responseData.data;
     }
@@ -32,15 +42,26 @@ export default function ApiHelper(){
     if (responseData.error) {
       throw new Error(responseData.error);
     }
-  }
-  const post = async ({signal, reqUrl, reqParams="", reqBody={}}) => {
+  };
+  const post = async ({ signal, reqUrl, reqParams = "", reqBody = {} }) => {
     const requestOptions = {
       method: "POST",
       headers: headers,
       body: reqBody,
     };
-    const fetchurl = BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" +reqParams;
+    const fetchurl =
+      BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" + reqParams;
+
+    store.dispatch({
+      type: "APILOADING",
+    });
+
     const response = await fetch(fetchurl, requestOptions, { signal: signal });
+
+    store.dispatch({
+      type: "APICALLEND",
+    });
+
     const { status } = response;
     const responseData = await response.json();
     if (status === 200) {
@@ -59,9 +80,10 @@ export default function ApiHelper(){
       type: "APIERROR",
       payLoad: payload,
     });
+
     if (responseData.error) {
       throw new Error(responseData.error);
     }
   };
-  return{get,post}
+  return { get, post };
 }

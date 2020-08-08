@@ -61,7 +61,7 @@ export default function UserDetailComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [props, editTogggle]);
+  }, [editTogggle, props.userId]);
 
   //get data from territories
   const handlesubmit = (event) => {

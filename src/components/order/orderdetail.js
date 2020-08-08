@@ -199,6 +199,9 @@ export default function OrderDetailcomp(props){
         .createOrder(signal, formControls)
         .then((data) => {
           handleClose();
+          dispatch({
+            type: "ORDER_UPDATED",
+          });
         })
         .catch((err) => console.log(err));
     }   

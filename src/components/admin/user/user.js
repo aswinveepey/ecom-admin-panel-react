@@ -40,7 +40,7 @@ export default function UserComp(props) {
 
   React.useEffect(()=>{
     props?.match?.params?.userId && setSelectedUserId(props.match.params.userId)
-  },[props])
+  },[])
 
   //render
     return (
@@ -52,7 +52,7 @@ export default function UserComp(props) {
           spacing={2}
           className={classes.userComp}
         >
-          <Grid item lg={2}>
+          <Grid item>
             <Button
               fullWidth
               color="primary"
@@ -63,9 +63,9 @@ export default function UserComp(props) {
               {"New User"}
             </Button>
             <UserCardList onSelect={selectUser} />
-            <Divider orientation="vertical" flexItem />
+            {/* <Divider orientation="vertical" /> */}
           </Grid>
-          <Grid item lg={10}>
+          <Grid item>
             {newUser && (
               <Suspense fallback={<div>Loading...</div>}>
                 <UserNewComp />
