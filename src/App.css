@@ -32,3 +32,8 @@ height: 100%;
   margin-top:1%!important;
   margin-bottom:1%!important;
 }
+
+.ag-row-hover {
+  /* putting in !important so it overrides the theme's styling as it hovers the row also */
+  background-color: #f8f5f5 !important;
+}

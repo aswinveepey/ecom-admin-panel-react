@@ -690,7 +690,7 @@ export default function ProductDetailComp(props) {
               <Suspense fallback={<div>Loading...</div>}>
                 <SkuIndexComp
                   data={formControls?.skus}
-                  product_id={formControls?._id}
+                  product={formControls}
                 />
               </Suspense>
             </Paper>

@@ -16,7 +16,7 @@ export default function InfoBox(props) {
   const classes = useStyles(); //use styles
   return (
     <React.Fragment>
-      <Paper className={classes.infoBox} variant="elevation" elevation={1}>
+      <Paper className={classes.infoBox}>
         <Typography variant="h6" gutterBottom>
           {props.title}
         </Typography>

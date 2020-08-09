@@ -25,6 +25,7 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
+import InputAdornment from "@material-ui/core/InputAdornment";
 //Component import
 import SingleAttributeComp from "../../common/singleattribute";
 import ImageUploadComp from "../../common/imageupload";
@@ -288,7 +289,7 @@ export default function SkuDetailComp(props) {
       // for new creation set product & create
       setFormControls(props.data);
     }
-  }, [props]);
+  }, [props.data, props.open]);
 
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
@@ -390,7 +391,7 @@ export default function SkuDetailComp(props) {
                   </Typography>
                   <Grid container spacing={1}>
                     {/* Add sku image grid */}
-                    <Grid item md={2} xs={6}>
+                    <Grid item md={3} xs={6}>
                       <Card variant="outlined" className={classes.imagecard}>
                         {/* Button base covers card content to make whole card clickable */}
                         <ButtonBase
@@ -407,7 +408,7 @@ export default function SkuDetailComp(props) {
                     </Grid>
                     {/* if images loop and display with edit & display */}
                     {formControls?.assets?.imgs?.map((img, index) => (
-                      <Grid item md={2} xs={6} key={index}>
+                      <Grid item md={3} xs={6} key={index}>
                         <Card variant="outlined" className={classes.imagecard}>
                           <CardContent className={classes.imagecardcontent}>
                             <img
@@ -431,7 +432,7 @@ export default function SkuDetailComp(props) {
                         </Card>
                       </Grid>
                     ))}
-                    <Grid item md={2} xs={6}>
+                    <Grid item md={3} xs={6}>
                       {formControls?.assets?.thumbnail ? (
                         <Card variant="outlined">
                           <CardHeader subheader="Thumbnail" />
@@ -494,6 +495,11 @@ export default function SkuDetailComp(props) {
                         fullWidth
                         required
                         onChange={onchangeSku}
+                        InputProps={{
+                          startAdornment: (
+                          <InputAdornment position="start">{props?.product?.name}</InputAdornment>
+                          ),
+                        }}
                         value={formControls?.name || ""}
                       />
                       {/* SKU Status */}
@@ -787,7 +793,11 @@ export default function SkuDetailComp(props) {
                                     <Switch
                                       name="status"
                                       size="small"
-                                      checked={data.status ? true : data.status}
+                                      checked={
+                                        data?.status === undefined
+                                          ? true
+                                          : data?.status
+                                      }
                                       onChange={onChangeInventory.bind(
                                         this,
                                         index
