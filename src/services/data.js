@@ -24,6 +24,9 @@ export default class DataService {
     return await this.apiHelper.get({signal:signal, reqUrl:"data/getOrderItemDump"});
   };
   getCustomerDump = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/customerDataDump"});
+    return await this.apiHelper.get({signal:signal, reqUrl:"data/getCustomerDump"});
+  };
+  getInventoryDump = async (signal) => {
+    return await this.apiHelper.get({signal:signal, reqUrl:"data/getInventoryDump"});
   };
 }

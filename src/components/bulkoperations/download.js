@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const dataSetOptions = [
   { value: "orderitemdump", label: "Order Item Dump" },
   { value: "customerdump", label: "Customer Dump" },
+  { value: "inventorydump", label: "Inventory Dump" },
 ];
 const OrderDumpHeaders = [
   { label: "Order Date", key: "orderdate" },
@@ -60,7 +61,48 @@ const OrderDumpHeaders = [
   { label: "Total Amount", key: "itemtotalamount" },
   { label: "Status", key: "itemstatus" },
 ];
-const headers = { orderitemdump: OrderDumpHeaders };
+const CustomerDumpHeaders = [
+  { label: "Customer ID", key: "customerid" },
+  { label: "Account ID", key: "accountid" },
+  { label: "First Name", key: "firstname" },
+  { label: "Last Name", key: "lastname" },
+  { label: "Account Name", key: "accountname" },
+  { label: "Username", key: "username" },
+  { label: "Email", key: "email" },
+  { label: "Mobile No", key: "mobilenumber" },
+  { label: "Type", key: "type" },
+  { label: "Gender", key: "gender" },
+  { label: "Birthday", key: "birthday" },
+  { label: "Contact Number", key: "contactnumber" },
+  { label: "Account Type", key: "accounttype" },
+  { label: "Gstin", key: "gstin" },
+  { label: "Status", key: "status" },
+  { label: "Created At", key: "createdat" },
+];
+const InventoryDumpHeaders = [
+  { label: "Inventory ID", key: "_id" },
+  { label: "Territory ID", key: "territoryid" },
+  { label: "Territory Name", key: "territoryname" },
+  { label: "Product ID", key: "productid" },
+  { label: "Product Name", key: "productname" },
+  { label: "SKU ID", key: "skuid" },
+  { label: "SKU Name", key: "skuname" },
+  { label: "Category", key: "categoryname" },
+  { label: "Brand", key: "brandname" },
+  { label: "Quantity", key: "quantity" },
+  { label: "MRP", key: "mrp" },
+  { label: "Purchase Price", key: "purchaseprice" },
+  { label: "Selling Price", key: "sellingprice" },
+  { label: "Discount", key: "discount" },
+  { label: "Shipping", key: "shippingcharges" },
+  { label: "Installation", key: "installationcharges" },
+  { label: "Status", key: "status" },
+];
+const headers = {
+  orderitemdump: OrderDumpHeaders,
+  customerdump: CustomerDumpHeaders,
+  inventorydump: InventoryDumpHeaders,
+};
 
 export default function DownloadComp(props) {
   const classes = useStyles();
@@ -72,9 +114,54 @@ export default function DownloadComp(props) {
   const csvRef = React.useRef();
 
   const downloadData = () => {
+    switch (dataSetType) {
+      case "orderitemdump":
+        downloadOrderItemDump();
+        break;
+      case "customerdump":
+        downloadCustomerDump();
+        break;
+      case "inventorydump":
+        downloadInventoryDump();
+        break;
+      default:
+        downloadOrderItemDump();
+        break;
+    }
+  };
+
+  const downloadOrderItemDump = ()=>{
     setFetching(true);
     dataService
       .getOrderItemDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  }
+  const downloadCustomerDump = ()=>{
+    setFetching(true);
+    dataService
+    .getCustomerDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  }
+  const downloadInventoryDump = () => {
+    setFetching(true);
+    dataService
+      .getInventoryDump()
       .then((data) => {
         setDataSet(data);
         setFetching(false);
@@ -91,7 +178,7 @@ export default function DownloadComp(props) {
     setDatasetType(e.target.value);
   };
 
-  React.useEffect(() => {}, [dataSet]);
+  // React.useEffect(() => {}, [dataSet]);
 
   return (
     <React.Fragment>
@@ -139,7 +226,7 @@ export default function DownloadComp(props) {
           <Card className={classes.card}>
             <CardHeader title="Data Headers" />
             <CardContent>
-              {headers[dataSetType].map((item) => (
+              {headers[dataSetType]?.map((item) => (
                 <Chip key={item.key} variant="outlined" label={item.label} />
               ))}
             </CardContent>
