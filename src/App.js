@@ -14,7 +14,7 @@ const CustomerComp = lazy(() => import("./components/customer/customer"));
 const CatalogComp = lazy(() => import("./components/catalog/catalog"));
 const Merchandizingomp = lazy(() => import("./components/merchandizing/merchandizing"));
 const AdminComp = lazy(() => import("./components/admin/admin"));
-const DownloadComp = lazy(() => import("./components/bulkoperations/download"));
+const BulkOperationsComp = lazy(() => import("./components/bulkoperations/bulkoperation"));
 const NotFoundComp = lazy(() => import("./components/404"));
 
 export default function App() {
@@ -34,7 +34,7 @@ export default function App() {
               <Route exact path="/catalog" component={CatalogComp}></Route>
               <Route exact path="/merchandizing" component={Merchandizingomp}></Route>
               <Route exact path="/admin" component={AdminComp}></Route>
-              <Route exact path="/bulkoperations" component={DownloadComp}></Route>
+              <Route exact path="/bulkoperations" component={BulkOperationsComp}></Route>
               <Route component={NotFoundComp}></Route>
             </Switch>
           </Scaffold>

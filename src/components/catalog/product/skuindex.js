@@ -33,7 +33,7 @@ export default function SKUIndeComp(props){
           color="primary"
           variant="outlined"
           aria-label="add"
-          onClick={openSkuDetail.bind(this, { product: props.product_id })}
+          onClick={openSkuDetail.bind(this, { product: props.product?._id })}
         >
           Add SKU
         </Button>
@@ -77,6 +77,7 @@ export default function SKUIndeComp(props){
           open={skuDetailOpen}
           handleClose={closeSkuDetail}
           data={skuDetailData}
+          product={props?.product}
         />
       </Suspense>
     </React.Fragment>
