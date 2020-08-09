@@ -28,16 +28,16 @@ export default function DashComp(props) {
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <Grid container spacing={1}>
-              <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Grid item xs={12} md={4}>
                 <InfoBox title="Daily" value={todayGmv} />
               </Grid>
-              <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Grid item xs={12} md={4}>
                 <InfoBox title="MTD" value={monthGmv} />
               </Grid>
-              <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Grid item xs={12} md={4}>
                 <InfoBox title="QTD" value={quarterGmv} />
               </Grid>
-              <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Grid item xs={12}  md={4}>
                 <Suspense fallback={<div>Loading...</div>}>
                   <CustomerDoughnut data={customerData} />
                 </Suspense>
