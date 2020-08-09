@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const dataSetOptions = [
   { value: "orderitemdump", label: "Order Item Dump" },
   { value: "customerdump", label: "Customer Dump" },
+  { value: "inventorydump", label: "Inventory Dump" },
 ];
 const OrderDumpHeaders = [
   { label: "Order Date", key: "orderdate" },
@@ -78,9 +79,29 @@ const CustomerDumpHeaders = [
   { label: "Status", key: "status" },
   { label: "Created At", key: "createdat" },
 ];
+const InventoryDumpHeaders = [
+  { label: "Inventory ID", key: "_id" },
+  { label: "Territory ID", key: "territoryid" },
+  { label: "Territory Name", key: "territoryname" },
+  { label: "Product ID", key: "productid" },
+  { label: "Product Name", key: "productname" },
+  { label: "SKU ID", key: "skuid" },
+  { label: "SKU Name", key: "skuname" },
+  { label: "Category", key: "categoryname" },
+  { label: "Brand", key: "brandname" },
+  { label: "Quantity", key: "quantity" },
+  { label: "MRP", key: "mrp" },
+  { label: "Purchase Price", key: "purchaseprice" },
+  { label: "Selling Price", key: "sellingprice" },
+  { label: "Discount", key: "discount" },
+  { label: "Shipping", key: "shippingcharges" },
+  { label: "Installation", key: "installationcharges" },
+  { label: "Status", key: "status" },
+];
 const headers = {
   orderitemdump: OrderDumpHeaders,
   customerdump: CustomerDumpHeaders,
+  inventorydump: InventoryDumpHeaders,
 };
 
 export default function DownloadComp(props) {
@@ -95,10 +116,13 @@ export default function DownloadComp(props) {
   const downloadData = () => {
     switch (dataSetType) {
       case "orderitemdump":
-        downloadOrderItemDump()
+        downloadOrderItemDump();
         break;
       case "customerdump":
-        downloadCustomerDump();  
+        downloadCustomerDump();
+        break;
+      case "inventorydump":
+        downloadInventoryDump();
         break;
       default:
         downloadOrderItemDump();
@@ -134,6 +158,20 @@ export default function DownloadComp(props) {
         setFetching(false);
       });
   }
+  const downloadInventoryDump = () => {
+    setFetching(true);
+    dataService
+      .getInventoryDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  };
 
   const handleDatasetSelection = (e) => {
     e.preventDefault();
