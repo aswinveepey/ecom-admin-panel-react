@@ -60,7 +60,28 @@ const OrderDumpHeaders = [
   { label: "Total Amount", key: "itemtotalamount" },
   { label: "Status", key: "itemstatus" },
 ];
-const headers = { orderitemdump: OrderDumpHeaders };
+const CustomerDumpHeaders = [
+  { label: "Customer ID", key: "customerid" },
+  { label: "Account ID", key: "accountid" },
+  { label: "First Name", key: "firstname" },
+  { label: "Last Name", key: "lastname" },
+  { label: "Account Name", key: "accountname" },
+  { label: "Username", key: "username" },
+  { label: "Email", key: "email" },
+  { label: "Mobile No", key: "mobilenumber" },
+  { label: "Type", key: "type" },
+  { label: "Gender", key: "gender" },
+  { label: "Birthday", key: "birthday" },
+  { label: "Contact Number", key: "contactnumber" },
+  { label: "Account Type", key: "accounttype" },
+  { label: "Gstin", key: "gstin" },
+  { label: "Status", key: "status" },
+  { label: "Created At", key: "createdat" },
+];
+const headers = {
+  orderitemdump: OrderDumpHeaders,
+  customerdump: CustomerDumpHeaders,
+};
 
 export default function DownloadComp(props) {
   const classes = useStyles();
@@ -72,6 +93,20 @@ export default function DownloadComp(props) {
   const csvRef = React.useRef();
 
   const downloadData = () => {
+    switch (dataSetType) {
+      case "orderitemdump":
+        downloadOrderItemDump()
+        break;
+      case "customerdump":
+        downloadCustomerDump();  
+        break;
+      default:
+        downloadOrderItemDump();
+        break;
+    }
+  };
+
+  const downloadOrderItemDump = ()=>{
     setFetching(true);
     dataService
       .getOrderItemDump()
@@ -84,7 +119,21 @@ export default function DownloadComp(props) {
         console.log(err);
         setFetching(false);
       });
-  };
+  }
+  const downloadCustomerDump = ()=>{
+    setFetching(true);
+    dataService
+    .getCustomerDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  }
 
   const handleDatasetSelection = (e) => {
     e.preventDefault();
@@ -139,7 +188,7 @@ export default function DownloadComp(props) {
           <Card className={classes.card}>
             <CardHeader title="Data Headers" />
             <CardContent>
-              {headers[dataSetType].map((item) => (
+              {headers[dataSetType]?.map((item) => (
                 <Chip key={item.key} variant="outlined" label={item.label} />
               ))}
             </CardContent>
