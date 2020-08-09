@@ -140,7 +140,7 @@ export default function DownloadComp(props) {
     setDatasetType(e.target.value);
   };
 
-  React.useEffect(() => {}, [dataSet]);
+  // React.useEffect(() => {}, [dataSet]);
 
   return (
     <React.Fragment>
