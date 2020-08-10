@@ -12,7 +12,7 @@ export default class SkuService {
   getOneSku = async (signal, skuId) => {
     return await this.apiHelper.get({
       signal: signal,
-      reqUrl: "sku/id/" + skuId,
+      reqUrl: "sku/id/web/" + skuId,
     });
   };
   //serach all skus
