@@ -65,6 +65,9 @@ const InventoryDumpHeaders = [
   { label: "Installation", key: "installationcharges" },
   { label: "Status", key: "status" },
 ];
+const headers = {
+  inventoryupload: InventoryDumpHeaders,
+};
 
 export default function UploadComp(props) {
   const classes = useStyles();
@@ -81,14 +84,26 @@ export default function UploadComp(props) {
   };
   const handleFileUploadSubmit = () => {
     setOpenFileUploadDialog(false);
+    switch (dataSetType) {
+      case "inventorydump":
+        bulkUploadInventory();
+        break;
+      default:
+        bulkUploadInventory();
+        break;
+    }
+  };
+  const bulkUploadInventory = ()=>{
     Promise.all(
       dataSet.map((item) =>
-        dataService.bulkUploadInventory(item).then((data) => console.log(data))
+        dataService
+          .bulkUploadInventory({ param: item })
+          .then((data) => console.log(data))
       )
     )
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
-  };
+  }
   const handleFileUpload = (data) => {
     const parsedData = data.map((item) => item.data);
     setDataSet(parsedData);
@@ -161,7 +176,7 @@ export default function UploadComp(props) {
                 <Table size="small">
                   <TableHead>
                     <TableRow>
-                      {InventoryDumpHeaders.map((header) => (
+                      {headers[dataSetType]?.map((header) => (
                         <TableCell key={header.key}>{header.label}</TableCell>
                       ))}
                     </TableRow>
@@ -169,8 +184,8 @@ export default function UploadComp(props) {
                   <TableBody>
                     {dataSet.map((item, index) => (
                       <TableRow key={index}>
-                        {Object.keys(item)?.map((key) => (
-                          <TableCell key={key}>{key}</TableCell>
+                        {Object.values(item)?.map((value, index) => (
+                          <TableCell key={index}>{value}</TableCell>
                         ))}
                       </TableRow>
                     ))}

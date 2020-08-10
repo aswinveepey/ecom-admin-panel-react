@@ -31,7 +31,7 @@ export default class DataService {
   };
   bulkUploadInventory = async ({signal, param}) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.get({
+    return await this.apiHelper.post({
       signal: signal,
       reqUrl: "data/bulkUploadInventory",
       reqBody: reqBody,
