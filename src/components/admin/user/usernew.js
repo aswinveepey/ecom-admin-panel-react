@@ -1,6 +1,5 @@
 import React from "react";
-//cookie library import
-import Cookies from "js-cookie";
+
 //material ui core imports
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -13,13 +12,16 @@ import StepContent from "@material-ui/core/StepContent";
 import Button from "@material-ui/core/Button";
 //material ui lab imports
 import Autocomplete from "@material-ui/lab/Autocomplete";
-//constants relative import
-import { BASE_URL } from "../../../constants";
+
+import UserService from "../../../services/user"
+import RoleService from "../../../services/role"
+import TerritoryService from "../../../services/territory"
+import DivisionService from "../../../services/division"
+
 
 class UserNewComp extends React.Component {
   state = {
     activeStep: 0,
-    token: Cookies.get("token"),
     formControls: {
       firstname: "",
       lastname: "",
@@ -39,9 +41,9 @@ class UserNewComp extends React.Component {
         mobilenumber: "",
       },
     },
-    territorydata: null,
-    roledata: null,
-    divisiondata: null,
+    territorydata: [],
+    roledata: [],
+    divisiondata: [],
     authComp: "",
     userComp: "",
     mapComp: "",
@@ -54,82 +56,34 @@ class UserNewComp extends React.Component {
   }
   //get data from roles
   fetchRoles = async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: this.state.token,
-      },
-    };
-    const fetchResponse = await fetch(BASE_URL + "role/", requestOptions);
-    const { status } = fetchResponse;
-    const roleResponse = await fetchResponse.json();
-    if (status === 200) {
-      this.setState({ roledata: roleResponse.data });
-    }
-  };
+    const roleService = new RoleService();
+
+    roleService
+      .getRoles()
+      .then((data) => this.setState({ roledata: data }));
+  }
+
   fetchTerritories = async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: this.state.token,
-      },
-    };
-    const fetchResponse = await fetch(BASE_URL + "territory/", requestOptions);
-    const { status } = fetchResponse;
-    const territoryResponse = await fetchResponse.json();
-    if (status === 200) {
-      this.setState({ territorydata: territoryResponse.data });
-    }
+    const territoryService = new TerritoryService();
+    territoryService.getTerritories((data) =>
+      this.setState({ territorydata: data })
+    );
   };
+
   fetchDivisions = async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: this.state.token,
-      },
-    };
-    const fetchResponse = await fetch(BASE_URL + "division/", requestOptions);
-    const { status } = fetchResponse;
-    const divisionResponse = await fetchResponse.json();
-    if (status === 200) {
-      this.setState({ divisiondata: divisionResponse.data });
-    }
+    const divisionService = new DivisionService();
+    divisionService.getDivisions(data=>this.setState({ divisiondata: data }))
   };
+
   handleSubmit = async (event) => {
     event.preventDefault();
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: this.state.token,
-      },
-      body: JSON.stringify(this.state.formControls),
-    };
-    try {
-      const fetchResponse = await fetch(
-        BASE_URL + "user/",
-        requestOptions
-      );
-      const { status } = fetchResponse;
-      // const userResponse = await fetchResponse.json();
-      if (status === 200) {
-        this.setState({
-          poststatus: "succesful",
-        });
-        window.location.reload();
-      } else {
-        this.setState({
-          poststatus: "error",
-          snackbaropen: true,
-          snackbarmessage: "Uh-Oh! Something Went Wrong",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    const userService = new UserService();
+    userService.createUser({param:this.state.formControls}).then((data) => {
+      this.setState({
+        poststatus: "succesful",
+      });
+      window.location.reload();
+    });
   };
   onChangeUserInput = async (event) => {
     const formControls = this.state.formControls;
@@ -321,16 +275,14 @@ class UserNewComp extends React.Component {
             disabled={disabled}
             multiple
             options={
-              this.state.territorydata &&
-              this.state.territorydata.map((data) => data)
+              this.state.territorydata
             }
             getOptionSelected={(option, value) =>
               option ? option.name === value.name : false
             }
             getOptionLabel={(option) => (option ? option.name : "")}
             value={
-              this.state.formControls.territories &&
-              this.state.formControls.territories.map((data) => data)
+              this.state.formControls.territories?.map((data) => data)
             }
             filterSelectedOptions
             name="name"
@@ -350,8 +302,7 @@ class UserNewComp extends React.Component {
             disabled={disabled}
             multiple
             options={
-              this.state.divisiondata &&
-              this.state.divisiondata.map((data) => data)
+              this.state.divisiondata
             }
             getOptionSelected={(option, value) =>
               option ? option.name === value.name : false

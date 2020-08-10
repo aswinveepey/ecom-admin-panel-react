@@ -33,7 +33,7 @@ export default class UserService {
     });
   };
   //Create a new User
-  createUser = async (signal, param) => {
+  createUser = async ({signal, param}) => {
     const reqBody = JSON.stringify(param);
     return await this.apiHelper.post({
       signal: signal,
