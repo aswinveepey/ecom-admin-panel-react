@@ -107,9 +107,9 @@ export default function ProductDetailComp(props) {
   //Change product name handling
   const onchangeProduct = (event) => {
     event.preventDefault();
-    const name = event.target.name;
-    const value = event.target.value;
-    const controls = { ...formControls };
+    const { name, value } = event.target;
+    
+    let controls = { ...formControls };
     controls[name] = value;
     setFormControls(controls);
   };
@@ -118,7 +118,7 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     // const name = event.target.name;
     const value = event.target.value;
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.description = controls.description || [];
     controls.description[index] = {
       lang: "en",
@@ -131,7 +131,7 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.storage = controls.storage || {}
     controls.storage[name] = value;
     setFormControls(controls);
@@ -141,7 +141,7 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.logistics = controls.logistics || {};
     controls.logistics[name] = value;
     setFormControls(controls);
@@ -151,7 +151,7 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.gst = controls.gst || {};
     controls.gst[name] = value;
     setFormControls(controls);
@@ -164,7 +164,7 @@ export default function ProductDetailComp(props) {
   //change account input handle
   const onchangeCategoryInput = (event, value) => {
     event.preventDefault();
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.category = value;
     setFormControls(controls);
   };
@@ -176,23 +176,23 @@ export default function ProductDetailComp(props) {
   //change account input handle
   const onchangeBrandInput = (event, value) => {
     event.preventDefault();
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.brand = value;
     setFormControls(controls);
   };
   //change attribute name handle
   const onchangeAttribute = (event, index) => {
     event.preventDefault();
-    const name = event.target.name;
-    const value = event.target.value;
-    const controls = { ...formControls };
+    const {name, value} = event.target;
+
+    let controls = { ...formControls };
     controls.attributes[index][name] = value;
     setFormControls(controls);
   };
   //add a new filter attribute
   const onAttributeAdd = (event)=>{
     event.preventDefault();
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     !controls.attributes && (controls.attributes=[])
     controls.attributes.push({ name: "", values: "" });
     setFormControls(controls);
@@ -200,7 +200,7 @@ export default function ProductDetailComp(props) {
   //delete variant attribute
   const onAttributeDelete = (event, index)=>{
     event.preventDefault();
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.attributes.splice(index,1);
     setFormControls(controls);
   }
@@ -209,14 +209,14 @@ export default function ProductDetailComp(props) {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.variantattributes[index][name] = value;
     setFormControls(controls);
   };
   //add a new variant attribute
   const onVariantAttributeAdd = (event)=>{
     event.preventDefault();
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     !controls.variantattributes && (controls.variantattributes=[])
     controls.variantattributes.push({ name: "", values: [] });
     setFormControls(controls);
@@ -224,20 +224,20 @@ export default function ProductDetailComp(props) {
   //delete variant attribute
   const onVariantAttributeDelete = (event, index) => {
     event.preventDefault();
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.variantattributes.splice(index, 1);
     setFormControls(controls);
   };
   //handle attribute value add
   const handleVariantAttrValueAdd = (index, chip)=>{
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     !controls.variantattributes[index].values &&
       (controls.variantattributes[index].values = []);
     controls.variantattributes[index].values.push(chip);
     setFormControls(controls);
   };
   const handleVariantAttrValueDelete = (index, attrIndex)=>{
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.variantattributes[index].values.splice(attrIndex, 1);
     setFormControls(controls);
   }
@@ -260,7 +260,7 @@ export default function ProductDetailComp(props) {
   }
   //handle image change
   const handleImageChange = (image)=>{
-    const controls = { ...formControls }
+    let controls = { ...formControls }
     controls.assets = controls.assets || {}
     !controls.assets.imgs && (controls.assets.imgs=[])
     controls.assets.imgs.push(image)
@@ -268,23 +268,17 @@ export default function ProductDetailComp(props) {
   }
   //handle image change
   const handleThumbnailChange = (thumbnail) => {
-    const controls = { ...formControls };
+    let controls = { ...formControls };
     controls.assets = controls.assets || {};
     controls.assets["thumbnail"] = thumbnail;
     setFormControls(controls);
   };
   //handle image deletion
   const deleteImage = (index)=>{
-    const controls = { ...formControls }
+    let controls = { ...formControls }
     controls.assets.imgs.splice(index, 1)
     setFormControls(controls);
   }
-
-  //get open state from props
-  React.useEffect(() => {
-    setOpen(props.open);
-    props.data && setFormControls(props.data);
-  }, [props]);
 
   //delegate close behaviour to parent
   const handleClose = () => {
@@ -310,6 +304,12 @@ export default function ProductDetailComp(props) {
       abortController.abort();
     };
   };
+
+  //get open state from props
+  React.useEffect(() => {
+    setOpen(props.open);
+    props.data && setFormControls(props.data);
+  }, [props.data, props.open]);
   
   //get category from search string
   React.useEffect(() => {
@@ -710,11 +710,11 @@ export default function ProductDetailComp(props) {
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <ImageUploadComp
-        open={openThumbnailUpload}
-        handleDialogClose={handleThumbnailUploadClose}
-        handleImageChange={handleThumbnailChange}
-        keyPath="product/thumbnail/"
-      />
+          open={openThumbnailUpload}
+          handleDialogClose={handleThumbnailUploadClose}
+          handleImageChange={handleThumbnailChange}
+          keyPath="product/thumbnail/"
+        />
       </Suspense>
     </React.Fragment>
   );
