@@ -29,6 +29,7 @@ import CollectionService from "../../../services/collection";
 // import SKUService from "../../../services/sku";
 
 const SelectSKU = React.lazy(() => import("../../common/selectsku"));
+const SelectCategory = React.lazy(() => import("../../common/selectcategory"));
 const ImageUploadComp = React.lazy(() => import("../../common/imageupload"));
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +84,7 @@ export default function CollectionDetailComp(props) {
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
   const [openThumbnailUpload, setOpenThumbnailUpload] = React.useState(false);
   const [addSkuOpen, setAddSkuOpen] = React.useState(false);
+  const [addCategoryOpen, setAddCategoryOpen] = React.useState(false);
   const [typeOptions, setTypeOptions] = React.useState([]);
   //handle dialog close - call div index comp
   const handleClose = () => {
@@ -99,8 +101,12 @@ export default function CollectionDetailComp(props) {
   };
 
   //add sku handling in case of new order
-  const toggleAddSku = () => {
-    setAddSkuOpen(!addSkuOpen);
+  const toggleAddItem = () => {
+    if(formControls?.type==="Category"){
+      setAddCategoryOpen(!addCategoryOpen);
+    } else {
+      setAddSkuOpen(!addSkuOpen);
+    }
   };
   //change division input handle
   const onchangeCollectionInput = (event) => {
@@ -193,7 +199,7 @@ export default function CollectionDetailComp(props) {
       { value: "Category", label: "Category" },
       { value: "Sku", label: "Sku" },
     ]);
-  }, [props]);
+  }, [props.data]);
   //get category from search string
   // React.useEffect(() => {
   //   //clean up subscriptions using abortcontroller & signals
@@ -390,7 +396,7 @@ export default function CollectionDetailComp(props) {
                   variant="outlined"
                   aria-label="add"
                   className={classes.button}
-                  onClick={toggleAddSku}
+                  onClick={toggleAddItem}
                 >
                   Add Items
                 </Button>
@@ -419,8 +425,15 @@ export default function CollectionDetailComp(props) {
       <Suspense fallback={<div>Loading...</div>}>
         <SelectSKU
           open={addSkuOpen}
-          handleClose={toggleAddSku}
+          handleClose={toggleAddItem}
           selectSku={handleAddItem}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SelectCategory
+          open={addCategoryOpen}
+          handleClose={toggleAddItem}
+          selectCategory={handleAddItem}
         />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
