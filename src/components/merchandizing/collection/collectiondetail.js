@@ -193,7 +193,7 @@ export default function CollectionDetailComp(props) {
       { value: "Category", label: "Category" },
       { value: "Sku", label: "Sku" },
     ]);
-  }, [props]);
+  }, [props.data]);
   //get category from search string
   // React.useEffect(() => {
   //   //clean up subscriptions using abortcontroller & signals

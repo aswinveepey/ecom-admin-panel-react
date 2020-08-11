@@ -56,7 +56,9 @@ export default function ApiHelper() {
       type: "APILOADING",
     });
 
-    const response = await fetch(fetchurl, requestOptions, { signal: signal });
+    const response = await fetch(fetchurl, requestOptions, {
+      signal: signal,
+    });
 
     store.dispatch({
       type: "APICALLEND",
@@ -84,6 +86,14 @@ export default function ApiHelper() {
     if (responseData.error) {
       throw new Error(responseData.error);
     }
+    // if (responseData.errors) {
+    //   responseData.errors.map((error) =>
+    //     store.dispatch({
+    //       type: "APIERROR",
+    //       payLoad: error.msg,
+    //     })
+    //   );
+    // }
   };
   return { get, post };
 }

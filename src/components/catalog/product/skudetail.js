@@ -497,7 +497,9 @@ export default function SkuDetailComp(props) {
                         onChange={onchangeSku}
                         InputProps={{
                           startAdornment: (
-                          <InputAdornment position="start">{props?.product?.name}</InputAdornment>
+                            <InputAdornment position="start">
+                              {props?.product?.name}
+                            </InputAdornment>
                           ),
                         }}
                         value={formControls?.name || ""}
@@ -537,6 +539,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.mrp || 0}
                       />
                       <TextField
@@ -547,6 +550,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.discount || 0}
                       />
                       <TextField
@@ -557,6 +561,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.sellingprice || 0}
                       />
                       <TextField
@@ -567,6 +572,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.purchaseprice || 0}
                       />
                       <TextField
@@ -577,6 +583,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.shippingcharges || 0}
                       />
                       <TextField
@@ -587,6 +594,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.installationcharges || 0}
                       />
                       <TextField
@@ -597,6 +605,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangeBulkdiscount}
+                        inputProps={{ min: 0 }}
                         value={formControls?.bulkdiscount?.threshold || 0}
                       />
                       <TextField
@@ -607,6 +616,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangeBulkdiscount}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.bulkdiscount?.discount || 0}
                       />
                       <TextField
@@ -617,6 +627,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangeQuantityrules}
+                        inputProps={{ min: 0 }}
                         value={formControls?.quantityrules?.minorderqty || 0}
                       />
                       <TextField
@@ -627,6 +638,7 @@ export default function SkuDetailComp(props) {
                         fullWidth
                         type="number"
                         onChange={onChangeQuantityrules}
+                        inputProps={{ min: 0 }}
                         value={formControls?.quantityrules?.maxorderqty || 0}
                       />
                       {/* Min Order Qty Multiple Flag comes here */}
@@ -712,6 +724,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0 }}
                                   value={data?.quantity || 0}
                                 />
                               </TableCell>
@@ -724,6 +737,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0, step: "any" }}
                                   value={data?.mrp || 0}
                                 />
                               </TableCell>
@@ -736,6 +750,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0, step: "any" }}
                                   value={data?.discount || 0}
                                 />
                               </TableCell>
@@ -748,6 +763,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0, step: "any" }}
                                   value={data?.sellingprice || 0}
                                 />
                               </TableCell>
@@ -760,6 +776,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0, step: "any" }}
                                   value={data?.purchaseprice || 0}
                                 />
                               </TableCell>
@@ -772,6 +789,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0, step: "any" }}
                                   value={data?.shippingcharges || 0}
                                 />
                               </TableCell>
@@ -784,6 +802,7 @@ export default function SkuDetailComp(props) {
                                   type="number"
                                   required
                                   onChange={onChangeInventory.bind(this, index)}
+                                  inputProps={{ min: 0, step: "any" }}
                                   value={data?.installationcharges || 0}
                                 />
                               </TableCell>
