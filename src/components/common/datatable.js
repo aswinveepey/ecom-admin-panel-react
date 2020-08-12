@@ -46,6 +46,7 @@ export default function DataTableComp(props){
         color="primary"
         variant="outlined"
         aria-label="Add"
+        color="secondary"
         className={classes.button}
         onClick={props.handleNewClick}
       >
@@ -58,7 +59,7 @@ export default function DataTableComp(props){
           <InputBase
             placeholder={"Search " + props.title}
             className={classes.searchinput}
-            onChange = {props.onchangeSearchInput}
+            onChange={props.onchangeSearchInput}
           />
           <IconButton type="submit" aria-label={"Search " + props.title}>
             <SearchIcon />

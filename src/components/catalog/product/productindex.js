@@ -182,6 +182,7 @@ export default function ProductIndexComp(props){
         variant="outlined"
         aria-label="add"
         className={classes.button}
+        color="secondary"
         onClick={openProductDetail}
       >
         Add Product
@@ -231,7 +232,7 @@ export default function ProductIndexComp(props){
             </Table>
           )}
         </TableContainer>
-        {(fetchStatus==="Loading") && (<div>Loading...</div>)}
+        {fetchStatus === "Loading" && <div>Loading...</div>}
       </div>
       {productDetailOpen && (
         <ProductDetailComp

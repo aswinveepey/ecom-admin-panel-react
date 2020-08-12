@@ -380,7 +380,7 @@ export default function SkuDetailComp(props) {
               <Typography variant="subtitle1" className={classes.title}>
                 {formControls?.name || "Add SKU"}
               </Typography>
-              <Button autoFocus color="inherit" type="submit">
+              <Button color="inherit" type="submit">
                 save changes
               </Button>
             </Toolbar>

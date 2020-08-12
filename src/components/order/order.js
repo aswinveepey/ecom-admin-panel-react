@@ -117,6 +117,7 @@ export default function OrderComp(props) {
         color="primary"
         variant="outlined"
         aria-label="add"
+        color="secondary"
         className={classes.button}
         onClick={createOrder}
       >
