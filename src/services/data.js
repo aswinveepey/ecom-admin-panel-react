@@ -29,6 +29,9 @@ export default class DataService {
   getInventoryDump = async (signal) => {
     return await this.apiHelper.get({signal:signal, reqUrl:"data/getInventoryDump"});
   };
+  getSkuDump = async (signal) => {
+    return await this.apiHelper.get({signal:signal, reqUrl:"data/getSkuDump"});
+  };
   bulkUploadInventory = async ({signal, param}) => {
     const reqBody = JSON.stringify(param);
     return await this.apiHelper.post({
