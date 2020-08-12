@@ -9,7 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
+// import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PublishIcon from "@material-ui/icons/Publish";
@@ -25,12 +25,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CSVReader } from "react-papaparse";
 
 import DataService from "../../services/data";
+import LoaderComp from "../loader"
 
 // define styles
 const useStyles = makeStyles((theme) => ({
   card: {
     // maxWidth: "500px",
-    margin: "auto",
+    marginBottom: "10px",
     padding: "10px",
   },
   button: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const dataSetOptions = [
-  { value: "productupload", label: "Product Upload" },
+  // { value: "productupload", label: "Product Upload" },
   { value: "skuupload", label: "Sku Upload" },
   { value: "inventoryupload", label: "Inventory Upload" },
 ];
@@ -65,8 +66,30 @@ const InventoryDumpHeaders = [
   { label: "Installation", key: "installationcharges" },
   { label: "Status", key: "status" },
 ];
+const SkuDumpHeaders = [
+  { label: "SKU ID", key: "skuid" },
+  { label: "Product ID", key: "productid" },
+  { label: "Product Name", key: "productname" },
+  { label: "SKU Name", key: "skuname" },
+  { label: "Category Name", key: "category" },
+  { label: "Brand Name", key: "brand" },
+  { label: "MRP", key: "mrp" },
+  { label: "Discount", key: "discount" },
+  { label: "Selling Price", key: "sellingprice" },
+  { label: "Purchase Price", key: "purchaseprice" },
+  { label: "Shipping", key: "shippingcharges" },
+  { label: "Installation", key: "installationcharges" },
+  { label: "Bulk Discount Threshold", key: "bulkdiscountthreshold" },
+  { label: "Bulk Discount", key: "bulkdiscount" },
+  { label: "Min Order Qty", key: "minorderqty" },
+  { label: "Min Order Qty Multiples", key: "minorderqtystep" },
+  { label: "Max Order Qty", key: "maxorderqty" },
+  { label: "Status", key: "status" },
+  { label: "Created At", key: "createdat" },
+];
 const headers = {
   inventoryupload: InventoryDumpHeaders,
+  skuupload: SkuDumpHeaders,
 };
 
 export default function UploadComp(props) {
@@ -75,6 +98,7 @@ export default function UploadComp(props) {
   const [dataSetType, setDatasetType] = React.useState(dataSetOptions[0].value);
   const [openFileUploadDialog, setOpenFileUploadDialog] = React.useState(false);
   const [dataSet, setDataSet] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const handleFileUploadClose = () => {
     setOpenFileUploadDialog(false);
@@ -84,12 +108,16 @@ export default function UploadComp(props) {
   };
   const handleFileUploadSubmit = () => {
     setOpenFileUploadDialog(false);
+    setLoading(true);
     switch (dataSetType) {
-      case "inventorydump":
+      case "inventoryupload":
         bulkUploadInventory();
         break;
+      case "skuupload":
+        bulkUploadSku();
+        break;
       default:
-        bulkUploadInventory();
+        // bulkUploadInventory();
         break;
     }
   };
@@ -101,8 +129,25 @@ export default function UploadComp(props) {
           .then((data) => console.log(data))
       )
     )
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => setLoading(false))
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  }
+  const bulkUploadSku = ()=>{
+    Promise.all(
+      dataSet.map((item) =>
+        dataService
+          .bulkUploadSku({ param: item })
+          .then((data) => console.log(data))
+      )
+    )
+      .then((data) => setLoading(false))
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   }
   const handleFileUpload = (data) => {
     const parsedData = data.map((item) => item.data);
@@ -116,8 +161,6 @@ export default function UploadComp(props) {
   };
   return (
     <React.Fragment>
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
           <Card className={classes.card}>
             <CardHeader title="Upload file" />
             <CardContent>
@@ -167,8 +210,6 @@ export default function UploadComp(props) {
               </Grid>
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item xs={8}>
           <Card className={classes.card}>
             <CardHeader title="Preview" />
             <CardContent>
@@ -194,8 +235,6 @@ export default function UploadComp(props) {
               </TableContainer>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
       <Dialog
         open={openFileUploadDialog}
         onClose={handleFileUploadClose}
@@ -216,6 +255,7 @@ export default function UploadComp(props) {
           </CSVReader>
         </DialogContent>
       </Dialog>
+      {loading && <LoaderComp/>}
     </React.Fragment>
   );
 }

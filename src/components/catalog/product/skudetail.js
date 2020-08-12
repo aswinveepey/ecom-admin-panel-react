@@ -21,6 +21,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
@@ -79,6 +80,12 @@ const useStyles = makeStyles((theme) => ({
   addimgbase: {
     margin: "auto",
   },
+  // dialog: {
+  //   minHeight: "90vh",
+  //   maxHeight: "90vh",
+  //   marginTop:"auto",
+  //   marginLeft:"auto",
+  // },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -352,6 +359,7 @@ export default function SkuDetailComp(props) {
     <React.Fragment>
       <Dialog
         fullScreen
+        className={classes.dialog}
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
@@ -372,7 +380,7 @@ export default function SkuDetailComp(props) {
               <Typography variant="subtitle1" className={classes.title}>
                 {formControls?.name || "Add SKU"}
               </Typography>
-              <Button autoFocus color="inherit" type="submit">
+              <Button color="inherit" type="submit">
                 save changes
               </Button>
             </Toolbar>
@@ -682,156 +690,179 @@ export default function SkuDetailComp(props) {
                       >
                         Add Inventory
                       </Button>
-                      <Table>
-                        <TableBody>
-                          {formControls?.inventory?.map((data, index) => (
-                            <TableRow key={index}>
-                              <TableCell width="20%">
-                                <Autocomplete
-                                  options={territories}
-                                  freeSolo
-                                  value={data.territory || ""}
-                                  getOptionLabel={(option) =>
-                                    typeof option === "string"
-                                      ? option
-                                      : option.name
-                                  }
-                                  getOptionSelected={(option, value) =>
-                                    option ? option._id === value._id : false
-                                  }
-                                  onChange={changeInventoryTerritory.bind(
-                                    this,
-                                    index
-                                  )}
-                                  renderInput={(params) => (
-                                    <TextField
-                                      {...params}
-                                      label="Territory"
-                                      name="territory"
-                                      variant="standard"
-                                      required
-                                      onChange={onChangeTerritorySearch}
-                                    />
-                                  )}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Quantity"
-                                  variant="standard"
-                                  name="quantity"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0 }}
-                                  value={data?.quantity || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="MRP"
-                                  variant="standard"
-                                  name="mrp"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0, step: "any" }}
-                                  value={data?.mrp || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Discount"
-                                  variant="standard"
-                                  name="discount"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0, step: "any" }}
-                                  value={data?.discount || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Selling"
-                                  variant="standard"
-                                  name="sellingprice"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0, step: "any" }}
-                                  value={data?.sellingprice || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Purchase"
-                                  variant="standard"
-                                  name="purchaseprice"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0, step: "any" }}
-                                  value={data?.purchaseprice || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Shipping"
-                                  variant="standard"
-                                  name="shippingcharges"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0, step: "any" }}
-                                  value={data?.shippingcharges || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Installation"
-                                  variant="standard"
-                                  name="installationcharges"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  inputProps={{ min: 0, step: "any" }}
-                                  value={data?.installationcharges || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      name="status"
-                                      size="small"
-                                      checked={
-                                        data?.status === undefined
-                                          ? true
-                                          : data?.status
-                                      }
-                                      onChange={onChangeInventory.bind(
-                                        this,
-                                        index
-                                      )}
-                                      color="primary"
-                                    />
-                                  }
-                                  label="Status"
-                                  labelPlacement="end"
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                      <TableContainer>
+                        <Table>
+                          <TableBody>
+                            {formControls?.inventory?.map((data, index) => (
+                              <TableRow key={index}>
+                                <TableCell width="20%">
+                                  <Autocomplete
+                                    options={territories}
+                                    freeSolo
+                                    value={data.territory || ""}
+                                    getOptionLabel={(option) =>
+                                      typeof option === "string"
+                                        ? option
+                                        : option.name
+                                    }
+                                    getOptionSelected={(option, value) =>
+                                      option ? option._id === value._id : false
+                                    }
+                                    onChange={changeInventoryTerritory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        label="Territory"
+                                        name="territory"
+                                        variant="standard"
+                                        required
+                                        onChange={onChangeTerritorySearch}
+                                      />
+                                    )}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Quantity"
+                                    variant="standard"
+                                    name="quantity"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0 }}
+                                    value={data?.quantity || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="MRP"
+                                    variant="standard"
+                                    name="mrp"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.mrp || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Discount"
+                                    variant="standard"
+                                    name="discount"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.discount || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Selling"
+                                    variant="standard"
+                                    name="sellingprice"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.sellingprice || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Purchase"
+                                    variant="standard"
+                                    name="purchaseprice"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.purchaseprice || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Shipping"
+                                    variant="standard"
+                                    name="shippingcharges"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.shippingcharges || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Installation"
+                                    variant="standard"
+                                    name="installationcharges"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.installationcharges || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <FormControlLabel
+                                    control={
+                                      <Switch
+                                        name="status"
+                                        size="small"
+                                        checked={
+                                          data?.status === undefined
+                                            ? true
+                                            : data?.status
+                                        }
+                                        onChange={onChangeInventory.bind(
+                                          this,
+                                          index
+                                        )}
+                                        color="primary"
+                                      />
+                                    }
+                                    label="Status"
+                                    labelPlacement="end"
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </Paper>
                   </Grid>
                   {/* Attribute Section */}

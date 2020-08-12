@@ -7,6 +7,8 @@ export default function ApiHelper() {
     "Content-Type": "application/json",
     Authorization: Cookies.get("token"),
   };
+
+  //get requests
   const get = async ({ signal, reqUrl, reqParams = "" }) => {
     const requestOptions = {
       method: "GET",
@@ -31,18 +33,20 @@ export default function ApiHelper() {
     if (status === 200) {
       return responseData.data;
     }
-    const payload =
-      typeof responseData.error === "string"
-        ? responseData.error
-        : "Unknown Error Occurred";
-    store.dispatch({
-      type: "APIERROR",
-      payLoad: payload,
-    });
+
     if (responseData.error) {
+      store.dispatch({
+        type: "APIERROR",
+        payLoad:
+          typeof responseData.error === "string"
+            ? responseData.error
+            : "Unknown Error Occurred",
+      });
       throw new Error(responseData.error);
     }
   };
+
+  //post requests
   const post = async ({ signal, reqUrl, reqParams = "", reqBody = {} }) => {
     const requestOptions = {
       method: "POST",
@@ -74,16 +78,15 @@ export default function ApiHelper() {
         });
       return responseData.data;
     }
-    const payload =
-      typeof responseData.error === "string"
-        ? responseData.error
-        : "Unknown Error Occurred";
-    store.dispatch({
-      type: "APIERROR",
-      payLoad: payload,
-    });
 
     if (responseData.error) {
+      store.dispatch({
+        type: "APIERROR",
+        payLoad:
+          typeof responseData.error === "string"
+            ? responseData.error
+            : "Unknown Error Occurred",
+      });
       throw new Error(responseData.error);
     }
     // if (responseData.errors) {

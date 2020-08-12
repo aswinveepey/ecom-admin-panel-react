@@ -33,6 +33,7 @@ export default function SKUIndeComp(props){
           color="primary"
           variant="outlined"
           aria-label="add"
+          color="secondary"
           onClick={openSkuDetail.bind(this, { product: props.product?._id })}
         >
           Add SKU

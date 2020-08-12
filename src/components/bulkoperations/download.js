@@ -7,7 +7,6 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip"
 import GetAppIcon from "@material-ui/icons/GetApp";
 //styles - Material UI
@@ -19,7 +18,7 @@ import DataService from "../../services/data";
 const useStyles = makeStyles((theme) => ({
   card: {
     // maxWidth: "500px",
-    margin: "auto",
+    marginBottom: "10px",
     padding: "10px",
   },
 }));
@@ -28,6 +27,7 @@ const dataSetOptions = [
   { value: "orderitemdump", label: "Order Item Dump" },
   { value: "customerdump", label: "Customer Dump" },
   { value: "inventorydump", label: "Inventory Dump" },
+  { value: "skudump", label: "Sku Dump" },
 ];
 const OrderDumpHeaders = [
   { label: "Order Date", key: "orderdate" },
@@ -98,10 +98,32 @@ const InventoryDumpHeaders = [
   { label: "Installation", key: "installationcharges" },
   { label: "Status", key: "status" },
 ];
+const SkuDumpHeaders = [
+  { label: "SKU ID", key: "skuid" },
+  { label: "Product ID", key: "productid" },
+  { label: "Product Name", key: "productname" },
+  { label: "SKU Name", key: "skuname" },
+  { label: "Category Name", key: "category" },
+  { label: "Brand Name", key: "brand" },
+  { label: "MRP", key: "mrp" },
+  { label: "Discount", key: "discount" },
+  { label: "Selling Price", key: "sellingprice" },
+  { label: "Purchase Price", key: "purchaseprice" },
+  { label: "Shipping", key: "shippingcharges" },
+  { label: "Installation", key: "installationcharges" },
+  { label: "Bulk Discount Threshold", key: "bulkdiscountthreshold" },
+  { label: "Bulk Discount", key: "bulkdiscount" },
+  { label: "Min Order Qty", key: "minorderqty" },
+  { label: "Min Order Qty Multiples", key: "minorderqtystep" },
+  { label: "Max Order Qty", key: "maxorderqty" },
+  { label: "Status", key: "status" },
+  { label: "Created At", key: "createdat" },
+];
 const headers = {
   orderitemdump: OrderDumpHeaders,
   customerdump: CustomerDumpHeaders,
   inventorydump: InventoryDumpHeaders,
+  skudump: SkuDumpHeaders,
 };
 
 export default function DownloadComp(props) {
@@ -123,6 +145,9 @@ export default function DownloadComp(props) {
         break;
       case "inventorydump":
         downloadInventoryDump();
+        break;
+      case "skudump":
+        downloadSkuDump();
         break;
       default:
         downloadOrderItemDump();
@@ -172,6 +197,20 @@ export default function DownloadComp(props) {
         setFetching(false);
       });
   };
+  const downloadSkuDump = () => {
+    setFetching(true);
+    dataService
+      .getSkuDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  };
 
   const handleDatasetSelection = (e) => {
     e.preventDefault();
@@ -182,8 +221,8 @@ export default function DownloadComp(props) {
 
   return (
     <React.Fragment>
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
+      {/* <Grid container spacing={1}> */}
+        {/* <Grid item xs={4}> */}
           <Card className={classes.card}>
             <CardHeader title="Download Data" />
             <CardContent>
@@ -221,8 +260,8 @@ export default function DownloadComp(props) {
               />
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item xs={8}>
+        {/* </Grid> */}
+        {/* <Grid item xs={8}> */}
           <Card className={classes.card}>
             <CardHeader title="Data Headers" />
             <CardContent>
@@ -231,8 +270,8 @@ export default function DownloadComp(props) {
               ))}
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        {/* </Grid> */}
+      {/* </Grid> */}
     </React.Fragment>
   );
 }
