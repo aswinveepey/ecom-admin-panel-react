@@ -40,4 +40,12 @@ export default class DataService {
       reqBody: reqBody,
     });
   };
+  bulkUploadSku = async ({signal, param}) => {
+    const reqBody = JSON.stringify(param);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "data/bulkUploadSku",
+      reqBody: reqBody,
+    });
+  };
 }

@@ -31,7 +31,7 @@ import LoaderComp from "../loader"
 const useStyles = makeStyles((theme) => ({
   card: {
     // maxWidth: "500px",
-    margin: "auto",
+    marginBottom: "10px",
     padding: "10px",
   },
   button: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const dataSetOptions = [
-  { value: "productupload", label: "Product Upload" },
+  // { value: "productupload", label: "Product Upload" },
   { value: "skuupload", label: "Sku Upload" },
   { value: "inventoryupload", label: "Inventory Upload" },
 ];
@@ -66,8 +66,30 @@ const InventoryDumpHeaders = [
   { label: "Installation", key: "installationcharges" },
   { label: "Status", key: "status" },
 ];
+const SkuDumpHeaders = [
+  { label: "SKU ID", key: "skuid" },
+  { label: "Product ID", key: "productid" },
+  { label: "Product Name", key: "productname" },
+  { label: "SKU Name", key: "skuname" },
+  { label: "Category Name", key: "category" },
+  { label: "Brand Name", key: "brand" },
+  { label: "MRP", key: "mrp" },
+  { label: "Discount", key: "discount" },
+  { label: "Selling Price", key: "sellingprice" },
+  { label: "Purchase Price", key: "purchaseprice" },
+  { label: "Shipping", key: "shippingcharges" },
+  { label: "Installation", key: "installationcharges" },
+  { label: "Bulk Discount Threshold", key: "bulkdiscountthreshold" },
+  { label: "Bulk Discount", key: "bulkdiscount" },
+  { label: "Min Order Qty", key: "minorderqty" },
+  { label: "Min Order Qty Multiples", key: "minorderqtystep" },
+  { label: "Max Order Qty", key: "maxorderqty" },
+  { label: "Status", key: "status" },
+  { label: "Created At", key: "createdat" },
+];
 const headers = {
   inventoryupload: InventoryDumpHeaders,
+  skuupload: SkuDumpHeaders,
 };
 
 export default function UploadComp(props) {
@@ -88,11 +110,14 @@ export default function UploadComp(props) {
     setOpenFileUploadDialog(false);
     setLoading(true);
     switch (dataSetType) {
-      case "inventorydump":
+      case "inventoryupload":
         bulkUploadInventory();
         break;
+      case "skuupload":
+        bulkUploadSku();
+        break;
       default:
-        bulkUploadInventory();
+        // bulkUploadInventory();
         break;
     }
   };
@@ -110,8 +135,21 @@ export default function UploadComp(props) {
         console.log(err);
       });
   }
+  const bulkUploadSku = ()=>{
+    Promise.all(
+      dataSet.map((item) =>
+        dataService
+          .bulkUploadSku({ param: item })
+          .then((data) => console.log(data))
+      )
+    )
+      .then((data) => setLoading(false))
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  }
   const handleFileUpload = (data) => {
-    console.log(data)
     const parsedData = data.map((item) => item.data);
     setDataSet(parsedData);
     setOpenFileUploadDialog(false);
@@ -123,8 +161,6 @@ export default function UploadComp(props) {
   };
   return (
     <React.Fragment>
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
           <Card className={classes.card}>
             <CardHeader title="Upload file" />
             <CardContent>
@@ -174,8 +210,6 @@ export default function UploadComp(props) {
               </Grid>
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item xs={8}>
           <Card className={classes.card}>
             <CardHeader title="Preview" />
             <CardContent>
@@ -201,8 +235,6 @@ export default function UploadComp(props) {
               </TableContainer>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
       <Dialog
         open={openFileUploadDialog}
         onClose={handleFileUploadClose}

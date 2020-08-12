@@ -7,7 +7,6 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip"
 import GetAppIcon from "@material-ui/icons/GetApp";
 //styles - Material UI
@@ -19,7 +18,7 @@ import DataService from "../../services/data";
 const useStyles = makeStyles((theme) => ({
   card: {
     // maxWidth: "500px",
-    margin: "auto",
+    marginBottom: "10px",
     padding: "10px",
   },
 }));
@@ -114,7 +113,7 @@ const SkuDumpHeaders = [
   { label: "Installation", key: "installationcharges" },
   { label: "Bulk Discount Threshold", key: "bulkdiscountthreshold" },
   { label: "Bulk Discount", key: "bulkdiscount" },
-  { label: "Min Order Qty ", key: "minorderqty" },
+  { label: "Min Order Qty", key: "minorderqty" },
   { label: "Min Order Qty Multiples", key: "minorderqtystep" },
   { label: "Max Order Qty", key: "maxorderqty" },
   { label: "Status", key: "status" },
@@ -222,8 +221,8 @@ export default function DownloadComp(props) {
 
   return (
     <React.Fragment>
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
+      {/* <Grid container spacing={1}> */}
+        {/* <Grid item xs={4}> */}
           <Card className={classes.card}>
             <CardHeader title="Download Data" />
             <CardContent>
@@ -261,8 +260,8 @@ export default function DownloadComp(props) {
               />
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item xs={8}>
+        {/* </Grid> */}
+        {/* <Grid item xs={8}> */}
           <Card className={classes.card}>
             <CardHeader title="Data Headers" />
             <CardContent>
@@ -271,8 +270,8 @@ export default function DownloadComp(props) {
               ))}
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        {/* </Grid> */}
+      {/* </Grid> */}
     </React.Fragment>
   );
 }
