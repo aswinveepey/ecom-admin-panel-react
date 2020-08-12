@@ -9,7 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
+// import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PublishIcon from "@material-ui/icons/Publish";
@@ -25,6 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CSVReader } from "react-papaparse";
 
 import DataService from "../../services/data";
+import LoaderComp from "../loader"
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +76,7 @@ export default function UploadComp(props) {
   const [dataSetType, setDatasetType] = React.useState(dataSetOptions[0].value);
   const [openFileUploadDialog, setOpenFileUploadDialog] = React.useState(false);
   const [dataSet, setDataSet] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const handleFileUploadClose = () => {
     setOpenFileUploadDialog(false);
@@ -84,6 +86,7 @@ export default function UploadComp(props) {
   };
   const handleFileUploadSubmit = () => {
     setOpenFileUploadDialog(false);
+    setLoading(true);
     switch (dataSetType) {
       case "inventorydump":
         bulkUploadInventory();
@@ -101,10 +104,14 @@ export default function UploadComp(props) {
           .then((data) => console.log(data))
       )
     )
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => setLoading(false))
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   }
   const handleFileUpload = (data) => {
+    console.log(data)
     const parsedData = data.map((item) => item.data);
     setDataSet(parsedData);
     setOpenFileUploadDialog(false);
@@ -216,6 +223,7 @@ export default function UploadComp(props) {
           </CSVReader>
         </DialogContent>
       </Dialog>
+      {loading && <LoaderComp/>}
     </React.Fragment>
   );
 }
