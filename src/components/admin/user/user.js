@@ -6,7 +6,7 @@ import UserCardList from './usercardlist'
 import Grid from "@material-ui/core/Grid";
 import Button from '@material-ui/core/Button'
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
+
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -39,8 +39,8 @@ export default function UserComp(props) {
   };
 
   React.useEffect(()=>{
-    props?.match?.params?.userId && setSelectedUserId(props.match.params.userId)
-  },[])
+    props.match?.params?.userId && setSelectedUserId(props.match.params.userId)
+  },[props.match])
 
   //render
     return (
@@ -49,12 +49,12 @@ export default function UserComp(props) {
         <Grid
           container
           direction="row"
-          spacing={2}
+          spacing={1}
           className={classes.userComp}
         >
-          <Grid item>
+          <Grid item md={3}>
             <Button
-              fullWidth
+              // fullWidth
               color="primary"
               variant="outlined"
               aria-label="Add"
@@ -65,7 +65,7 @@ export default function UserComp(props) {
             <UserCardList onSelect={selectUser} />
             {/* <Divider orientation="vertical" /> */}
           </Grid>
-          <Grid item>
+          <Grid item md={9}>
             {newUser && (
               <Suspense fallback={<div>Loading...</div>}>
                 <UserNewComp />

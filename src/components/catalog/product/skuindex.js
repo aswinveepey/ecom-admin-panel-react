@@ -30,7 +30,6 @@ export default function SKUIndeComp(props){
     <React.Fragment>
       <TableContainer>
         <Button
-          color="primary"
           variant="outlined"
           aria-label="add"
           color="secondary"

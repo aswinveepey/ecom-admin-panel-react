@@ -19,13 +19,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserCardList(props) {
   const classes = useStyles();
-  const userService = new UserService();
 
   const [userData, setUserData] = React.useState([]);
   const [fetchStatus, setFetchStatus] = React.useState("loading");
   const [selectedId, setSelectedId] = React.useState();
 
   React.useEffect(() => {
+    const userService = new UserService();
     setFetchStatus("loading");
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
@@ -33,7 +33,7 @@ export default function UserCardList(props) {
     userService.getUsers(signal).then((data) => {
       setUserData(data);
       setFetchStatus("fetched");
-    });
+    }).catch(err=>console.log(err));
     return function cleanup() {
       abortController.abort();
     };

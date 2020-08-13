@@ -65,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Scaffold(props) {
   const classes = useStyles(); //use styles
   const dispatch = useDispatch(); //send redux actions
-  const userApi = new UserService(); //get user data
   const history = useHistory(); //react router
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -125,18 +124,21 @@ export default function Scaffold(props) {
 
   //get & set user state
   React.useEffect(() => {
+    const userApi = new UserService(); //get user data
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (!userState.firstname) {
       userApi
         .getSelf(signal)
         .then((data) => {
-          data &&
-            dispatch({
-              type: "SETUSER",
-              payLoad: data,
-            });
-          !data && history && history.push("/");
+            if(data){
+              dispatch({
+                type: "SETUSER",
+                payLoad: data,
+              });
+            } else {
+              history && history.push("/");
+            }
         })
         .catch((err) => {
           console.log(err);

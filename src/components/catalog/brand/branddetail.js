@@ -38,7 +38,7 @@ export default function BrandDetailComp(props) {
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
-  }, [props]);
+  }, [props.data]);
   //handle dialog close - call parent function
   const handleClose = () => {
     props.handleDialogClose();

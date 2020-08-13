@@ -43,10 +43,9 @@ export default function GmvTimeSeriesComp(props) {
   };
   React.useEffect(() => {
     props.data && setGmvTimeSeries(props.data);
-  }, [props]);
+  }, [props.data]);
   return (
     <Paper className={classes.infoBox}>
-      <Typography gutterBottom={true} variant="h6"></Typography>
       <Line data={line.data} options={line.options} height={200} />
     </Paper>
   );

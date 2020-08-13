@@ -178,7 +178,6 @@ export default function ProductIndexComp(props){
   return (
     <React.Fragment>
       <Button
-        color="primary"
         variant="outlined"
         aria-label="add"
         className={classes.button}

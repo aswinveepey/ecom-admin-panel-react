@@ -43,7 +43,6 @@ export default function DataTableComp(props){
       {/* <Tooltip title={"Add " + props.title}> */}
       <Button
         // size="small"
-        color="primary"
         variant="outlined"
         aria-label="Add"
         color="secondary"

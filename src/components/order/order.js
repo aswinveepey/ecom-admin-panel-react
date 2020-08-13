@@ -114,7 +114,6 @@ export default function OrderComp(props) {
   return (
     <React.Fragment>
       <Button
-        color="primary"
         variant="outlined"
         aria-label="add"
         color="secondary"

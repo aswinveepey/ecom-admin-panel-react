@@ -10,9 +10,17 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Chip from "@material-ui/core/Chip"
 import GetAppIcon from "@material-ui/icons/GetApp";
 //styles - Material UI
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, formatMs } from "@material-ui/core/styles";
 
 import DataService from "../../services/data";
+
+import {
+  CustomerDumpHeaders,
+  OrderDumpHeaders,
+  InventoryDumpHeaders,
+  SkuDumpHeaders,
+  ProductDumpHeaders,
+} from "./headers";
 
 // define styles
 const useStyles = makeStyles((theme) => ({
@@ -28,102 +36,15 @@ const dataSetOptions = [
   { value: "customerdump", label: "Customer Dump" },
   { value: "inventorydump", label: "Inventory Dump" },
   { value: "skudump", label: "Sku Dump" },
+  { value: "productdump", label: "Product Dump" },
 ];
-const OrderDumpHeaders = [
-  { label: "Order Date", key: "orderdate" },
-  { label: "Order ID", key: "itemorderid" },
-  { label: "Order Item ID", key: "orderitemid" },
-  { label: "Customer ID", key: "customerid" },
-  { label: "Customer Name", key: "customername" },
-  { label: "SKU ID", key: "skuid" },
-  { label: "SKU Name", key: "skuname" },
-  { label: "Category ID", key: "skucategoryid" },
-  { label: "Brand ID", key: "skubrandid" },
-  { label: "MRP", key: "skumrp" },
-  { label: "Discount", key: "skudiscount" },
-  { label: "Selling Price", key: "skusellingprice" },
-  { label: "Purchase Price", key: "skupurchaseprice" },
-  { label: "Shipping Price", key: "skushippingcharges" },
-  { label: "Installation Charges", key: "skuinstallationcharges" },
-  { label: "Bulk Threshold", key: "skubulkthreshold" },
-  { label: "Bulk Discount", key: "skubulkdiscount" },
-  { label: "Min Order Qty", key: "skuminorderqty" },
-  { label: "Min Order Qty Multiples", key: "skuminorderqtymultiples" },
-  { label: "Max Order Qty", key: "skumaxorderqty" },
-  { label: "Booked Qty", key: "itemquantitybooked" },
-  { label: "Confirmed Qty", key: "itemquantityconfirmed" },
-  { label: "Shipped Qty", key: "itemquantityshipped" },
-  { label: "Delivered Qty", key: "itemquantitydelivered" },
-  { label: "Returned Qty", key: "itemquantityreturned" },
-  { label: "Territory ID", key: "itemterritoryid" },
-  { label: "Amount", key: "itemamount" },
-  { label: "Discount", key: "itemdiscount" },
-  { label: "Total Amount", key: "itemtotalamount" },
-  { label: "Status", key: "itemstatus" },
-];
-const CustomerDumpHeaders = [
-  { label: "Customer ID", key: "customerid" },
-  { label: "Account ID", key: "accountid" },
-  { label: "First Name", key: "firstname" },
-  { label: "Last Name", key: "lastname" },
-  { label: "Account Name", key: "accountname" },
-  { label: "Username", key: "username" },
-  { label: "Email", key: "email" },
-  { label: "Mobile No", key: "mobilenumber" },
-  { label: "Type", key: "type" },
-  { label: "Gender", key: "gender" },
-  { label: "Birthday", key: "birthday" },
-  { label: "Contact Number", key: "contactnumber" },
-  { label: "Account Type", key: "accounttype" },
-  { label: "Gstin", key: "gstin" },
-  { label: "Status", key: "status" },
-  { label: "Created At", key: "createdat" },
-];
-const InventoryDumpHeaders = [
-  { label: "Inventory ID", key: "_id" },
-  { label: "Territory ID", key: "territoryid" },
-  { label: "Territory Name", key: "territoryname" },
-  { label: "Product ID", key: "productid" },
-  { label: "Product Name", key: "productname" },
-  { label: "SKU ID", key: "skuid" },
-  { label: "SKU Name", key: "skuname" },
-  { label: "Category", key: "categoryname" },
-  { label: "Brand", key: "brandname" },
-  { label: "Quantity", key: "quantity" },
-  { label: "MRP", key: "mrp" },
-  { label: "Purchase Price", key: "purchaseprice" },
-  { label: "Selling Price", key: "sellingprice" },
-  { label: "Discount", key: "discount" },
-  { label: "Shipping", key: "shippingcharges" },
-  { label: "Installation", key: "installationcharges" },
-  { label: "Status", key: "status" },
-];
-const SkuDumpHeaders = [
-  { label: "SKU ID", key: "skuid" },
-  { label: "Product ID", key: "productid" },
-  { label: "Product Name", key: "productname" },
-  { label: "SKU Name", key: "skuname" },
-  { label: "Category Name", key: "category" },
-  { label: "Brand Name", key: "brand" },
-  { label: "MRP", key: "mrp" },
-  { label: "Discount", key: "discount" },
-  { label: "Selling Price", key: "sellingprice" },
-  { label: "Purchase Price", key: "purchaseprice" },
-  { label: "Shipping", key: "shippingcharges" },
-  { label: "Installation", key: "installationcharges" },
-  { label: "Bulk Discount Threshold", key: "bulkdiscountthreshold" },
-  { label: "Bulk Discount", key: "bulkdiscount" },
-  { label: "Min Order Qty", key: "minorderqty" },
-  { label: "Min Order Qty Multiples", key: "minorderqtystep" },
-  { label: "Max Order Qty", key: "maxorderqty" },
-  { label: "Status", key: "status" },
-  { label: "Created At", key: "createdat" },
-];
+
 const headers = {
   orderitemdump: OrderDumpHeaders,
   customerdump: CustomerDumpHeaders,
   inventorydump: InventoryDumpHeaders,
   skudump: SkuDumpHeaders,
+  productdump: ProductDumpHeaders,
 };
 
 export default function DownloadComp(props) {
@@ -148,6 +69,9 @@ export default function DownloadComp(props) {
         break;
       case "skudump":
         downloadSkuDump();
+        break;
+      case "productdump":
+        downloadProductDump();
         break;
       default:
         downloadOrderItemDump();
@@ -201,6 +125,20 @@ export default function DownloadComp(props) {
     setFetching(true);
     dataService
       .getSkuDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  };
+  const downloadProductDump = () => {
+    setFetching(true);
+    dataService
+      .getProductDump()
       .then((data) => {
         setDataSet(data);
         setFetching(false);

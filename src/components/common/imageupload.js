@@ -22,7 +22,6 @@ import AssetService from "../../services/asset"
 
 export default function ImageUploadComp(props){
   // const classes = useStyles();
-  const assetService = new AssetService();
   const [image, setImage] = React.useState();
   const [uploadUrl, setUploadUrl] = React.useState();
   const [imageUrl, setImageUrl] = React.useState();
@@ -41,6 +40,7 @@ export default function ImageUploadComp(props){
 
   //get signed s3 url for file upload
   React.useEffect(() => {
+    const assetService = new AssetService();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;

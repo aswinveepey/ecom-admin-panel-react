@@ -6,31 +6,54 @@ export default class DataService {
   }
   //get all customers
   getCustomerData = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/customer"});
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/customer",
+    });
   };
-  getTodayGmv = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/gmvData", reqParams:"filterBy=today"});
+  getGmv = async ({signal, param}) => {
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/gmvData",
+      reqParams: "filterBy="+param,
+    });
   };
-  getMonthGmv = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/gmvData", reqParams:"filterBy=month"});
-  };
-  getQuarterGmv = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/gmvData", reqParams:"filterBy=quarter"});
-  };
-  getGmvTimeSeries = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/gmvTimeSeries"});
+  getGmvTimeSeries = async ({signal, param}) => {
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/gmvTimeSeries",
+      reqParams: "filterBy="+param,
+    });
   };
   getOrderItemDump = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/getOrderItemDump"});
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/getOrderItemDump",
+    });
   };
   getCustomerDump = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/getCustomerDump"});
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/getCustomerDump",
+    });
   };
   getInventoryDump = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/getInventoryDump"});
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/getInventoryDump",
+    });
   };
   getSkuDump = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"data/getSkuDump"});
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/getSkuDump",
+    });
+  };
+  getProductDump = async (signal) => {
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "data/getProductDump",
+    });
   };
   bulkUploadInventory = async ({signal, param}) => {
     const reqBody = JSON.stringify(param);
@@ -45,6 +68,22 @@ export default class DataService {
     return await this.apiHelper.post({
       signal: signal,
       reqUrl: "data/bulkUploadSku",
+      reqBody: reqBody,
+    });
+  };
+  bulkUploadProduct = async ({signal, param}) => {
+    const reqBody = JSON.stringify(param);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "data/bulkUploadProduct",
+      reqBody: reqBody,
+    });
+  };
+  bulkUploadOrderItem = async ({signal, param}) => {
+    const reqBody = JSON.stringify(param);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "data/bulkUploadOrderItem",
       reqBody: reqBody,
     });
   };
