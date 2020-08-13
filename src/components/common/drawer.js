@@ -39,16 +39,17 @@ export default function DrawerComp(props) {
   const tenantLogo =
     "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +
     tenantLogoFile;
-  const userApi = new UserService(); //get user data
+
   const [navData, setNavData] = React.useState([]);
 
   //fetch drawer data
   React.useEffect(() => {
+    const userService = new UserService(); //get user data
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
     try {
-      userApi
+      userService
         .getNav(signal)
         .then(async (data) => {
           setNavData(data);

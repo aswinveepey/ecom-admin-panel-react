@@ -63,7 +63,7 @@ export default function AccountDetailComp(props) {
 
   React.useEffect(() => {
     setFormControls(props.data);
-  }, [props]);
+  }, [props.data]);
 
   const handleClose = () => {
     props.handleDialogClose();

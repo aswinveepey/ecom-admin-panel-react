@@ -155,7 +155,7 @@ export default function DivisionDetailComp(props) {
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
-  }, [props]);
+  }, [props.data]);
   //get category from search string
   React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals

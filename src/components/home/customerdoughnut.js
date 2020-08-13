@@ -40,7 +40,7 @@ export default function CustomerDoughnut(props) {
 
   React.useEffect(() => {
     props.data && setCustomerData(props.data);
-  }, [props]);
+  }, [props.data]);
 
   return (
     <Paper className={classes.infoBox}>

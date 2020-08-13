@@ -152,7 +152,7 @@ export default function CustomerDetailComp(props){
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
-  }, [props]);
+  }, [props.data]);
   //get account from search string
   React.useEffect(()=>{
     const abortController = new AbortController();

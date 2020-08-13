@@ -69,7 +69,7 @@ export default function AppSearchComp(props) {
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [options, setOptions] = React.useState([]);
-  const searchService = new SearchService();
+  
   // const history = useHistory();
   //handle search changes
   function handleSearchChange(event){
@@ -85,6 +85,7 @@ export default function AppSearchComp(props) {
 
   //useeffect
   React.useEffect(() => {
+    const searchService = new SearchService();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;

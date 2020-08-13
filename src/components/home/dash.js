@@ -8,7 +8,6 @@ import DataService from "../../services/data";
 const CustomerDoughnut = lazy(() => import("./customerdoughnut"));
 
 export default function DashComp(props) {
-  const dataService = new DataService();
   const [customerData, setCustomerData] = React.useState()
   const [todayGmv, setTodayGmv] = React.useState();
   const [monthGmv, setMonthGmv] = React.useState();
@@ -16,6 +15,7 @@ export default function DashComp(props) {
   const [gmvTimeSeries, setGmvTimeSeries] = React.useState();
 
   React.useEffect(()=>{
+    const dataService = new DataService();
     dataService.getCustomerData().then((data) => data && setCustomerData(data)).catch(err=>console.log(err));
     dataService.getTodayGmv().then((data) => data && setTodayGmv(data[0])).catch(err=>console.log(err));
     dataService.getMonthGmv().then((data) => data && setMonthGmv(data[0])).catch(err=>console.log(err));

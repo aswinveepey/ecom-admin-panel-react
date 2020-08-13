@@ -86,6 +86,23 @@ export default function LoginFormComp(props){
     };
   };
 
+  const getUserAndLogin = () => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    userService
+      .getSelf(signal)
+      .then((data) => {
+        dispatch({
+          type: "SETUSER",
+          payLoad: data,
+        });
+        history && history.push("/home");
+      })
+      .catch((err) => console.log(err));
+      return function cleanup() {
+        abortController.abort();
+      };
+  }
   //Error handling through redux
   React.useEffect(() => {
     apifeedbackstate.apierror && setErrorState(apifeedbackstate.apierror);
@@ -93,24 +110,10 @@ export default function LoginFormComp(props){
 
   //check auth and set user Redux state
   React.useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
     if (loginState === "Authenticated") {
-      userService
-        .getSelf(signal)
-        .then((data) => {
-          dispatch({
-            type: "SETUSER",
-            payLoad: data,
-          });
-          history && history.push("/home");
-        })
-        .catch((err) => console.log(err));
+      getUserAndLogin();
     }
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [loginState, dispatch, history]);
+  }, [loginState]);
   return (
     <Grid
       container

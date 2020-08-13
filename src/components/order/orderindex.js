@@ -146,7 +146,7 @@ export default function OrderIndexComp(props) {
   React.useEffect(()=>{
     props.data && setRowData(props.data)
     props.newOrder && setOrderDetailOpen(props.newOrder);
-  },[props])
+  },[props.data, props.newOrder])
 
   return (
     <React.Fragment>

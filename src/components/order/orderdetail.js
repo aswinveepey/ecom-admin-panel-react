@@ -63,7 +63,7 @@ export default function OrderDetailcomp(props){
   React.useEffect(() => {
     setOpen(props.open);
     props.data && setFormControls(props.data);
-  }, [props]);
+  }, [props.data, props.open]);
 
   //delegate close behaviour to parent
   const handleClose = () => {
