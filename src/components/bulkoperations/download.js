@@ -28,6 +28,7 @@ const dataSetOptions = [
   { value: "customerdump", label: "Customer Dump" },
   { value: "inventorydump", label: "Inventory Dump" },
   { value: "skudump", label: "Sku Dump" },
+  { value: "productdump", label: "Product Dump" },
 ];
 const OrderDumpHeaders = [
   { label: "Order Date", key: "orderdate" },
@@ -119,11 +120,29 @@ const SkuDumpHeaders = [
   { label: "Status", key: "status" },
   { label: "Created At", key: "createdat" },
 ];
+const ProductDumpHeaders = [
+  { label: "Product ID", key: "productid" },
+  { label: "Product Name", key: "name" },
+  { label: "Category Name", key: "categoryname" },
+  { label: "Category ID", key: "categoryid" },
+  { label: "Brand Name", key: "brandname" },
+  { label: "Brand ID", key: "brandid" },
+  { label: "Storage Type", key: "storagetype" },
+  { label: "Shelf Life", key: "shelflife" },
+  { label: "Deadweight", key: "deadweight" },
+  { label: "Volumetric Weight", key: "volumetricweight" },
+  { label: "HSN Code", key: "hsncode" },
+  { label: "CGST", key: "cgst" },
+  { label: "SGST", key: "sgst" },
+  { label: "IGST", key: "igst" },
+  { label: "Created At", key: "createdat" },
+];
 const headers = {
   orderitemdump: OrderDumpHeaders,
   customerdump: CustomerDumpHeaders,
   inventorydump: InventoryDumpHeaders,
   skudump: SkuDumpHeaders,
+  productdump: ProductDumpHeaders,
 };
 
 export default function DownloadComp(props) {
@@ -148,6 +167,9 @@ export default function DownloadComp(props) {
         break;
       case "skudump":
         downloadSkuDump();
+        break;
+      case "productdump":
+        downloadProductDump();
         break;
       default:
         downloadOrderItemDump();
@@ -201,6 +223,20 @@ export default function DownloadComp(props) {
     setFetching(true);
     dataService
       .getSkuDump()
+      .then((data) => {
+        setDataSet(data);
+        setFetching(false);
+        csvRef.current.link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+        setFetching(false);
+      });
+  };
+  const downloadProductDump = () => {
+    setFetching(true);
+    dataService
+      .getProductDump()
       .then((data) => {
         setDataSet(data);
         setFetching(false);
