@@ -11,31 +11,18 @@ export default class DataService {
       reqUrl: "data/customer",
     });
   };
-  getTodayGmv = async (signal) => {
+  getGmv = async ({signal, param}) => {
     return await this.apiHelper.get({
       signal: signal,
       reqUrl: "data/gmvData",
-      reqParams: "filterBy=today",
+      reqParams: "filterBy="+param,
     });
   };
-  getMonthGmv = async (signal) => {
-    return await this.apiHelper.get({
-      signal: signal,
-      reqUrl: "data/gmvData",
-      reqParams: "filterBy=month",
-    });
-  };
-  getQuarterGmv = async (signal) => {
-    return await this.apiHelper.get({
-      signal: signal,
-      reqUrl: "data/gmvData",
-      reqParams: "filterBy=quarter",
-    });
-  };
-  getGmvTimeSeries = async (signal) => {
+  getGmvTimeSeries = async ({signal, param}) => {
     return await this.apiHelper.get({
       signal: signal,
       reqUrl: "data/gmvTimeSeries",
+      reqParams: "filterBy="+param,
     });
   };
   getOrderItemDump = async (signal) => {
