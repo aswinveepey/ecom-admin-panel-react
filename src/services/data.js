@@ -71,4 +71,20 @@ export default class DataService {
       reqBody: reqBody,
     });
   };
+  bulkUploadProduct = async ({signal, param}) => {
+    const reqBody = JSON.stringify(param);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "data/bulkUploadProduct",
+      reqBody: reqBody,
+    });
+  };
+  bulkUploadOrderItem = async ({signal, param}) => {
+    const reqBody = JSON.stringify(param);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "data/bulkUploadOrderItem",
+      reqBody: reqBody,
+    });
+  };
 }

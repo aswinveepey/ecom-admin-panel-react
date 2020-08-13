@@ -27,6 +27,13 @@ import { CSVReader } from "react-papaparse";
 import DataService from "../../services/data";
 import LoaderComp from "../loader"
 
+import {
+  OrderDumpHeaders,
+  InventoryDumpHeaders,
+  SkuDumpHeaders,
+  ProductDumpHeaders,
+} from "./headers";
+
 // define styles
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,51 +52,15 @@ const dataSetOptions = [
   // { value: "productupload", label: "Product Upload" },
   { value: "skuupload", label: "Sku Upload" },
   { value: "inventoryupload", label: "Inventory Upload" },
+  { value: "productupload", label: "Product Upload" },
+  { value: "orderitemupload", label: "Order Upload" },
 ];
 
-const InventoryDumpHeaders = [
-  { label: "Inventory ID", key: "_id" },
-  { label: "Territory ID", key: "territoryid" },
-  { label: "Territory Name", key: "territoryname" },
-  { label: "Product ID", key: "productid" },
-  { label: "Product Name", key: "productname" },
-  { label: "SKU ID", key: "skuid" },
-  { label: "SKU Name", key: "skuname" },
-  { label: "Category", key: "categoryname" },
-  { label: "Brand", key: "brandname" },
-  { label: "Quantity", key: "quantity" },
-  { label: "MRP", key: "mrp" },
-  { label: "Purchase Price", key: "purchaseprice" },
-  { label: "Selling Price", key: "sellingprice" },
-  { label: "Discount", key: "discount" },
-  { label: "Shipping", key: "shippingcharges" },
-  { label: "Installation", key: "installationcharges" },
-  { label: "Status", key: "status" },
-];
-const SkuDumpHeaders = [
-  { label: "SKU ID", key: "skuid" },
-  { label: "Product ID", key: "productid" },
-  { label: "Product Name", key: "productname" },
-  { label: "SKU Name", key: "skuname" },
-  { label: "Category Name", key: "category" },
-  { label: "Brand Name", key: "brand" },
-  { label: "MRP", key: "mrp" },
-  { label: "Discount", key: "discount" },
-  { label: "Selling Price", key: "sellingprice" },
-  { label: "Purchase Price", key: "purchaseprice" },
-  { label: "Shipping", key: "shippingcharges" },
-  { label: "Installation", key: "installationcharges" },
-  { label: "Bulk Discount Threshold", key: "bulkdiscountthreshold" },
-  { label: "Bulk Discount", key: "bulkdiscount" },
-  { label: "Min Order Qty", key: "minorderqty" },
-  { label: "Min Order Qty Multiples", key: "minorderqtystep" },
-  { label: "Max Order Qty", key: "maxorderqty" },
-  { label: "Status", key: "status" },
-  { label: "Created At", key: "createdat" },
-];
 const headers = {
   inventoryupload: InventoryDumpHeaders,
   skuupload: SkuDumpHeaders,
+  productupload: ProductDumpHeaders,
+  orderitemupload: OrderDumpHeaders,
 };
 
 export default function UploadComp(props) {
@@ -115,6 +86,12 @@ export default function UploadComp(props) {
         break;
       case "skuupload":
         bulkUploadSku();
+        break;
+      case "productupload":
+        bulkUploadProduct();
+        break;
+      case "orderitemupload":
+        bulkUploadOrderItem();
         break;
       default:
         // bulkUploadInventory();
@@ -149,6 +126,34 @@ export default function UploadComp(props) {
         console.log(err);
       });
   }
+  const bulkUploadProduct = ()=>{
+    Promise.all(
+      dataSet.map((item) =>
+        dataService
+          .bulkUploadProduct({ param: item })
+          .then((data) => console.log(data))
+      )
+    )
+      .then((data) => setLoading(false))
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  }
+  const bulkUploadOrderItem = () => {
+    Promise.all(
+      dataSet.map((item) =>
+        dataService
+          .bulkUploadOrderItem({ param: item })
+          .then((data) => console.log(data))
+      )
+    )
+      .then((data) => setLoading(false))
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
   const handleFileUpload = (data) => {
     const parsedData = data.map((item) => item.data);
     setDataSet(parsedData);
