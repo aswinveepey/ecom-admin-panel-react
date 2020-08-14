@@ -202,7 +202,7 @@ export default function Scaffold(props) {
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </div>
-          {search && <AppSearchComp />}
+          {/* {search && <AppSearchComp />} */}
         </Toolbar>
       </AppBar>
       {/* Main Component - handle children */}
