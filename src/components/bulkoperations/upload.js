@@ -163,6 +163,7 @@ export default function UploadComp(props) {
   const handleDatasetSelection = (e) => {
     e.preventDefault();
     setDatasetType(e.target.value);
+    setDataSet([])
   };
   return (
     <React.Fragment>
