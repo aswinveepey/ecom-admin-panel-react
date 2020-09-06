@@ -25,7 +25,9 @@ import CategoryService from "../../../services/category"
 import BrandService from "../../../services/brand"
 //Component import
 const SkuIndexComp = React.lazy(() => import("./skuindex"));
-const SingleAttributeComp = React.lazy(() => import("../../common/singleattribute"));
+const FilterAttributeComp = React.lazy(() =>
+  import("../../common/filterattribute")
+);
 const MultiAttributeComp = React.lazy(() => import("../../common/multiattribute"));
 const ImageUploadComp = React.lazy(() => import("../../common/imageupload"))
 
@@ -102,6 +104,7 @@ export default function ProductDetailComp(props) {
   const [formControls, setFormControls] = React.useState([]);
   const [categorySearchString, setCategorySearchString] = React.useState("");
   const [categories, setCategories] = React.useState([]);
+  const [selectedCategory, setSelectedCategory] = React.useState({});
   const [brandSearchString, setBrandSearchString] = React.useState("");
   const [brands, setBrands] = React.useState([]);
   const [openImageUpload, setOpenImageUpload] = React.useState(false);
@@ -333,6 +336,22 @@ export default function ProductDetailComp(props) {
       abortController.abort();
     };
   }, [categorySearchString]);
+
+  //get category data of selected category
+  React.useEffect(() => {
+    //clean up subscriptions using abortcontroller & signals
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    if (formControls.category){
+      categoryService
+        .getOneSku({ signal: signal, categoryId: formControls.category?._id })
+        .then((data) => setSelectedCategory(data))
+        .catch((err) => console.log(err));
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [formControls.category]);
 
   //get brand from search string
   React.useEffect(() => {
@@ -586,8 +605,9 @@ export default function ProductDetailComp(props) {
                         Set values for category filter
                       </Typography>
                       <Suspense fallback={<div>Loading...</div>}>
-                        <SingleAttributeComp
+                        <FilterAttributeComp
                           data={formControls.attributes}
+                          selectData={selectedCategory}
                           // label="Attributes"
                           onchangeAttribute={onchangeAttribute}
                           onAttributeAdd={onAttributeAdd}
