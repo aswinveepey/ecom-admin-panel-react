@@ -37,9 +37,11 @@ export default function FilterAttributeComp(props) {
     );
   }, [props.selectData]);
   React.useEffect(()=>{
-    setAttributeValueOptions(
-      props.selectData?.filterattributes?.map((item) => item.values)
-    );
+    let filterValues = props.selectData?.filterattributes?.map((item) => item.values)
+
+    let merged = [].concat.apply([], filterValues);
+
+    setAttributeValueOptions(merged);
   },[])
 
   return (
@@ -87,19 +89,37 @@ export default function FilterAttributeComp(props) {
                   }}
                 >
                   {attributeOptions?.map((option) => (
-                    <option value={option} key={option}>{option}</option>
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
                   ))}
                 </Select>
               </TableCell>
               <TableCell className={classes.attrvalues}>
-                <TextField
+                <Select
+                  native
+                  value={attribute.value || ""}
+                  data-index={index}
+                  onChange={(event) => props.onchangeAttribute(event, index)}
+                  fullWidth
+                  inputProps={{
+                    name: "value",
+                  }}
+                >
+                  {attributeValueOptions?.map((option) => (
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
+                  ))}
+                </Select>
+                {/* <TextField
                   value={attribute.value || ""}
                   data-index={index}
                   name="value"
                   variant="standard"
                   fullWidth
                   onChange={(event) => props.onchangeAttribute(event, index)}
-                />
+                /> */}
               </TableCell>
             </TableRow>
           ))}
