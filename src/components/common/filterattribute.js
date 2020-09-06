@@ -33,11 +33,12 @@ export default function FilterAttributeComp(props) {
 
   React.useEffect(() => {
     setAttributeOptions(
-      props.selectData?.filterattributes?.map((item) => item.name)
+      props.selectData?.map((item) => item.name)
     );
   }, [props.selectData]);
+  
   React.useEffect(()=>{
-    let filterValues = props.selectData?.filterattributes?.map((item) => item.values)
+    let filterValues = props.selectData?.map((item) => item.values)
 
     let merged = [].concat.apply([], filterValues);
 

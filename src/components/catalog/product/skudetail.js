@@ -29,10 +29,12 @@ import TableCell from "@material-ui/core/TableCell";
 import InputAdornment from "@material-ui/core/InputAdornment";
 //Component import
 import SingleAttributeComp from "../../common/singleattribute";
+import FilterAttributeComp from "../../common/filterattribute";
 import ImageUploadComp from "../../common/imageupload";
 //api import
 import SkuService from "../../../services/sku";
 import TerritoryService from "../../../services/territory";
+import { PropertyKeys } from "ag-grid-community";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -875,8 +877,9 @@ export default function SkuDetailComp(props) {
                         SKU selection attributes - Use attributes defined as
                         product variant attributes
                       </Typography>
-                      <SingleAttributeComp
+                      <FilterAttributeComp
                         data={formControls?.attributes}
+                        selectData={props?.product?.variantattributes}
                         onchangeAttribute={onChangeAttribute}
                         onAttributeAdd={onAttributeAdd}
                         onAttributeDelete={onAttributeDelete}
