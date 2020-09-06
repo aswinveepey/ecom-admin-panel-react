@@ -607,7 +607,7 @@ export default function ProductDetailComp(props) {
                       <Suspense fallback={<div>Loading...</div>}>
                         <FilterAttributeComp
                           data={formControls.attributes}
-                          selectData={selectedCategory}
+                          selectData={selectedCategory?.filterattributes}
                           // label="Attributes"
                           onchangeAttribute={onchangeAttribute}
                           onAttributeAdd={onAttributeAdd}
