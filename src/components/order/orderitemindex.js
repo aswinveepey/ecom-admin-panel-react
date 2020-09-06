@@ -23,6 +23,7 @@ export default function OrderitemIndexComp(props) {
         <Table size="small" aria-label="orderitems" className={classes.table}>
           <TableHead>
             <TableRow>
+              <TableCell className={classes.tablecell}>ID</TableCell>
               <TableCell className={classes.tablecell}>Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Booked</TableCell>
@@ -38,7 +39,14 @@ export default function OrderitemIndexComp(props) {
           <TableBody>
             {props.data?.map((orderitem) => (
               <TableRow key={orderitem.shortid}>
-                <TableCell className={classes.tablecell} component="th" scope="row">
+                <TableCell
+                  className={classes.tablecell}
+                  component="th"
+                  scope="row"
+                >
+                  {orderitem.shortid}
+                </TableCell>
+                <TableCell>
                   {orderitem.sku?.product?.name + " " + orderitem.sku?.name}
                 </TableCell>
                 <TableCell>{orderitem.status}</TableCell>

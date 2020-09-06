@@ -7,7 +7,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import LoginFormComp from './loginform'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import UserService from "../../services/user";
+import { useHistory } from "react-router";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,21 +23,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props){
+export default function Login(props) {
   const classes = useStyles();
+  const history = useHistory(); //react router
+  const dispatch = useDispatch(); //send redux actions
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
-  const state = useSelector((state) => state.apiFeedbackReducer);
+  const apistate = useSelector((state) => state.apiFeedbackReducer);
+  const userState = useSelector((state) => state.userStateReducer);
 
   const tenantHeroFile = "hero-image-hhys.png";
   const tenantHero =
-    "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/"+tenantHeroFile;
+    "https://litcomassets.s3.ap-south-1.amazonaws.com/tenantassets/" +
+    tenantHeroFile;
 
   const handleSnackBarClose = () => {
     setSnackBarOpen(false);
   };
   React.useEffect(() => {
-      (state.apisuccess || state.apierror) && setSnackBarOpen(true);
-  }, [state]);
+    (apistate.apisuccess || apistate.apierror) && setSnackBarOpen(true);
+  }, [apistate]);
+
+  //get & set user state
+  React.useEffect(() => {
+    const userApi = new UserService(); //get user data
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    if (!userState.firstname) {
+      userApi
+        .getSelf(signal)
+        .then((data) => {
+          if (data) {
+            dispatch({
+              type: "SETUSER",
+              payLoad: data,
+            });
+            history && history.push("/home");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, []);
 
   return (
     <Grid container>
@@ -65,8 +97,8 @@ export default function Login(props){
           onClose={handleSnackBarClose}
         >
           <React.Fragment>
-            {state.apierror && (
-              <Alert severity="error">{state.apierror}</Alert>
+            {apistate.apierror && (
+              <Alert severity="error">{apistate.apierror}</Alert>
             )}
             <IconButton
               size="small"

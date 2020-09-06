@@ -6,7 +6,14 @@ export default class CategoryService {
   }
   //get all Categories
   getCategories = async (signal) => {
-    return await this.apiHelper.get({signal:signal, reqUrl:"category"});
+    return await this.apiHelper.get({ signal: signal, reqUrl: "category" });
+  };
+  //get one category
+  getOneSku = async ({signal, categoryId}) => {
+    return await this.apiHelper.get({
+      signal: signal,
+      reqUrl: "category/id/" + categoryId,
+    });
   };
   //serach all Categories
   searchCategories = async (signal, param) => {
