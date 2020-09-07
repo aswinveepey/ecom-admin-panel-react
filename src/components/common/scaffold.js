@@ -1,5 +1,6 @@
 import React from "react";
 import Paper from "@material-ui/core/Paper";
+import Cookies from "js-cookie";
 //Material ui core imports
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -107,6 +108,7 @@ export default function Scaffold(props) {
   //close profile menu
   const handleLogout = (e) => {
     e.preventDefault();
+    Cookies.remove("token")
     dispatch({
       type: "UNSETUSER",
     });
