@@ -30,7 +30,7 @@ export default function LeadIndexComp(params) {
       },
       {
         headerName: "Name",
-        valueGetter: (params) => params.data?.firstname + params.data?.lastname,
+        valueGetter: (params) => params.data?.firstname +" "+ params.data?.lastname,
       },
       {
         headerName: "Type",

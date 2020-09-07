@@ -34,7 +34,6 @@ import ImageUploadComp from "../../common/imageupload";
 //api import
 import SkuService from "../../../services/sku";
 import TerritoryService from "../../../services/territory";
-import { PropertyKeys } from "ag-grid-community";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
