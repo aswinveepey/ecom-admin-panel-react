@@ -259,6 +259,14 @@ export default function SkuDetailComp(props) {
                         onChange={(event) => onchangeLeadInput(event)}
                       />
                       <TextField
+                        value={formControls?.email || ""}
+                        label="Email"
+                        name="email"
+                        variant="standard"
+                        fullWidth
+                        onChange={(event) => onchangeLeadInput(event)}
+                      />
+                      <TextField
                         value={formControls?.gst || ""}
                         label="GST"
                         name="gst"
