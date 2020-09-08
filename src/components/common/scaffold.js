@@ -21,7 +21,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
 import DrawerComp from "./drawer"; //sidebar drawer
-import AppSearchComp from "./appsearch";
+// import AppSearchComp from "./appsearch";
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import UserService from "../../services/user";
@@ -70,7 +70,7 @@ export default function Scaffold(props) {
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
-  const [search, setSearch] = React.useState(true);
+  // const [search, setSearch] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState();
   const [loading, setLoading] = React.useState(false);
 

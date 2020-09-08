@@ -10,7 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Chip from "@material-ui/core/Chip"
 import GetAppIcon from "@material-ui/icons/GetApp";
 //styles - Material UI
-import { makeStyles, formatMs } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import DataService from "../../services/data";
 

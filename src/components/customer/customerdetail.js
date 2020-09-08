@@ -43,15 +43,8 @@ export default function CustomerDetailComp(props){
   const [formControls, setFormControls] = React.useState([]);
   const [accounts, setAccounts] = React.useState([]);
   const [accountSearchString, setAccountSearchString] = React.useState("");
-  const [customerTypes,setCustomerTypes] = React.useState([
-    { value: "Regular", label: "Regular" },
-    { value: "Business", label: "Business" },
-  ]) 
-  const [genderOptions, setGenderOPtions] = React.useState([
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
-    { value: "Other", label: "Other" },
-  ]);
+  const [customerTypes,setCustomerTypes] = React.useState([]) 
+  const [genderOptions, setGenderOptions] = React.useState();
   const [addressFormOpen, setAddressFormOpen] = React.useState(false);
   //handle dialog close - call parent function
   const handleClose = () => {
@@ -152,6 +145,15 @@ export default function CustomerDetailComp(props){
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
+    setCustomerTypes([
+      { value: "Regular", label: "Regular" },
+      { value: "Business", label: "Business" },
+    ]);
+    setGenderOptions([
+      { value: "Male", label: "Male" },
+      { value: "Female", label: "Female" },
+      { value: "Other", label: "Other" },
+    ]);
   }, [props.data]);
   //get account from search string
   React.useEffect(()=>{

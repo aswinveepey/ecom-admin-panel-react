@@ -73,19 +73,9 @@ export default function SkuDetailComp(props) {
   const [users, setUsers] = React.useState([]);
   const [accountSearchString, setAccountSearchString] = React.useState("");
   const [userSearchString, setUserSearchString] = React.useState("");
-  const [leadTypes, setLeadTypes] = React.useState([
-    { value: "Regular", label: "Regular" },
-    { value: "Business", label: "Business" },
-  ]);
-  const [sources, setSources] = React.useState([
-    { value: "walkin", label: "Walkin" },
-    { value: "walkin", label: "Website" },
-  ]);
-  const [scores, setScores] = React.useState([
-    { value: "hot", label: "Hot" },
-    { value: "warm", label: "Warm" },
-    { value: "cold", label: "Cold" },
-  ]);
+  const [leadTypes, setLeadTypes] = React.useState([]);
+  const [sources, setSources] = React.useState([]);
+  const [scores, setScores] = React.useState();
 
   //handle dialog close - call parent function
   const handleClose = () => {
@@ -157,6 +147,19 @@ export default function SkuDetailComp(props) {
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
+    setLeadTypes([
+      { value: "Regular", label: "Regular" },
+      { value: "Business", label: "Business" },
+    ]);
+    setSources([
+      { value: "walkin", label: "Walkin" },
+      { value: "walkin", label: "Website" },
+    ]);
+    setScores([
+      { value: "hot", label: "Hot" },
+      { value: "warm", label: "Warm" },
+      { value: "cold", label: "Cold" },
+    ]);
   }, [props.data]);
   //get account from search string
   React.useEffect(() => {

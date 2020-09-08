@@ -50,7 +50,7 @@ export default function OrderComp(props) {
   const [bookedData, setBookedData] = React.useState([]);
   const [confirmedData, setConfirmedData] = React.useState([]);
   const [shippedData, setShippedData] = React.useState([]);
-  const [processedData, setProcessedData] = React.useState([]);
+  // const [processedData, setProcessedData] = React.useState([]);
   const [orderSearch, setOrderSearch] = React.useState("");
   const [orderDetailOpen, setOrderDetailOpen] = React.useState(false);
   const [orderFilterStartDate, setOrderFilterStartDate] = React.useState(moment().subtract(5, "days"))

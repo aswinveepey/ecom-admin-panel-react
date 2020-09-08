@@ -22,7 +22,7 @@ export default function UserCardList(props) {
 
   const [userData, setUserData] = React.useState([]);
   const [fetchStatus, setFetchStatus] = React.useState("loading");
-  const [selectedId, setSelectedId] = React.useState();
+  // const [selectedId, setSelectedId] = React.useState();
 
   React.useEffect(() => {
     const userService = new UserService();
@@ -39,10 +39,10 @@ export default function UserCardList(props) {
     };
   }, []);
 
-  const handleCardClick = async (userId, e) => {
+  const handleCardClick = (userId, e) => {
     e.preventDefault();
-    setSelectedId(userId);
-    await props.onSelect(userId);
+    // setSelectedId(userId);
+    props.onSelect(userId);
   };
   return (
     <React.Fragment>
