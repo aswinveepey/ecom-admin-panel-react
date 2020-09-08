@@ -195,6 +195,10 @@ export default function CollectionDetailComp(props) {
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
+    const controls = { ...formControls };
+    controls["startdate"] = controls["startdate"] || Date.now();
+    controls["enddate"] = controls["enddate"] || Date.now();
+    setFormControls(controls);
     setTypeOptions([
       { value: "Category", label: "Category" },
       { value: "Sku", label: "Sku" },
