@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import moment from "moment";
 //api import
 import CollectionServices from "../../../services/collection";
 
@@ -36,6 +37,18 @@ export default function CollectionIndexComp(params) {
       {
         headerName: "Name",
         valueGetter: (params) => params.data?.name,
+      },
+      {
+        headerName: "Status",
+        valueGetter: (params) => params.data?.status?"Active":"Inactive",
+      },
+      {
+        headerName: "Start Date",
+        valueGetter: (params) => moment(params.data?.startdate).format("LLLL"),
+      },
+      {
+        headerName: "End Date",
+        valueGetter: (params) => moment(params.data?.enddate).format("LLLL"),
       },
       {
         headerName: "Last Updated At",
