@@ -24,6 +24,11 @@ export default function CustomerIndexComp(props){
     },
     columnDefs: [
       {
+        headerName: "ID",
+        valueGetter: (params) =>
+          params.data?.shortid,
+      },
+      {
         headerName: "Name",
         valueGetter: (params) =>
           params.data?.firstname + " " + params.data?.lastname,

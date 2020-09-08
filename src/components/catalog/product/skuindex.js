@@ -30,10 +30,10 @@ export default function SKUIndeComp(props){
     <React.Fragment>
       <TableContainer>
         <Button
-          color="primary"
           variant="outlined"
           aria-label="add"
-          onClick={openSkuDetail.bind(this, { product: props.product_id })}
+          color="secondary"
+          onClick={openSkuDetail.bind(this, { product: props.product?._id })}
         >
           Add SKU
         </Button>
@@ -77,6 +77,7 @@ export default function SKUIndeComp(props){
           open={skuDetailOpen}
           handleClose={closeSkuDetail}
           data={skuDetailData}
+          product={props?.product}
         />
       </Suspense>
     </React.Fragment>

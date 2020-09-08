@@ -1,6 +1,5 @@
 import React from 'react'
-//cookie library import
-import Cookies from "js-cookie";
+
 //material ui core import
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { fade, makeStyles } from "@material-ui/core/styles";
@@ -10,10 +9,9 @@ import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
+
 //history hook
-// import { useHistory } from "react-router-dom";
-//relative imports
-import { BASE_URL } from "../../constants";
+import SearchService from "../../services/search"
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -69,14 +67,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AppSearchComp(props) {
   const classes = useStyles();
-  const [search, setSearch] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState("");
   const [options, setOptions] = React.useState([]);
-  const token = Cookies.get("token");
+  
   // const history = useHistory();
   //handle search changes
   function handleSearchChange(event){
     event.preventDefault();
-    setSearch(event.target.value);
+    setSearchTerm(event.target.value);
   }
   //handle input changes
   // function handleInputChange(data) {
@@ -86,35 +84,19 @@ export default function AppSearchComp(props) {
   // }
 
   //useeffect
-  React.useEffect(()=>{
+  React.useEffect(() => {
+    const searchService = new SearchService();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
     // console.log(search);
-    if(search.length>3){
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ searchString: search }),
-      };
-      try {
-        fetch(BASE_URL + "search/user/", requestOptions, { signal: signal })
-          .then(async (data) => {
-            const response = await data.json();
-            // console.log(response);
-            setOptions(response.data);
-            // console.log(options)
-          })
-          .catch((err) => console.log(err));
-      } catch (error) {}
+    if (searchTerm.length > 3) {
+      searchService.search(signal, searchTerm).then((data) => setOptions(data)).catch(err=>console.log(err));
     }
     return function cleanup() {
       abortController.abort();
     };
-  },[search, token])
+  }, [searchTerm]);
   //return
   return (
     <div className={classes.search}>
@@ -177,7 +159,7 @@ export default function AppSearchComp(props) {
               type="text"
               ref={InputProps.ref}
               placeholder="Search…"
-              value={search}
+              value={searchTerm}
               onChange={(event) => handleSearchChange(event)}
               label="Search"
               classes={{

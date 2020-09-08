@@ -1,8 +1,17 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  infoBox: {
+    // height: "30vh !important",
+    padding: 10,
+  },
+}));
 
 export default function CustomerDoughnut(props) {
+  const classes = useStyles(); //use styles
   const [customerData, setCustomerData] = React.useState([]);
 
   const doughnut = {
@@ -31,10 +40,10 @@ export default function CustomerDoughnut(props) {
 
   React.useEffect(() => {
     props.data && setCustomerData(props.data);
-  }, [props]);
+  }, [props.data]);
 
   return (
-    <Paper className="chart-box">
+    <Paper className={classes.infoBox}>
       <Doughnut data={doughnut.data} options={doughnut.options} />
     </Paper>
   );

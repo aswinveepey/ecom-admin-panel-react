@@ -21,16 +21,19 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
+import InputAdornment from "@material-ui/core/InputAdornment";
 //Component import
 import SingleAttributeComp from "../../common/singleattribute";
+import FilterAttributeComp from "../../common/filterattribute";
 import ImageUploadComp from "../../common/imageupload";
 //api import
-import SkuService from "../../../services/sku"
-import TerritoryService from "../../../services/territory"
+import SkuService from "../../../services/sku";
+import TerritoryService from "../../../services/territory";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -78,14 +81,20 @@ const useStyles = makeStyles((theme) => ({
   addimgbase: {
     margin: "auto",
   },
+  // dialog: {
+  //   minHeight: "90vh",
+  //   maxHeight: "90vh",
+  //   marginTop:"auto",
+  //   marginLeft:"auto",
+  // },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const skuService = new SkuService()
-const territoryService = new TerritoryService()
+const skuService = new SkuService();
+const territoryService = new TerritoryService();
 
 export default function SkuDetailComp(props) {
   const classes = useStyles();
@@ -117,25 +126,31 @@ export default function SkuDetailComp(props) {
     setTerritorySearchString(event.target.value);
   };
   //Change SKU Inventory
-  const onChangeInventory = (index, event, territory) => {
+  const onChangeInventory = (index, event) => {
     event.preventDefault();
-    // const name = event.target.name;
+
     const value = event.target.value;
     const name = event.target.name;
     const controls = { ...formControls };
     controls.inventory = controls.inventory || [];
-    if (territory){
-      controls.inventory[index]["territory"] = territory;
+
+    if (name === "status") {
+      controls.inventory[index]["status"] = event.target.checked;
     } else {
-      if (name === "status") {
-        controls.inventory[index][name] = event.target.checked;
-      } else {
-        controls[name] = value;
-      }
       controls.inventory[index][name] = value;
     }
     setFormControls(controls);
   };
+
+  const changeInventoryTerritory = (index, event, territory )=> {
+    
+    event.preventDefault();
+    const controls = { ...formControls };
+    controls.inventory = controls.inventory || [];
+    controls.inventory[index]["territory"] = territory;
+    setFormControls(controls);
+
+  }
   //Add new SKU Inentory
   const onAddInventory = (event) => {
     event.preventDefault();
@@ -275,13 +290,16 @@ export default function SkuDetailComp(props) {
 
   React.useEffect(() => {
     setOpen(props.open);
-    if(props.data._id){
+    if (props.data._id) {
       // for edit option set sku id and retrieve data
       setSkuId(props.data._id);
     } else {
-      // for new creation set product & create 
-      setFormControls(props.data)
+      // for new creation set product & create
+      setFormControls(props.data);
     }
+  }, [props.data, props.open]);
+
+  React.useEffect(() => {
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -294,7 +312,7 @@ export default function SkuDetailComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [props, skuId]);
+  }, [skuId]);
 
   //handle territorys search for inventory
   React.useEffect(() => {
@@ -317,12 +335,12 @@ export default function SkuDetailComp(props) {
   };
   //handle submit
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
     //set request options
-    if (formControls._id){
+    if (formControls._id) {
       skuService
         .updateSku(signal, formControls)
         .then((data) => handleClose())
@@ -342,6 +360,7 @@ export default function SkuDetailComp(props) {
     <React.Fragment>
       <Dialog
         fullScreen
+        className={classes.dialog}
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
@@ -362,7 +381,7 @@ export default function SkuDetailComp(props) {
               <Typography variant="subtitle1" className={classes.title}>
                 {formControls?.name || "Add SKU"}
               </Typography>
-              <Button autoFocus color="inherit" type="submit">
+              <Button color="inherit" type="submit">
                 save changes
               </Button>
             </Toolbar>
@@ -381,7 +400,7 @@ export default function SkuDetailComp(props) {
                   </Typography>
                   <Grid container spacing={1}>
                     {/* Add sku image grid */}
-                    <Grid item md={2} xs={6}>
+                    <Grid item md={3} xs={6}>
                       <Card variant="outlined" className={classes.imagecard}>
                         {/* Button base covers card content to make whole card clickable */}
                         <ButtonBase
@@ -398,7 +417,7 @@ export default function SkuDetailComp(props) {
                     </Grid>
                     {/* if images loop and display with edit & display */}
                     {formControls?.assets?.imgs?.map((img, index) => (
-                      <Grid item md={2} xs={6} key={index}>
+                      <Grid item md={3} xs={6} key={index}>
                         <Card variant="outlined" className={classes.imagecard}>
                           <CardContent className={classes.imagecardcontent}>
                             <img
@@ -422,7 +441,7 @@ export default function SkuDetailComp(props) {
                         </Card>
                       </Grid>
                     ))}
-                    <Grid item md={2} xs={6}>
+                    <Grid item md={3} xs={6}>
                       {formControls?.assets?.thumbnail ? (
                         <Card variant="outlined">
                           <CardHeader subheader="Thumbnail" />
@@ -485,6 +504,13 @@ export default function SkuDetailComp(props) {
                         fullWidth
                         required
                         onChange={onchangeSku}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {props?.product?.name}
+                            </InputAdornment>
+                          ),
+                        }}
                         value={formControls?.name || ""}
                       />
                       {/* SKU Status */}
@@ -522,6 +548,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.mrp || 0}
                       />
                       <TextField
@@ -532,6 +559,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.discount || 0}
                       />
                       <TextField
@@ -542,6 +570,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.sellingprice || 0}
                       />
                       <TextField
@@ -552,6 +581,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.purchaseprice || 0}
                       />
                       <TextField
@@ -562,6 +592,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.shippingcharges || 0}
                       />
                       <TextField
@@ -572,6 +603,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangePrice}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.price?.installationcharges || 0}
                       />
                       <TextField
@@ -582,6 +614,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangeBulkdiscount}
+                        inputProps={{ min: 0 }}
                         value={formControls?.bulkdiscount?.threshold || 0}
                       />
                       <TextField
@@ -592,6 +625,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangeBulkdiscount}
+                        inputProps={{ min: 0, step: "any" }}
                         value={formControls?.bulkdiscount?.discount || 0}
                       />
                       <TextField
@@ -602,6 +636,7 @@ export default function SkuDetailComp(props) {
                         required
                         type="number"
                         onChange={onChangeQuantityrules}
+                        inputProps={{ min: 0 }}
                         value={formControls?.quantityrules?.minorderqty || 0}
                       />
                       <TextField
@@ -612,6 +647,7 @@ export default function SkuDetailComp(props) {
                         fullWidth
                         type="number"
                         onChange={onChangeQuantityrules}
+                        inputProps={{ min: 0 }}
                         value={formControls?.quantityrules?.maxorderqty || 0}
                       />
                       {/* Min Order Qty Multiple Flag comes here */}
@@ -655,146 +691,179 @@ export default function SkuDetailComp(props) {
                       >
                         Add Inventory
                       </Button>
-                      <Table>
-                        <TableBody>
-                          {formControls?.inventory?.map((data, index) => (
-                            <TableRow key={index}>
-                              <TableCell width="20%">
-                                <Autocomplete
-                                  options={territories}
-                                  freeSolo
-                                  value={data.territory || ""}
-                                  getOptionLabel={(option) =>
-                                    typeof option === "string"
-                                      ? option
-                                      : option.name
-                                  }
-                                  getOptionSelected={(option, value) =>
-                                    option ? option.name === value.name : false
-                                  }
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  renderInput={(params) => (
-                                    <TextField
-                                      {...params}
-                                      label="Territory"
-                                      name="territory"
-                                      variant="standard"
-                                      required
-                                      onChange={onChangeTerritorySearch}
-                                    />
-                                  )}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Quantity"
-                                  variant="standard"
-                                  name="quantity"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.quantity || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="MRP"
-                                  variant="standard"
-                                  name="mrp"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.mrp || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Discount"
-                                  variant="standard"
-                                  name="discount"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.discount || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Selling"
-                                  variant="standard"
-                                  name="sellingprice"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.sellingprice || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Purchase"
-                                  variant="standard"
-                                  name="purchaseprice"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.purchaseprice || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Shipping"
-                                  variant="standard"
-                                  name="shippingcharges"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.shippingcharges || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  label="Installation"
-                                  variant="standard"
-                                  name="installationcharges"
-                                  fullWidth
-                                  type="number"
-                                  required
-                                  onChange={onChangeInventory.bind(this, index)}
-                                  value={data?.installationcharges || 0}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      name="status"
-                                      size="small"
-                                      checked={
-                                        data?.status === undefined
-                                          ? true
-                                          : data?.status
-                                      }
-                                      onChange={onChangeInventory.bind(
-                                        this,
-                                        index
-                                      )}
-                                      color="primary"
-                                    />
-                                  }
-                                  label="Status"
-                                  labelPlacement="end"
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                      <TableContainer>
+                        <Table>
+                          <TableBody>
+                            {formControls?.inventory?.map((data, index) => (
+                              <TableRow key={index}>
+                                <TableCell width="20%">
+                                  <Autocomplete
+                                    options={territories}
+                                    freeSolo
+                                    value={data.territory || ""}
+                                    getOptionLabel={(option) =>
+                                      typeof option === "string"
+                                        ? option
+                                        : option.name
+                                    }
+                                    getOptionSelected={(option, value) =>
+                                      option ? option._id === value._id : false
+                                    }
+                                    onChange={changeInventoryTerritory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        label="Territory"
+                                        name="territory"
+                                        variant="standard"
+                                        required
+                                        onChange={onChangeTerritorySearch}
+                                      />
+                                    )}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Quantity"
+                                    variant="standard"
+                                    name="quantity"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0 }}
+                                    value={data?.quantity || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="MRP"
+                                    variant="standard"
+                                    name="mrp"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.mrp || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Discount"
+                                    variant="standard"
+                                    name="discount"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.discount || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Selling"
+                                    variant="standard"
+                                    name="sellingprice"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.sellingprice || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Purchase"
+                                    variant="standard"
+                                    name="purchaseprice"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.purchaseprice || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Shipping"
+                                    variant="standard"
+                                    name="shippingcharges"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.shippingcharges || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    label="Installation"
+                                    variant="standard"
+                                    name="installationcharges"
+                                    fullWidth
+                                    type="number"
+                                    required
+                                    onChange={onChangeInventory.bind(
+                                      this,
+                                      index
+                                    )}
+                                    inputProps={{ min: 0, step: "any" }}
+                                    value={data?.installationcharges || 0}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <FormControlLabel
+                                    control={
+                                      <Switch
+                                        name="status"
+                                        size="small"
+                                        checked={
+                                          data?.status === undefined
+                                            ? true
+                                            : data?.status
+                                        }
+                                        onChange={onChangeInventory.bind(
+                                          this,
+                                          index
+                                        )}
+                                        color="primary"
+                                      />
+                                    }
+                                    label="Status"
+                                    labelPlacement="end"
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </Paper>
                   </Grid>
                   {/* Attribute Section */}
@@ -807,8 +876,9 @@ export default function SkuDetailComp(props) {
                         SKU selection attributes - Use attributes defined as
                         product variant attributes
                       </Typography>
-                      <SingleAttributeComp
+                      <FilterAttributeComp
                         data={formControls?.attributes}
+                        selectData={props?.product?.variantattributes}
                         onchangeAttribute={onChangeAttribute}
                         onAttributeAdd={onAttributeAdd}
                         onAttributeDelete={onAttributeDelete}

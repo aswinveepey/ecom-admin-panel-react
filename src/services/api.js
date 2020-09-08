@@ -1,45 +1,73 @@
-import { BASE_URL } from "../constants";
+import { BASE_URL, TENANT_ID } from "../constants";
 import Cookies from "js-cookie";
-import store from "../store"
+import store from "../store";
 
-export default function ApiHelper(){
-
+export default function ApiHelper() {
   const headers = {
-                      "Content-Type": "application/json",
-                      Authorization: Cookies.get("token"),
-                    }
-  const get = async (signal, reqUrl)=>{
+    "Content-Type": "application/json",
+    Authorization: Cookies.get("token"),
+  };
+
+  //get requests
+  const get = async ({ signal, reqUrl, reqParams = "" }) => {
     const requestOptions = {
       method: "GET",
       headers: headers,
     };
-    const fetchurl = BASE_URL + reqUrl;
+    const fetchurl =
+      BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" + reqParams;
+
+    store.dispatch({
+      type: "APILOADING",
+    });
+
     const response = await fetch(fetchurl, requestOptions, { signal: signal });
+
+    store.dispatch({
+      type: "APICALLEND",
+    });
+
     const { status } = response;
     const responseData = await response.json();
+
     if (status === 200) {
       return responseData.data;
     }
-    const payload =
-      typeof responseData.message === "string"
-        ? responseData.message
-        : "Unknown Error Occurred";
-    store.dispatch({
-      type: "APIERROR",
-      payLoad: payload,
-    });
-    if (responseData.message) {
-      throw new Error(responseData.message);
+
+    if (responseData.error) {
+      store.dispatch({
+        type: "APIERROR",
+        payLoad:
+          typeof responseData.error === "string"
+            ? responseData.error
+            : "Unknown Error Occurred",
+      });
+      throw new Error(responseData.error);
     }
-  }
-  const post = async (signal, reqUrl, reqBody) => {
+  };
+
+  //post requests
+  const post = async ({ signal, reqUrl, reqParams = "", reqBody = {} }) => {
     const requestOptions = {
       method: "POST",
       headers: headers,
       body: reqBody,
     };
-    const fetchurl = BASE_URL + reqUrl;
-    const response = await fetch(fetchurl, requestOptions, { signal: signal });
+    const fetchurl =
+      BASE_URL + reqUrl + "?tenantId=" + TENANT_ID + "&" + reqParams;
+
+    store.dispatch({
+      type: "APILOADING",
+    });
+
+    const response = await fetch(fetchurl, requestOptions, {
+      signal: signal,
+    });
+
+    store.dispatch({
+      type: "APICALLEND",
+    });
+
     const { status } = response;
     const responseData = await response.json();
     if (status === 200) {
@@ -50,17 +78,25 @@ export default function ApiHelper(){
         });
       return responseData.data;
     }
-    const payload =
-      typeof responseData.message === "string"
-        ? responseData.message
-        : "Unknown Error Occurred";
-    store.dispatch({
-      type: "APIERROR",
-      payLoad: payload,
-    });
-    if (responseData.message) {
-      throw new Error(responseData.message);
+
+    if (responseData.error) {
+      store.dispatch({
+        type: "APIERROR",
+        payLoad:
+          typeof responseData.error === "string"
+            ? responseData.error
+            : "Unknown Error Occurred",
+      });
+      throw new Error(responseData.error);
     }
+    // if (responseData.errors) {
+    //   responseData.errors.map((error) =>
+    //     store.dispatch({
+    //       type: "APIERROR",
+    //       payLoad: error.msg,
+    //     })
+    //   );
+    // }
   };
-  return{get,post}
+  return { get, post };
 }

@@ -1,10 +1,17 @@
 import React from 'react'
 import { Line } from "react-chartjs-2";
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
+import { makeStyles } from "@material-ui/core/styles";
 
-export default function GmvTimeSeriesComp (props){
+const useStyles = makeStyles((theme) => ({
+  infoBox: {
+    // height: "30vh !important",
+    padding: 10,
+  },
+}));
+
+export default function GmvTimeSeriesComp(props) {
+  const classes = useStyles(); //use styles
   const [gmvTimeSeries, setGmvTimeSeries] = React.useState([]);
 
   const line = {
@@ -33,13 +40,12 @@ export default function GmvTimeSeriesComp (props){
       maintainAspectRatio: false,
     },
   };
-  React.useEffect(()=>{
+  React.useEffect(() => {
     props.data && setGmvTimeSeries(props.data);
-  },[props])
-    return (
-      <Paper className="chart-box">
-        <Typography gutterBottom={true} variant="h6"></Typography>
-        <Line data={line.data} options={line.options} height={200} />
-      </Paper>
-    );
+  }, [props.data]);
+  return (
+    <Paper className={classes.infoBox}>
+      <Line data={line.data} options={line.options} height={200} />
+    </Paper>
+  );
 }

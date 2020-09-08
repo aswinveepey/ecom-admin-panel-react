@@ -9,10 +9,13 @@ import { useSelector } from "react-redux";
 const Login = lazy(() => import("./components/login/login.js"));
 const Home = lazy(() => import("./components/home/home.js"));
 const OrderComp = lazy(() => import("./components/order/order.js"));
-const UserComp = lazy(() => import("./components/admin/user/user"));
+// const UserComp = lazy(() => import("./components/admin/user/user"));
 const CustomerComp = lazy(() => import("./components/customer/customer"));
 const CatalogComp = lazy(() => import("./components/catalog/catalog"));
+const Merchandizingomp = lazy(() => import("./components/merchandizing/merchandizing"));
 const AdminComp = lazy(() => import("./components/admin/admin"));
+const BulkOperationsComp = lazy(() => import("./components/bulkoperations/bulkoperation"));
+const CustomerRelationsComp = lazy(() => import("./components/customerrelations/customerrelation"));
 const NotFoundComp = lazy(() => import("./components/404"));
 
 export default function App() {
@@ -30,7 +33,22 @@ export default function App() {
               {/* <Route exact path="/user/:userid" component={UserComp}></Route> */}
               <Route exact path="/customer" component={CustomerComp}></Route>
               <Route exact path="/catalog" component={CatalogComp}></Route>
+              <Route
+                exact
+                path="/merchandizing"
+                component={Merchandizingomp}
+              ></Route>
               <Route exact path="/admin" component={AdminComp}></Route>
+              <Route
+                exact
+                path="/bulkoperations"
+                component={BulkOperationsComp}
+              ></Route>
+              <Route
+                exact
+                path="/customerrelations"
+                component={CustomerRelationsComp}
+              ></Route>
               <Route component={NotFoundComp}></Route>
             </Switch>
           </Scaffold>

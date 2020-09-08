@@ -6,25 +6,33 @@ export default class RoleService {
   }
   //get all roles
   getRoles = async (signal) => {
-    return await this.apiHelper.get(signal, "role");
+    return await this.apiHelper.get({ signal: signal, reqUrl: "role" });
   };
   //serach all roles
   searchRoles = async (signal, param) => {
     const reqBody = JSON.stringify({ searchString: param });
-    return await this.apiHelper.post(signal, "role/search", reqBody);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "role/search",
+      reqBody: reqBody,
+    });
   };
   //Create a new Role
   createRole = async (signal, param) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.post(signal, "role/", reqBody);
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "role/",
+      reqBody: reqBody,
+    });
   };
   //Update a Role
   updateRole = async (signal, param) => {
     const reqBody = JSON.stringify(param);
-    return await this.apiHelper.post(
-      signal,
-      "role/id/" + param._id,
-      reqBody
-    );
+    return await this.apiHelper.post({
+      signal: signal,
+      reqUrl: "role/id/" + param._id,
+      reqBody: reqBody,
+    });
   };
 }

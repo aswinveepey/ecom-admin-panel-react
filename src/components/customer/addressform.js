@@ -12,7 +12,7 @@ export default function AddressFormComp(props){
   
   React.useEffect(()=>{
     props.data && setData(props.data)
-  },[props])
+  },[props.data])
 
   const handleClose = ()=>{
     props.handleClose();

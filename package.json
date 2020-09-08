@@ -25,7 +25,9 @@
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
+    "react-papaparse": "^3.7.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.4.1",
@@ -36,7 +38,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": " env-cmd -f .env react-scripts start",
-    "build": "env-cmd -f .env react-scripts build",
+    "build": "react-scripts build",
     "build-ci": "react-scripts build",
     "build-dev": "env-cmd -f .env.development react-scripts build",
     "build-prod": "env-cmd -f .env.production react-scripts build",

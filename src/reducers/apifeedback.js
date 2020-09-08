@@ -3,16 +3,47 @@ const apiFeedbackReducer = (state, action)=>{
     case "APISUCCESS":
       return {
         ...state,
-        apisuccess: action.payLoad,
+        apistate: {
+          apisuccess: action.payLoad,
+          apierror: null,
+          apiloading: null,
+        },
       };
     case "APIERROR":
       return {
         ...state,
-        apierror: action.payLoad,
+        apistate: {
+          apisuccess: null,
+          apierror: action.payload,
+          apiloading: null,
+        },
+      };
+    case "APILOADING":
+      return {
+        ...state,
+        apistate: {
+          apisuccess: null,
+          apierror: null,
+          apiloading: true,
+        },
+      };
+    case "APICALLEND":
+      return {
+        ...state,
+        apistate: {
+          apisuccess: null,
+          apierror: null,
+          apiloading: null,
+        },
       };
     default:
       return {
         ...state,
+        apistate: {
+          apisuccess: null,
+          apierror: null,
+          apiloading: null,
+        },
       };
   }
 }

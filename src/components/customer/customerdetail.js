@@ -19,6 +19,9 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AddIcon from "@material-ui/icons/Add";
 //styles - Material UI
 import { makeStyles } from "@material-ui/core/styles";
+// date picker
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 
 import CustomerService from "../../services/customer";
 import AccountService from "../../services/account";
@@ -40,15 +43,8 @@ export default function CustomerDetailComp(props){
   const [formControls, setFormControls] = React.useState([]);
   const [accounts, setAccounts] = React.useState([]);
   const [accountSearchString, setAccountSearchString] = React.useState("");
-  const [customerTypes,setCustomerTypes] = React.useState([
-    { value: "Regular", label: "Regular" },
-    { value: "Business", label: "Business" },
-  ]) 
-  const [genderOptions, setGenderOPtions] = React.useState([
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
-    { value: "Other", label: "Other" },
-  ]);
+  const [customerTypes,setCustomerTypes] = React.useState([]) 
+  const [genderOptions, setGenderOptions] = React.useState();
   const [addressFormOpen, setAddressFormOpen] = React.useState(false);
   //handle dialog close - call parent function
   const handleClose = () => {
@@ -141,10 +137,24 @@ export default function CustomerDetailComp(props){
     event.preventDefault();
     setAccountSearchString(event.target.value);
   };
+  const changeCustomerBirthday = (date) => {
+    const controls = { ...formControls };
+    controls["birthday"] = date;
+    setFormControls(controls);
+  };
   //set form controls from props
   React.useEffect(() => {
     setFormControls(props.data);
-  }, [props]);
+    setCustomerTypes([
+      { value: "Regular", label: "Regular" },
+      { value: "Business", label: "Business" },
+    ]);
+    setGenderOptions([
+      { value: "Male", label: "Male" },
+      { value: "Female", label: "Female" },
+      { value: "Other", label: "Other" },
+    ]);
+  }, [props.data]);
   //get account from search string
   React.useEffect(()=>{
     const abortController = new AbortController();
@@ -212,20 +222,22 @@ export default function CustomerDetailComp(props){
                   ))}
                 </TextField>
               </Grid>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <Grid item>
+                  <DatePicker
+                    inputVariant="standard"
+                    variant="inline"
+                    label="Date of Birth"
+                    name="startdate"
+                    fullWidth
+                    value={formControls?.birthday || ""}
+                    onChange={changeCustomerBirthday}
+                  />
+                </Grid>
+              </MuiPickersUtilsProvider>
               <Grid item>
                 <TextField
-                  value={formControls?.birthday?.substring(0, 10)}
-                  label="Date of Birth"
-                  name="birthday"
-                  variant="standard"
-                  type="date"
-                  fullWidth
-                  onChange={(event) => onchangeCustomerInput(event)}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  value={formControls?.contactnumber}
+                  value={formControls?.contactnumber || ""}
                   label="Contact Mobile"
                   name="contactnumber"
                   variant="standard"

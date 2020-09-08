@@ -1,25 +1,27 @@
 import React from "react";
 import Paper from "@material-ui/core/Paper";
+import Cookies from "js-cookie";
 //Material ui core imports
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer"
+import Drawer from "@material-ui/core/Drawer";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import CloseIcon from "@material-ui/icons/Close";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import LinearProgress from "@material-ui/core/LinearProgress";
 //Material Icon Imports
 import MenuIcon from "@material-ui/icons/Menu";
 //styles import
 import { makeStyles } from "@material-ui/core/styles";
 //Relative imports
 import DrawerComp from "./drawer"; //sidebar drawer
-import AppSearchComp from './appsearch'
+// import AppSearchComp from "./appsearch";
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import UserService from "../../services/user";
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     padding: "1%",
     minHeight: "70vh",
-    overflow:"auto"
+    overflow: "auto",
   },
   content: {
     flexGrow: 1,
@@ -64,25 +66,25 @@ const useStyles = makeStyles((theme) => ({
 export default function Scaffold(props) {
   const classes = useStyles(); //use styles
   const dispatch = useDispatch(); //send redux actions
-  const userApi = new UserService(); //get user data
   const history = useHistory(); //react router
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [snackBarOpen, setSnackBarOpen] = React.useState(false);
-  const [search, setSearch] = React.useState(true);
+  // const [search, setSearch] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState();
+  const [loading, setLoading] = React.useState(false);
 
   //consume redux events
-  const apifeedbackState = useSelector((state) => state.apiFeedbackReducer);
+  const apifeedbackState = useSelector((state) => state.apiFeedbackReducer.apistate);
   const userState = useSelector((state) => state.userStateReducer);
 
   // sidebar open
-  const handleDrawerToggle = ()=>{
+  const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
-  }
+  };
 
   //close snackbar - manual & clear redux api states
-  const handleSnackBarClose = ()=>{
+  const handleSnackBarClose = () => {
     setSnackBarOpen(false);
     dispatch({
       type: "APIERROR",
@@ -92,12 +94,12 @@ export default function Scaffold(props) {
       type: "APISUCCESS",
       payLoad: null,
     });
-  }
+  };
   //open profile menu
-  const handleProfileMenuClick = (e)=>{
-    e.preventDefault()
-    setAnchorEl(e.currentTarget);  
-  }
+  const handleProfileMenuClick = (e) => {
+    e.preventDefault();
+    setAnchorEl(e.currentTarget);
+  };
   //close profile menu
   const handleProfileMenuClose = (e) => {
     e.preventDefault();
@@ -106,6 +108,7 @@ export default function Scaffold(props) {
   //close profile menu
   const handleLogout = (e) => {
     e.preventDefault();
+    Cookies.remove("token")
     dispatch({
       type: "UNSETUSER",
     });
@@ -114,23 +117,30 @@ export default function Scaffold(props) {
   };
   //watch redux api feedback state
   React.useEffect(() => {
-    (apifeedbackState.apisuccess || apifeedbackState.apierror) &&
+    if (apifeedbackState.apisuccess || apifeedbackState.apierror) {
       setSnackBarOpen(true);
+      setLoading(false);
+    }
+    apifeedbackState.apiloading && setLoading(true);
   }, [apifeedbackState]);
-  
+
   //get & set user state
   React.useEffect(() => {
+    const userApi = new UserService(); //get user data
     const abortController = new AbortController();
     const signal = abortController.signal;
     if (!userState.firstname) {
       userApi
         .getSelf(signal)
         .then((data) => {
-          data && dispatch({
-            type: "SETUSER",
-            payLoad: data,
-          });
-          !data && history && history.push("/");
+            if(data){
+              dispatch({
+                type: "SETUSER",
+                payLoad: data,
+              });
+            } else {
+              history && history.push("/");
+            }
         })
         .catch((err) => {
           console.log(err);
@@ -139,7 +149,7 @@ export default function Scaffold(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [userState.firstname]);
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -194,12 +204,15 @@ export default function Scaffold(props) {
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </div>
-          {search && <AppSearchComp />}
+          {/* {search && <AppSearchComp />} */}
         </Toolbar>
       </AppBar>
       {/* Main Component - handle children */}
       <main className={classes.content}>
-        <Paper className={classes.raisedpaper}>{props.children}</Paper>
+        <Paper className={classes.raisedpaper}>
+          {apifeedbackState.apiloading && (<LinearProgress />)}
+          {props.children}
+        </Paper>
       </main>
       {/* SnackBar */}
       <Snackbar

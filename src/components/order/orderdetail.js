@@ -18,7 +18,7 @@ import {useDispatch} from "react-redux"
 //lazy import component - enables code splitting. Ensure suspense hoc
 const OrderitemDetailComp = React.lazy(() => import("./orderitemdetail"));
 const CustomerDisplayComp = React.lazy(() => import("./customercomp"));
-const SelectSKU = React.lazy(() => import("./selectsku"));
+const SelectSKU = React.lazy(() => import("../common/selectsku"));
 const OrdertotalComp = React.lazy(() => import("./ordertotal"));
 
 //styles
@@ -63,7 +63,7 @@ export default function OrderDetailcomp(props){
   React.useEffect(() => {
     setOpen(props.open);
     props.data && setFormControls(props.data);
-  }, [props]);
+  }, [props.data, props.open]);
 
   //delegate close behaviour to parent
   const handleClose = () => {
@@ -199,6 +199,9 @@ export default function OrderDetailcomp(props){
         .createOrder(signal, formControls)
         .then((data) => {
           handleClose();
+          dispatch({
+            type: "ORDER_UPDATED",
+          });
         })
         .catch((err) => console.log(err));
     }   

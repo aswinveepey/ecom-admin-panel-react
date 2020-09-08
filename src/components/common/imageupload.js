@@ -7,7 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 // import { makeStyles } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
-import { BASE_URL } from "../../constants";
+import AssetService from "../../services/asset"
 
 // const useStyles = makeStyles((theme) => ({
 //   // root: {
@@ -22,7 +22,6 @@ import { BASE_URL } from "../../constants";
 
 export default function ImageUploadComp(props){
   // const classes = useStyles();
-  // const[loader, setLoader] = React.useState()
   const [image, setImage] = React.useState();
   const [uploadUrl, setUploadUrl] = React.useState();
   const [imageUrl, setImageUrl] = React.useState();
@@ -41,31 +40,21 @@ export default function ImageUploadComp(props){
 
   //get signed s3 url for file upload
   React.useEffect(() => {
+    const assetService = new AssetService();
     //clean up subscriptions using abortcontroller & signals
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        Key: props.keyPath + image?.name,
-        ContentType: image?.type,
-      }),
-    };
+    const reqBody =  JSON.stringify({
+      Key: props.keyPath + image?.name,
+      ContentType: image?.type,
+    });
     //generate put url from api
     image &&
-      fetch(BASE_URL + "asset/generatePutUrl", requestOptions, {
-        signal: signal,
-      })
-        .then(async (data) => {
-          const response = await data.json();
-          const { status } = data;
-          status === 200 && setUploadUrl(response.data);
-        })
+      assetService
+        .getAssetPutUrl({ signal: signal, reqBody: reqBody })
+        .then((data) => setUploadUrl(data))
         .catch((err) => console.log(err));
+
     return function cleanup() {
       abortController.abort();
     };

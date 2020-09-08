@@ -61,7 +61,7 @@ export default function UserDetailComp(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, [props, editTogggle]);
+  }, [editTogggle, props.userId]);
 
   //get data from territories
   const handlesubmit = (event) => {
@@ -119,7 +119,7 @@ export default function UserDetailComp(props) {
   };
     return (
       <React.Fragment>
-        <Paper style={{ padding: "10px" }} elevation={editTogggle ? 2 : 0}>
+        <Paper style={{ padding: "10px" }} elevation={editTogggle ? 2 : 1}>
           <form onSubmit={handlesubmit}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
